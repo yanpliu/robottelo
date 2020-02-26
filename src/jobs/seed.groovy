@@ -8,7 +8,7 @@ job('Seed Job') {
       remote {
         name('upstream')
         // replace this with whever you put this repo
-        url('https://gitlab.sat.engineering.redhat.com/jmolet/jenkins-dsl-template.git')
+        url('https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git')
       }
     }
   }
