@@ -1,0 +1,25 @@
+# Put here plugin:version to override default plugin:version
+ansible
+ansible-tower
+build-timeout
+configuration-as-code
+configuration-as-code-support
+credentials
+dumpling
+durable-task
+email-ext
+git
+gitlab-plugin
+groovy
+jms-messaging
+job-dsl
+kerberos-sso
+ldap
+mailer
+pipeline-model-definition
+pipeline-utility-steps
+role-strategy
+script-security
+testng-plugin
+timestamper
+workflow-job

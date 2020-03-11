@@ -1,0 +1,95 @@
+jenkins:
+  systemMessage: "Controlled by Configuration as Code"
+  numExecutors: 1
+  quietPeriod: 0
+
+  # Default LDAP configuration
+  securityRealm:
+    ldap:
+      cache:
+        size: 100
+        ttl: 10
+      configurations:
+        - server: ldaps://ldap.corp.redhat.com
+          rootDN: dc=redhat,dc=com
+          inhibitInferRootDN: false
+          userSearch: uid={0}
+          groupSearchFilter: (& (cn={0}) (objectclass=GroupOfUniqueNames))
+      userIdStrategy: CaseInsensitive
+      groupIdStrategy: CaseInsensitive
+
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "admin"
+            description: "Jenkins administrators"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "cci-octopus" # Instance telemetry collection
+              - "ci-support" # Access for the support team
+              - "sysops" # Access for the support team
+              - "ccit-test" # OpenShift automation account
+              - "ccit" # CCIT team
+              - "sat-qe-jenkins"
+          - name: "anonymous"
+            description: "Anonymous users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+            assignments:
+              - "anonymous"
+          - name: "readonly"
+            description: "Read-only users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+              - "Job/ExtendedRead"
+              - "View/Read"
+            assignments:
+              - "authenticated"
+
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: true
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
+  slaveAgentPort: 50000
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "http://do.not.install.plugins.manually.use.plugins.txt"
+
+security:
+  sSHD:
+    port: 50022
+  downloadSettings:
+    useBrowser: false
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+
+unclassified:
+  shell:
+    shell: "bash"
+  ansibleTowerGlobalConfig:
+    towerInstallation:
+      - enableDebugging: true
+        towerCredentialsId: ansible-tower-jenkins-user  # create these by hand in jenkins
+        towerDisplayName: Infra-Ansible-Tower-01
+        towerTrustCert: true
+        towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
+
+
+configuration-as-code:
+  deprecated: warn
+
+jobs:
+  - url: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/raw/master/src/jobs/masterSeed.groovy
