@@ -1,3 +1,13 @@
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: ansible-tower-jenkins-user
+              username: "admin"
+              password: ${casc-secret/tower-password} #Load from Environment Variable
+              description: "Username/Password Credentials for Ansible Tower"
 jenkins:
   systemMessage: "Controlled by Configuration as Code"
   numExecutors: 1
