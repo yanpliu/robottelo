@@ -1,3 +1,13 @@
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: ansible-tower-jenkins-user
+              username: "admin"
+              password: ${casc-secret/tower-password} # This is stored in and loaded from OpenShift env as a Secrets obj.
+              description: "Username/Password Credentials for Ansible Tower"
 jenkins:
   systemMessage: "Controlled by Configuration as Code"
   numExecutors: 1

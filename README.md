@@ -152,3 +152,70 @@ The `readFileFromWorkspace()` function returns the entire script as a string so 
 ## IDE integration
 
 While you can use any editor, this project includes DSL definition files for [IntelliJ IDEA](https://www.jetbrains.com/idea/), in the folder `src/main/resources/`.  This gives this editor tab completion and argument hits/docs to the various Job DSL and Jenkins Pipleline functions.  You can also run the `./gradlew` commands with the gradle plugin from the IDE.
+
+
+# Using Git-Crypt
+
+* Clone following repo: git@gitlab.mw.lab.eng.bos.redhat.com:jbossqe-jenkins/jcasc.git
+* Clone this `satelliteqe-jenkins` repo
+* Once both repos have been cloned, enter into `satelliteqe-jenkins` repo directory
+* In this directory use git crypt `git crypt add-gpg-user <your email associated with GPG key>` which will allow you to gain access to `secrets/` in git-crypt.
+* In `secrets/` directory, each file would contain just single credential.
+```
+# cat secrets/tower-password
+mypassword
+```
+* You may create new passwords or secrets as needed. Just 1 secret per file. Continue to next section to see how to use it in Jenkins.
+* You can use encrypt/decrypt commands to lock/unlock secrets in your working directory when you clone the repo first time and the files are encrypted:
+```
+Encrypt: git crypt lock
+Decrypt: git crypt unlock
+```
+
+## To use the credential in your Jenkins, you need to use following steps
+
+* Next two are only needed for `push-credentials.sh` nothing else. You do not need to commit these changes to repo.
+- Make sure properties.yaml correctly declare `OS_PROJECT_NAME` and `OS_TENANT_NAME`, as that is where the credentials will be uploaded.
+- Make sure to sym-link `src/jobs` to `jobs` at the root of your `satelliteqe-jenkins` dir using ` ln -s src/jobs jobs`
+
+* Enter into 'jcasc' repo and run the following command:
+```
+
+oc login paas.psi.redhat.com
+< use your ldap login creds >
+
+./push-credentials.sh ../satelliteqe-jenkins
+```
+* Above step will create you new set of secrets in openshift.
+* Now that is done, you can update `casc.yaml` to actually make use of those credentials, an example as follows:
+```
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: ansible-tower-jenkins-user
+              username: "admin"
+              password: ${casc-secret/tower-password} #Load from Environment Variable
+              description: "Username/Password Credentials for Ansible Tower"
+unclassified:
+  ansibleTowerGlobalConfig:
+    towerInstallation:
+      - enableDebugging: true
+        towerCredentialsId: ansible-tower-jenkins-user  # create these by hand in jenkins
+        towerDisplayName: Infra-Ansible-Tower-01
+        towerTrustCert: true
+        towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
+```
+
+More examples can be found at: https://github.com/jenkinsci/configuration-as-code-plugin/tree/90223edaf191f28c6ec8d46f84ee7feb14172e9b/demos/credentials
+
+* Once this is all done, you should commit the changes to your `casc.yml` and `secrets/*` to your Git repo.
+* Make sure that your `CASC_DECLARATION_PROPERTIES` is pointing to correct branch of correct repo/fork for the build `OS_TENANT_NAME-jenkins-docker` and rebuild it either via UI or by issuing `oc start-build OS_TENANT_NAME-jenkins-docker`
+
+This will rebuild your Jenkins docker container and that will trigger rebuild of `OS_TENANT_NAME-jenkins` and finally redeploy Jenkins Pods.
+
+This is what finishes adding new credentials to your Jenkins with Git-Crypt and JCasC.
+
+Additional Reference: https://gitlab.mw.lab.eng.bos.redhat.com/jbossqe-jenkins/jcasc/blob/master/docs/git-crypt.md
