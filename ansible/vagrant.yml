@@ -69,6 +69,7 @@
       - rebuild
 
   roles:
+    - geerlingguy.java
     - geerlingguy.jenkins
 
   tasks:
