@@ -8,8 +8,10 @@ credentials
 dumpling
 durable-task
 email-ext
+envinject
 git
 gitlab-plugin
+gradle
 groovy
 jms-messaging
 job-dsl
@@ -18,8 +20,11 @@ ldap
 mailer
 pipeline-model-definition
 pipeline-utility-steps
+progress-bar-column-plugin
 role-strategy
 script-security
 testng-plugin
 timestamper
+view-job-filters
 workflow-job
+ws-cleanup
