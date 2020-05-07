@@ -10,34 +10,34 @@
    */
 
 // import Job object so we can manipulate it directly later
-import javaposse.jobdsl.dsl.Job
+//import javaposse.jobdsl.dsl.Job
 
 // Variables
 // immutable strings are single quoted
-def foo = 'world'
+//def foo = 'world'
 
 // string templates are double quoted
-def bar = "Hello, ${foo}."  //Hello, world.
+//def bar = "Hello, ${foo}."  //Hello, world.
 
 // you can save jobs to variables for later manipulation
-def someJob = job('Some Job') {
-    steps{
-        shell("echo '${bar}'")
-    }
-}
+//def someJob = job('Some Job') {
+//    steps{
+//        shell("echo '${bar}'")
+//    }
+//}
 
 // you can create functions which add common resuable parts to jobs
-def addCronTrigger = { Job job, String interval = 'H/5 * * * *' ->
-    // '.with' will insert DSL closures into any Job object. Note that pipelines and matrix jobs are subclasses of Job.
-    job.with {
-        triggers {
-            cron(interval)
-        }
-    }
-}
+//def addCronTrigger = { Job job, String interval = 'H/5 * * * *' ->
+//    // '.with' will insert DSL closures into any Job object. Note that pipelines and matrix jobs are subclasses of Job.
+//    job.with {
+//        triggers {
+//            cron(interval)
+//        }
+//    }
+//}
 
 // call the function
-addCronTrigger(someJob)
+//addCronTrigger(someJob)
 
 // Generating Jobs
 
@@ -45,29 +45,29 @@ addCronTrigger(someJob)
 // an easy way to do this is to loop over a configuration map (dictionary).
 
 // here I will make key, value :: <job name>, <configuration map>
-def jobCFG = [
-    'job-foo' : ['script': 'echo hello',
-                 'description': 'This job is very friendly.',
-                 'disabled': false],
-    'job-bar' : ['script': 'echo what',
-                 'description': 'This job is very confused.',
-                 'disabled': true,
-                 'trigger': 'H/2 * * * *']
-]
+//def jobCFG = [
+//    'job-foo' : ['script': 'echo hello',
+//                 'description': 'This job is very friendly.',
+//                 'disabled': false],
+//    'job-bar' : ['script': 'echo what',
+//                 'description': 'This job is very confused.',
+//                 'disabled': true,
+//                 'trigger': 'H/2 * * * *']
+//]
 
 // loop over this config map to create multiple jobs at once
-jobCFG.each { jobName, config ->  // destructure the map to make it easier to work with
-    job(jobName) {
-        description(config['description'])
-        disabled(config['disabled'])
-        steps{
-            shell(config['script'])
-        }
-        // you can also conditionally add DSL
-        if (config.containsKey('trigger')) {
-            triggers {
-                cron(config['trigger'])
-            }
-        }
-    }
-}
+//jobCFG.each { jobName, config ->  // destructure the map to make it easier to work with
+//    job(jobName) {
+//        description(config['description'])
+//        disabled(config['disabled'])
+//        steps{
+//            shell(config['script'])
+//        }
+//        // you can also conditionally add DSL
+//        if (config.containsKey('trigger')) {
+//            triggers {
+//                cron(config['trigger'])
+//            }
+//        }
+//    }
+//}
