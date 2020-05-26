@@ -51,21 +51,53 @@ dependencies {
   // Job DSL plugin including plugin dependencies
   testCompile "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}"
   testCompile "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}@jar"
-  testCompile 'org.jenkins-ci.plugins:structs:1.13@jar'
-  testCompile 'org.jenkins-ci.plugins:cloudbees-folder:5.12@jar'
-  testCompile 'org.jenkins-ci.plugins:script-security:1.42@jar'
-  testCompile group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-aggregator', version: '2.5'
-  testCompile 'org.jvnet.hudson.plugins:ircbot:2.30@jar'
+  testCompile 'org.jenkins-ci.plugins:structs:1.20@jar'
+  testCompile 'org.jenkins-ci.plugins:cloudbees-folder:6.9@jar'
+  testCompile 'org.jenkins-ci.plugins:script-security:1.68@jar'
+
+  // Run the following script in the Script Console of your Jenkins instance to generate
+  // the above testPlugins list. (adapted from https://git.io/fjpUs)
+  //  note that I did not install all of these, I merely run './gradlew --info test' and only install the ones that
+  //  are used for the tests or throw a traceback.
+  /*
+    Jenkins.instance.pluginManager.plugins
+        .findAll { !(it.shortName in ['job-dsl', 'structs']) }
+        .collect { "testPlugins '${it.manifest.mainAttributes.getValue("Group-Id")}:${it.shortName}:${it.version}'" }
+        .sort()
+        .each { println it }
+ */
 
   // plugins to install in test instance
-  testPlugins 'org.jenkins-ci.plugins:ghprb:1.31.4'
-  testPlugins 'com.coravy.hudson.plugins.github:github:1.19.0'
-  testPlugins 'org.jenkins-ci.plugins:cloudbees-folder:5.12'
-  testPlugins 'org.jenkins-ci.plugins:credentials:2.1.10'
+  testPlugins 'org.jenkins-ci.plugins:ansible:1.0'
+  testPlugins 'org.jenkins-ci.plugins:ansible-tower:0.14.1'
+  testPlugins 'com.coravy.hudson.plugins.github:github:1.29.4'
+  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.14'
+  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:2.72'
+  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.21'
+  testPlugins 'org.jenkins-ci.plugins:any-buildstep:0.1'
+  testPlugins 'org.jenkins-ci.plugins:build-blocker-plugin:1.7.3'
+  testPlugins 'org.jenkins-ci.plugins:cachet-gating:1.0.7'
+  testPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.9'
+  testPlugins 'org.jenkins-ci.plugins:credentials:2.3.0'
+  testPlugins 'org.jenkins-ci.plugins:cvs:2.14'
+  testPlugins 'org.jenkins-ci.plugins:envinject:2.2.0'
+  testPlugins 'org.jenkins-ci.plugins:fail-the-build-plugin:1.0'
+  testPlugins 'org.jenkins-ci.plugins:flexible-publish:0.15.2'
+  testPlugins 'org.jenkins-ci.plugins:ghprb:1.42.0'
+  testPlugins 'org.jenkins-ci.plugins:git:3.12.0'
+  testPlugins 'org.jenkins-ci.plugins:gradle:1.33'
+  testPlugins 'org.jenkins-ci.plugins:groovy:2.2'
+  testPlugins 'org.jenkins-ci.plugins:htmlpublisher:1.18'
+  testPlugins 'org.jenkins-ci.plugins:jms-messaging:1.1.14'
+  testPlugins 'org.jenkins-ci.plugins:mailer:1.29'
+  testPlugins 'org.jenkins-ci.plugins:matrix-project:1.14'
+  testPlugins 'org.jenkins-ci.plugins:parameterized-trigger:2.35.2'
+  testPlugins 'org.jenkins-ci.plugins:progress-bar-column-plugin:1.0'
+  testPlugins 'org.jenkins-ci.plugins:ssh-agent:1.17'
+  testPlugins 'org.jenkins-ci.plugins:token-macro:2.8'
+  testPlugins 'org.jenkins-ci.plugins:view-job-filters:2.1.1'
+  testPlugins 'org.jenkins-ci.plugins:ws-cleanup:0.37'
   testPlugins group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-aggregator', version: '2.5'
-  testPlugins 'org.jvnet.hudson.plugins:ircbot:2.30'
-  testPlugins 'org.jenkins-ci.plugins:cvs:2.13'
-  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.7'
 }
 
 task resolveTestPlugins(type: Copy) {

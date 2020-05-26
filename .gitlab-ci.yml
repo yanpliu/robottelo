@@ -1,0 +1,17 @@
+stages:
+  - lint-check
+  - build
+
+lint:
+  stage: lint-check
+  script:
+    - ./gradlew test --debug
+  only:
+  - merge_requests
+
+build:
+  stage: build
+  script:
+    - ./gradlew build
+  only:
+  - merge_requests
