@@ -65,6 +65,14 @@ jenkins:
               - "View/Read"
             assignments:
               - "authenticated"
+    globalNodeProperties:
+      - envVars:
+          env:
+          - key: "satlab_tower_credentials_id"
+            value: "ansible-tower-jenkins-user"
+          - key: "satlab_tower_server"
+            value: "Infra-Ansible-Tower-01"
+
 
   crumbIssuer:
     standard:
