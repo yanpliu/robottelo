@@ -1,4 +1,5 @@
 job('Master-Seed') {
+  label(name='satqe-stage-jenkins-slave')
   description('Helper that simply populates the seed job since the seed cant rewrite itself.')
   wrappers {
     preBuildCleanup()
