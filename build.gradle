@@ -126,6 +126,9 @@ test {
 
   // set build directory for Jenkins test harness, JENKINS-26331
   systemProperty 'buildDirectory', project.buildDir.absolutePath
+  maxParallelForks = 2
+  maxHeapSize = '128m'
+  jvmArgs '-Xmx512m', '-Xms128m', "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap"
 }
 
 task rest(dependsOn: 'classes', type: JavaExec) {
