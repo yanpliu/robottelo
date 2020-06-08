@@ -98,6 +98,15 @@ dependencies {
   testPlugins 'org.jenkins-ci.plugins:view-job-filters:2.1.1'
   testPlugins 'org.jenkins-ci.plugins:ws-cleanup:0.37'
   testPlugins group: 'org.jenkins-ci.plugins.workflow', name: 'workflow-aggregator', version: '2.5'
+  testPlugins 'com.openshift.jenkins.plugins:openshift-client:1.0.31'
+  testPlugins 'com.openshift.jenkins:openshift-pipeline:1.0.56'
+  testPlugins 'io.fabric8.jenkins.plugins:openshift-sync:1.0.39'
+  testPlugins 'org.openshift.jenkins:openshift-login:1.0.19'
+  testPlugins 'org.jenkinsci.plugins:kubernetes-credentials:0.6.2'
+  testPlugins 'com.cloudbees.jenkins.plugins:kubernetes-credentials-provider:0.12.1'
+  testPlugins 'org.csanchez.jenkins.plugins:kubernetes:1.24.1'
+  testPlugins 'org.jenkins-ci.plugins:kubernetes-client-api:4.6.4-2'
+  testPlugins 'org.jenkinsci.plugins:kubernetes-credentials:0.6.2'
 }
 
 task resolveTestPlugins(type: Copy) {
