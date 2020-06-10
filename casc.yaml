@@ -112,7 +112,17 @@ unclassified:
         towerDisplayName: Infra-Ansible-Tower-01
         towerTrustCert: true
         towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
-
+  globalLibraries:
+    libraries:
+      - defaultVersion: "master"
+        name: "satqe_pipeline_lib"
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+                traits:
+                  - "gitBranchDiscovery"
 
 configuration-as-code:
   deprecated: warn
