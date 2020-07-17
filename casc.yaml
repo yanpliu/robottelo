@@ -75,25 +75,7 @@ jenkins:
         maxRequestsPerHostStr: "32"
         name: "upshift"
         namespace: "jenkins-csb-satellite-qe"
-        serverCertificate: |-
-          -----BEGIN CERTIFICATE-----
-          MIIC6jCCAdKgAwIBAgIBATANBgkqhkiG9w0BAQsFADAmMSQwIgYDVQQDDBtvcGVu
-          c2hpZnQtc2lnbmVyQDE1NDg5NjQzNjEwHhcNMTkwMTMxMTk1MjQwWhcNMjQwMTMw
-          MTk1MjQxWjAmMSQwIgYDVQQDDBtvcGVuc2hpZnQtc2lnbmVyQDE1NDg5NjQzNjEw
-          ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDlElZ4Yw8/r57yh8wComUn
-          0b1ldIJkbr7GzEOCKNOIjvd6OwMu55nDBO2syOH2x8H+7L7x1vTB+49aNYHAZ+Q7
-          BPqsEV1FSEPwPGdlappoZTW2BC2co8EuCV4jy6TfNfJqg+AiXeu7ecdDukHl3F4R
-          rbxtBiAof2V6/qrRGLTplATBIMXpKGZd3U79xitSq23PVtVPojemhojdcymmwkao
-          Kp6qLOEe3TuUEaXjGyxAEsfmBOSjYUyclfoeKK3ps79yPCtGf4GMkq1WPZhdTdZP
-          OS2TrJg1SFWL0rNtUbjMuSa+Z9kYA4q8mIZE1KcyBGCOoV+B3XHmfn1p1lahARgH
-          AgMBAAGjIzAhMA4GA1UdDwEB/wQEAwICpDAPBgNVHRMBAf8EBTADAQH/MA0GCSqG
-          SIb3DQEBCwUAA4IBAQDUUcvAi/bFdYXC+aG9+zRc6wLO8dHBHbMvtIFHNoxd8dmA
-          XcGhMJpzSdEbTlzqHtrR5riYCskeihNjaNuAQsJzbMHUmxBSrQTe9SrGZnpyY2Tj
-          hFoJhKILbEdssGSP3yA2WPycTE1ZlEFNjjqIORhNXNpvjcmpq6PLzTfDjQ6ggSzb
-          djABUwPkyaR8hWihkjklehmoI8rFTqPYqSEJboIPNz3vUHb++uE8hWOtp0gFvMyb
-          2yOP1w43Hmtx6PJLnQBUB7N9rLX26mPNLbgT7NmkSw35j8ghE7QRhFiR5oTaiDG1
-          fnmqtwc5+6wbriKMIarg2JjZ99NjYrnQ45h6ls0B
-          -----END CERTIFICATE-----
+        serverCertificate: ${casc-secret/k8s-server-cert}
         serverUrl: "https://kubernetes.default.svc.cluster.local:443"
   globalNodeProperties:
     - envVars:
