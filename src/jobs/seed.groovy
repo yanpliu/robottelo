@@ -1,4 +1,5 @@
 job('Seed Job') {
+  label(name='satqe-stage-jenkins-slave')
   wrappers {
     preBuildCleanup()
   }

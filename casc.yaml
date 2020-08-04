@@ -65,6 +65,26 @@ jenkins:
               - "View/Read"
             assignments:
               - "authenticated"
+  clouds:
+    - kubernetes:
+        addMasterProxyEnvVars: true
+        containerCapStr: "100"
+        credentialsId: ""
+        jenkinsTunnel: "satqe-stage-jenkins.jenkins-csb-satellite-qe.svc:50000"
+        jenkinsUrl: "http://satqe-stage-jenkins.jenkins-csb-satellite-qe.svc:80"
+        maxRequestsPerHostStr: "32"
+        name: "upshift"
+        namespace: "jenkins-csb-satellite-qe"
+        serverCertificate: ${casc-secret/k8s-server-cert}
+        serverUrl: "https://kubernetes.default.svc.cluster.local:443"
+  globalNodeProperties:
+    - envVars:
+        env:
+        - key: "satlab_tower_credentials_id"
+          value: "ansible-tower-jenkins-user"
+        - key: "satlab_tower_server"
+          value: "Infra-Ansible-Tower-01"
+
 
   crumbIssuer:
     standard:
@@ -104,7 +124,17 @@ unclassified:
         towerDisplayName: Infra-Ansible-Tower-01
         towerTrustCert: true
         towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
-
+  globalLibraries:
+    libraries:
+      - defaultVersion: "master"
+        name: "satqe_pipeline_lib"
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+                traits:
+                  - "gitBranchDiscovery"
 
 configuration-as-code:
   deprecated: warn

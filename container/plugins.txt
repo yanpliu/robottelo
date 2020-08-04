@@ -16,7 +16,15 @@ groovy:latest
 htmlpublisher:latest
 ircbot:latest
 job-dsl:latest
+kubernetes:latest
+kubernetes-client-api:latest
+kubernetes-credentials:latest
+kubernetes-credentials-provider:latest
 mask-passwords:latest
+openshift-client:latest
+openshift-login:latest
+openshift-pipeline:latest
+openshift-sync:latest
 ownership:latest
 parameterized-trigger:latest
 permissive-script-security:latest

@@ -15,9 +15,16 @@ gradle
 groovy
 jms-messaging
 job-dsl
+kubernetes-client-api
+kubernetes-credentials
+kubernetes-credentials-provider
 kerberos-sso
 ldap
 mailer
+openshift-client
+openshift-login
+openshift-pipeline
+openshift-sync
 pipeline-model-definition
 pipeline-utility-steps
 progress-bar-column-plugin
