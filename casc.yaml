@@ -15,7 +15,7 @@ credentials:
               password: ${casc-secret/jenkins-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
               description: "Username/Password Credentials for gitlab"
 jenkins:
-  systemMessage: "Controlled by Configuration as Code"
+  systemMessage: "Satellite QE Jenkins, deployed with JCASC from ${CASC_DECLARATION_PROPERTIES}"
   numExecutors: 1
   quietPeriod: 0
 
@@ -70,8 +70,8 @@ jenkins:
         addMasterProxyEnvVars: true
         containerCapStr: "100"
         credentialsId: ""
-        jenkinsTunnel: "satqe-jenkins.jenkins-csb-satellite-qe.svc:50000"
-        jenkinsUrl: "http://satqe-jenkins.jenkins-csb-satellite-qe.svc:80"
+        jenkinsTunnel: "${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:50000"
+        jenkinsUrl: "http://${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:80"
         maxRequestsPerHostStr: "32"
         name: "upshift"
         namespace: "jenkins-csb-satellite-qe"
@@ -129,8 +129,9 @@ unclassified:
     allowUnregisteredEnabled: false
     charset: "UTF-8"
     debugMode: false
-    defaultBody: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:\r\n\r\nCheck\
-        \ console output at $BUILD_URL to view the results."
+    defaultBody: |
+      $PROJECT_NAME - Build #$BUILD_NUMBER: $BUILD_STATUS
+      Check console output at $BUILD_URL to view the results.
     defaultContentType: "text/plain"
     defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
     defaultSuffix: "@redhat.com"
@@ -150,7 +151,7 @@ unclassified:
           modernSCM:
             scm:
               git:
-                remote: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+                remote: 'https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git'
                 traits:
                   - "gitBranchDiscovery"
   location:
@@ -182,8 +183,10 @@ unclassified:
         description: "Subnet: 10.1.5.40/29, VLAN_ID:1020"
         labels: "vlan_pool"
 
+
 configuration-as-code:
   deprecated: warn
 
 jobs:
+  # TODO separate repo URL for specific raw paths
   - url: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/raw/master/src/jobs/masterSeed.groovy
