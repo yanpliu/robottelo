@@ -70,8 +70,8 @@ jenkins:
         addMasterProxyEnvVars: true
         containerCapStr: "100"
         credentialsId: ""
-        jenkinsTunnel: "satqe-stage-jenkins.jenkins-csb-satellite-qe.svc:50000"
-        jenkinsUrl: "http://satqe-stage-jenkins.jenkins-csb-satellite-qe.svc:80"
+        jenkinsTunnel: "satqe-jenkins.jenkins-csb-satellite-qe.svc:50000"
+        jenkinsUrl: "http://satqe-jenkins.jenkins-csb-satellite-qe.svc:80"
         maxRequestsPerHostStr: "32"
         name: "upshift"
         namespace: "jenkins-csb-satellite-qe"
