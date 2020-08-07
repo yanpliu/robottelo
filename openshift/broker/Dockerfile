@@ -4,7 +4,7 @@ MAINTAINER "SatCI"
 ENV HOME="/opt/app-root/src/broker"
 
 # Install broker
-RUN git clone --branch update-timeout --single-branch  https://github.com/mshriver/broker.git && \
+RUN git clone https://github.com/SatelliteQE/broker.git && \
     cd broker && \
     pip install . && \
     cp broker_settings.yaml.example broker_settings.yaml

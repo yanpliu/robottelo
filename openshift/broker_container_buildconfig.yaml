@@ -25,10 +25,8 @@ items:
     runPolicy: Serial
     source:
       git:
-#        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-#        ref: "master"
-        uri: "https://gitlab.sat.engineering.redhat.com/juwatts/satelliteqe-jenkins.git"
-        ref: "snap_image_template_creation"
+        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+        ref: "master"
       type: Git
       contextDir: openshift/broker
     strategy:
