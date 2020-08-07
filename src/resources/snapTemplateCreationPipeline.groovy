@@ -100,9 +100,12 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             stage('Parse Output and Set Template Names'){
 
                 // Output to JSON
-                output_sat_json = readJSON text: output_sat_jenkins
-                output_lite_json = readJSON text: output_sat_lite
-                output_capsule_json = readJSON text: output_capsule
+                def jsonSlurper = new JsonSlurper()
+                // groovy data processing
+                // fixing JSON format
+                def output_sat_json = jsonSlurper.parseText(output_sat_jenkins.replace("'","\""))
+                def output_lite_json = jsonSlurper.parseText(output_sat_lite.replace("'","\""))
+                def output_capsule_json = jsonSlurper.parseText(output_capsule.replace("'","\""))
 
                 // Write CI message to file to be archived
                 writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json
