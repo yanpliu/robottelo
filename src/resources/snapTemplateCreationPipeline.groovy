@@ -55,7 +55,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                                     returnStdout: true,
                                     script:
                                          """
-                                            broker execute --workflow 'jenkins-test' \
+                                            broker execute --workflow 'create-sat-jenkins-template' \
                                             --output-format raw --artifacts last --additional-arg True \
                                             --activation_key ${satellite_activation_key}\
                                             --rhel_major_version ${rhel_major_version} \
@@ -70,7 +70,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                                     returnStdout: true,
                                     script:
                                          """
-                                            broker execute --workflow 'jenkins-test' \
+                                            broker execute --workflow 'create-sat-lite-template' \
                                             --output-format raw --artifacts last --additional-arg True \
                                             --activation_key ${satellite_activation_key}\
                                             --rhel_major_version ${rhel_major_version} \
@@ -85,7 +85,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                                      returnStdout: true,
                                      script:
                                          """
-                                            broker execute --workflow 'jenkins-test' \
+                                            broker execute --workflow 'create-capsule-template' \
                                             --output-format raw --artifacts last --additional-arg True \
                                             --activation_key ${capsule_activation_key}\
                                             --rhel_major_version ${rhel_major_version} \
