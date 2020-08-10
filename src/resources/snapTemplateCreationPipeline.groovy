@@ -99,48 +99,47 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
         stage('Parse Output and Set Template Names'){
                 
-               // Print raw output, small JSON so not pretty printing
-                println("create-sat-jenkins-template output: " +output_sat_jenkins)
-                println("create-sat-lite-template output: " + output_sat_lite)
-                println("create-capsule-template output: " + output_capsule)
+            // Print raw output, small JSON so not pretty printing
+            println("create-sat-jenkins-template output: " + output_sat_jenkins)
+            println("create-sat-lite-template output: " + output_sat_lite)
+            println("create-capsule-template output: " + output_capsule)
 
-                // Output to JSON files
-                // Single quotes in the broker console output, replace with double quote
-                sat_jenkins_template = null
-                sat_lite_template = null
-                capsule_template = null
-                
-                if (output_sat_jenkins != "None") {
-                    output_sat_json = readJSON text: output_sat_jenkins.replace("'","\"")
-                    writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json['data_out']
-                    sat_jenkins_template = output_sat_json.get('data_out', '').get('template', '')
-                    println("Sat Jenkins Template Name is " + sat_jenkins_template)
-                } else {
-                    println("ERROR: broker call for sat-jenkins workflow must have failed, nothing was returned")
-                }
-                
-                
-                if (output_sat_lite != "None") {
-                    output_lite_json = readJSON text: output_sat_lite.replace("'","\"")
-                    writeJSON file: "sat-lite-temp-creation.json", json: output_lite_json['data_out']
-                    sat_lite_template = output_lite_json.get('data_out', '').get('template', '')
-                    println("Sat Lite Template Name is " + sat_lite_template)
-                } else {
-                    println("ERROR: broker call for sat-lite workflow must have failed, nothing was returned")
-                }
-                
-                
-                if (output_capsule != "None") {
-                    output_capsule_json = readJSON text: output_capsule.replace("'","\"")
-                    writeJSON file: "capsule-temp-creation.json", json: output_capsule_json['data_out']
-                    capsule_template = output_capsule_json.get('data_out', '').get('template', '')
-                    println("Sat Capsule Template Name is " + capsule_template)
-                } else {
-                    println("ERROR: broker call for capsule workflow must have failed, nothing was returned")
-                }
-
-               
+            // Output to JSON files
+            // Single quotes in the broker console output, replace with double quote
+            sat_jenkins_template = null
+            sat_lite_template = null
+            capsule_template = null
+            
+            if (output_sat_jenkins.contains("data_out")) {
+                output_sat_json = readJSON text: output_sat_jenkins.replace("'","\"")
+                writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json['data_out']
+                sat_jenkins_template = output_sat_json.get('data_out', '').get('template', '')
+                println("Sat Jenkins Template Name is " + sat_jenkins_template)
+            } else {
+                println("ERROR: broker call for sat-jenkins workflow must have failed, nothing was returned")
             }
+            
+            
+            if (output_sat_lite.contains("data_out")) {
+                output_lite_json = readJSON text: output_sat_lite.replace("'","\"")
+                writeJSON file: "sat-lite-temp-creation.json", json: output_lite_json['data_out']
+                sat_lite_template = output_lite_json.get('data_out', '').get('template', '')
+                println("Sat Lite Template Name is " + sat_lite_template)
+            } else {
+                println("ERROR: broker call for sat-lite workflow must have failed, nothing was returned")
+            }
+            
+            
+            if (output_capsule.contains("data_out")) {
+                output_capsule_json = readJSON text: output_capsule.replace("'","\"")
+                writeJSON file: "capsule-temp-creation.json", json: output_capsule_json['data_out']
+                capsule_template = output_capsule_json.get('data_out', '').get('template', '')
+                println("Sat Capsule Template Name is " + capsule_template)
+            } else {
+                println("ERROR: broker call for capsule workflow must have failed, nothing was returned")
+            }
+       
+        }
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
