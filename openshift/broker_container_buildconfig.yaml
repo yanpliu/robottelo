@@ -26,7 +26,7 @@ items:
     source:
       git:
         uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "stage"
+        ref: "master"
       type: Git
       contextDir: openshift/broker
     strategy:
