@@ -124,6 +124,8 @@ unclassified:
         towerDisplayName: Infra-Ansible-Tower-01
         towerTrustCert: true
         towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
+  timestamperConfig:
+    allPipelines: True
   globalLibraries:
     libraries:
       - defaultVersion: "master"
