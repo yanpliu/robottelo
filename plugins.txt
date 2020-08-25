@@ -3,7 +3,6 @@ ansible
 ansible-tower
 build-timeout
 configuration-as-code
-configuration-as-code-support
 credentials
 dumpling
 durable-task
