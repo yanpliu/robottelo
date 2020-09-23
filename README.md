@@ -156,11 +156,16 @@ While you can use any editor, this project includes DSL definition files for [In
 
 # Using Git-Crypt
 
-* Clone following repo: git@gitlab.mw.lab.eng.bos.redhat.com:jbossqe-jenkins/jcasc.git
-* Clone this `satelliteqe-jenkins` repo
-* Once both repos have been cloned, enter into `satelliteqe-jenkins` repo directory
-* In this directory use git crypt `git crypt add-gpg-user <your email associated with GPG key>` which will allow you to gain access to `secrets/` in git-crypt.
+* Your gpg key must be added to the repo by a currently supported user. Reach out to project admins to have your key added
+* Admins have to have pulled your key from the keyservers, and edited it to set it as ultimately trusted. Or include a `--trusted` argument when adding the key.
+* Admins will add your key with `git crypt add-gpg-user <fingerprint>` and open an MR to update `master` branch.
+* In this repository use `git crypt unlock` which will allow you to read and write to `secrets/`.
 * In `secrets/` directory, each file would contain just single credential.
+
+See git-crypt documentation for more information on using git-crypt.  There is no need to `init` within this project.
+
+https://github.com/AGWA/git-crypt#git-crypt---transparent-file-encryption-in-git
+
 ```
 # cat secrets/tower-password
 mypassword
@@ -174,17 +179,19 @@ Decrypt: git crypt unlock
 
 ## To use the credential in your Jenkins, you need to use following steps
 
+* Clone following repo: https://gitlab.cee.redhat.com/ccit/jenkins-csb/ 
 * Next two are only needed for `push-credentials.sh` nothing else. You do not need to commit these changes to repo.
+* Please see [CCIT Tools README](https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/tree/2-190-3/cci-jd) for more details on the tooling.
 - Make sure properties.yaml correctly declare `OS_PROJECT_NAME` and `OS_TENANT_NAME`, as that is where the credentials will be uploaded.
 - Make sure to sym-link `src/jobs` to `jobs` at the root of your `satelliteqe-jenkins` dir using ` ln -s src/jobs jobs`
 
-* Enter into 'jcasc' repo and run the following command:
+* Enter into 'ccit/jenkins-csb' repo and run the following command:
 ```
 
 oc login paas.psi.redhat.com
 < use your ldap login creds >
 
-./push-credentials.sh ../satelliteqe-jenkins
+./cci-jd/push-credentials.sh ../satelliteqe-jenkins
 ```
 * Above step will create you new set of secrets in openshift.
 * Now that is done, you can update `casc.yaml` to actually make use of those credentials, an example as follows:
@@ -218,4 +225,4 @@ This will rebuild your Jenkins docker container and that will trigger rebuild of
 
 This is what finishes adding new credentials to your Jenkins with Git-Crypt and JCasC.
 
-Additional Reference: https://gitlab.mw.lab.eng.bos.redhat.com/jbossqe-jenkins/jcasc/blob/master/docs/git-crypt.md
+Additional Reference: https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-190-3/cci-jd/docs/git-crypt.md 
