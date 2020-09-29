@@ -124,6 +124,22 @@ unclassified:
         towerDisplayName: Infra-Ansible-Tower-01
         towerTrustCert: true
         towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
+  extendedEmailPublisher:
+    adminRequiredForTemplateTesting: false
+    allowUnregisteredEnabled: false
+    charset: "UTF-8"
+    debugMode: false
+    defaultBody: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:\r\n\r\nCheck\
+        \ console output at $BUILD_URL to view the results."
+    defaultContentType: "text/plain"
+    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
+    defaultSuffix: "@redhat.com"
+    maxAttachmentSize: -1
+    maxAttachmentSizeMb: 0
+    precedenceBulk: false
+    smtpServer: "smtp.corp.redhat.com"
+    useSsl: false
+    watchingEnabled: false
   timestamperConfig:
     allPipelines: True
   globalLibraries:
@@ -137,6 +153,8 @@ unclassified:
                 remote: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
                 traits:
                   - "gitBranchDiscovery"
+  location:
+    adminAddress: "SAT QE Jenkins Notifier <sat-qe-jenkins-notifier@redhat.com>"
 
 configuration-as-code:
   deprecated: warn
