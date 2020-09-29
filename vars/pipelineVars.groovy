@@ -15,6 +15,7 @@ class pipelineVars implements Serializable {
 
     String python36Image = 'registry.access.redhat.com/ubi8/python-36:latest'
     String ciBrokerImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/broker-container'
+    String ciRobotelloImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
 
     String defaultCloud = 'upshift'
     String upshiftNameSpace = 'jenkins-csb-satellite-qe'

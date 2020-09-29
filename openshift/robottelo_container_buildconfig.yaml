@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: List
+items:
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
+    labels:
+      name: robottelo-container
+    name: robottelo-container
+  spec:
+    lookupPolicy:
+      local: true
+
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    creationTimestamp: null
+    labels:
+      name: robottelo-container
+    name: robottelo-container
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: robottelo-container:latest
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+        ref: "master"
+      type: Git
+      contextDir: openshift/robottelo
+    strategy:
+      # TODO OCP Builder does not have the right CA to clone public gitlab.
+      # TODO Look into making satqe jenkins repo private and using deploy tokens
+      dockerStrategy:
+        env:
+          - name: GIT_SSL_NO_VERIFY
+            value: 'true'
+          - name: CONFIG_FILES_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: config-files-token
+                name: satqe-casc-secret
+          - name: BUGZILLA_API_KEY
+            valueFrom:
+              secretKeyRef:
+                key: bz-api-key
+                name: satqe-casc-secret
+      type: Docker
+    triggers:
+    # TODO: implement trigger to build when robottelo upstream image changes
+    #- type: ImageChange
+    #  imageChange:
+    #    from:
+    #      kind: ImageStreamTag
+    #      name: "registry.hub.docker.com:5000/satelliteqe/robottelo:latest" ???
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+
