@@ -2,6 +2,12 @@
 
 import groovy.json.*
 
+node('master') {
+    // see more at https://www.jenkins.io/doc/pipeline/examples/#load-from-file
+    // with out explicit scm checkout the files are present only on master node
+    snapTemplateSanityCheck = load("${WORKSPACE}@script/src/resources/snapTemplateSanityCheck.groovy")
+}
+
 withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
     def at_vars = [
         containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -140,6 +146,8 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             }
        
         }
+
+        snapTemplateSanityCheck('sat_version': sat_version, 'snap_version': snap_version, 'at_vars': at_vars)
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
