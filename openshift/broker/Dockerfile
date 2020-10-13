@@ -4,8 +4,12 @@ MAINTAINER "SatCI"
 ENV HOME="/opt/app-root/src/broker"
 
 # Install broker
-RUN pip install broker
-COPY broker_settings.yaml $HOME/broker_settings.yaml
+RUN git clone https://github.com/SatelliteQE/broker.git && \
+    cd broker && \
+    pip install . && \
+    cp broker_settings.yaml.example broker_settings.yaml
+
+# TODO: Pull settings file from source (gitlab or AT). Store in same directory as Dockerfile
 
 ENV BROKER_DIRECTORY="$HOME"
 WORKDIR "$HOME"
