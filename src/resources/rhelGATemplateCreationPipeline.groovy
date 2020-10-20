@@ -59,9 +59,23 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             // Check for any value not set
             if (rhel_ga_template) {
                 print "RHEL GA Template has been created"
+                email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
+                subject = "RHEL ${rhel_version} GA Template now available"
             } else {
-                error("Template name is empty")
+                email_to = ['sat-qe-jenkins', 'satellite-lab-list']
+                subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
+                println("One or more template names were empty")
+                currentBuild.result = 'UNSTABLE'
             }
+        }
+
+        stage('Build Notification') {
+            emailUtils.sendEmail(
+                'to_nicks': email_to,
+                'reply_nicks': email_to,
+                'subject': subject,
+                'body':"${BUILD_URL}"
+            )
         }
     }
 }
