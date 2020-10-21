@@ -143,13 +143,29 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
-            
+            def email_to = ''
+            def subject = ''
             // Check for any value not set
             if (sat_jenkins_template && sat_lite_template && capsule_template) {
                 print "All template names have been created"
+                email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
+                subject = "Templates for ${sat_version} SNAP ${snap_version} are available"
+
             } else {
-                error("One or more template names were empty")
-            }   
+                email_to = ['sat-qe-jenkins', 'satellite-lab-list']
+                subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
+                println("One or more template names were empty")
+                currentBuild.result = 'UNSTABLE'
+            }
+        }
+
+        stage('Build Notification') {
+            emailUtils.sendEmail(
+                'to_nicks': email_to,
+                'reply_nicks': email_to,
+                'subject': subject,
+                'body':"${BUILD_URL}"
+            )
         }
     }
 }
