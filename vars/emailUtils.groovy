@@ -22,14 +22,14 @@ def sendEmail(parameters = [:]) {
     def email_addrs = ''
 
     for (t_nick in to_nicks) {
-        t_nick = t_nick+"@redhat.com,"
+        t_nick = t_nick.replaceAll("\\s","")+"@redhat.com,"
         email_addrs += t_nick
     }
 
     def reply_emails = ''
 
     for (r_nick in reply_nicks) {
-        reply_emails += r_nick+"@redhat.com,"
+        reply_emails += r_nick.replaceAll("\\s","")+"@redhat.com,"
     }
 
     println("""
