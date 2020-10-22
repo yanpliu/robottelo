@@ -143,8 +143,6 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
-            def email_to = ''
-            def subject = ''
             // Check for any value not set
             if (sat_jenkins_template && sat_lite_template && capsule_template) {
                 print "All template names have been created"
