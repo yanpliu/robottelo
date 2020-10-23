@@ -148,10 +148,14 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 print "All template names have been created"
                 email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
                 subject = "Templates for ${sat_version} SNAP ${snap_version} are available"
-
+                body = "Following snap ${snap_version} templates have been created:" +
+                       " <br><br> sat_jenkins_template: ${sat_jenkins_template} " +
+                       "<br><br> sat_lite_template: ${sat_lite_template} " +
+                       "<br><br> capsule_template: ${capsule_template}"
             } else {
                 email_to = ['sat-qe-jenkins', 'satellite-lab-list']
                 subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
+                body = "Jenkins Console Log: ${BUILD_URL}"
                 println("One or more template names were empty")
                 currentBuild.result = 'UNSTABLE'
             }
@@ -162,7 +166,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 'to_nicks': email_to,
                 'reply_nicks': email_to,
                 'subject': subject,
-                'body':"${BUILD_URL}"
+                'body': body
             )
         }
     }
