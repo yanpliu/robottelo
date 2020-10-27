@@ -101,8 +101,8 @@ withCredentials([usernamePassword(credentialsId:'ansible-tower-jenkins-user', pa
                     }
 
                     emailUtils.sendEmail(
-                        'to_nicks': user,
-                        'reply_nicks': user,
+                        'to_nicks': [user],
+                        'reply_nicks': [user],
                         'subject': subject,
                         'body': body
                     )
