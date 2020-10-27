@@ -30,7 +30,7 @@ withCredentials([usernamePassword(credentialsId:'ansible-tower-jenkins-user', pa
             )
         }
 
-        stage('Parse Output and Notfy Users'){
+        stage('Parse Output'){
             def jsonSlurper = new JsonSlurper()
             // groovy data processing
             // fixing JSON format
@@ -71,6 +71,42 @@ withCredentials([usernamePassword(credentialsId:'ansible-tower-jenkins-user', pa
             println("User wise VMs shutdown:" + JsonOutput.prettyPrint(JsonOutput.toJson(user_wise_vms_shutdown )));
             println("User wise VMs Removed:" + JsonOutput.prettyPrint(JsonOutput.toJson(user_wise_vms_removed)));
             // TODO: Notify Users 
+        }
+
+        stage ('Build Email and Notify Associates') {
+            users = user_wise_vms_expiring_soon.keySet() +
+                    user_wise_vms_shutdown.keySet() +
+                    user_wise_vms_removed.keySet() as String[]
+
+            for (user in users) {
+                    def body = "${user}:<br><br> "
+                    def subject = "SLA Enforcement ${user} Report for Build ${BUILD_NUMBER}"
+
+                    if(user == "${USERNAME}") {
+                        println("skipping jenkins user")
+                        continue;
+                    }
+
+                    if(user_wise_vms_expiring_soon.containsKey(user)) {
+                        body = body + "VMs expiring soon: <br><br>" +
+                                JsonOutput.prettyPrint(JsonOutput.toJson(user_wise_vms_expiring_soon.get(user))) + "<br><br>"
+                    }
+                    if(user_wise_vms_shutdown.containsKey(user)) {
+                        body = body + "VMs Shut down by SLA:<br><br>" +
+                                JsonOutput.prettyPrint(JsonOutput.toJson(user_wise_vms_shutdown.get(user))) + "<br><br>"
+                    }
+                    if(user_wise_vms_removed.containsKey(user)) {
+                        body = body + "VMs Removed by SLA:<br><br>" +
+                                JsonOutput.prettyPrint(JsonOutput.toJson(user_wise_vms_removed.get(user)))
+                    }
+
+                    emailUtils.sendEmail(
+                        'to_nicks': user,
+                        'reply_nicks': email_to,
+                        'subject': "SLA Notification ",
+                        'body':"${BUILD_URL}"
+                    )
+            }
         }
     }
 }
