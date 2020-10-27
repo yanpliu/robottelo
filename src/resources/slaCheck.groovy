@@ -102,9 +102,9 @@ withCredentials([usernamePassword(credentialsId:'ansible-tower-jenkins-user', pa
 
                     emailUtils.sendEmail(
                         'to_nicks': user,
-                        'reply_nicks': email_to,
-                        'subject': "SLA Notification ",
-                        'body':"${BUILD_URL}"
+                        'reply_nicks': user,
+                        'subject': subject,
+                        'body': body
                     )
             }
         }
