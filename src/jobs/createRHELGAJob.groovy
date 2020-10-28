@@ -1,8 +1,10 @@
 // Create RHEL Templates
 
 import jobLib.globalJenkinsDefaults
+import jenkins.model.*
 
 pipelineJob('rhel-templatization') {
+    disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
     description('RHEL Templatization Pipeline.')
     parameters {

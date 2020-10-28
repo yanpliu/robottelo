@@ -1,6 +1,8 @@
 import jobLib.globalJenkinsDefaults
+import jenkins.model.*
 
 pipelineJob("sla-enforcement") {
+    disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
     parameters {
         stringParam{
