@@ -1,8 +1,11 @@
 // Update Satellite & Capsule Templates
 
 import jobLib.globalJenkinsDefaults
+import jenkins.model.*
 
 pipelineJob('snap-templatization') {
+    disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
+    
     def uuid = { UUID.randomUUID().toString() }
     def consumerID = { "Consumer.rh-jenkins-ci-plugin.${uuid()}" }
     String consumerTopic = "${consumerID()}.VirtualTopic.eng.sat6eng-ci.snap.ready"
