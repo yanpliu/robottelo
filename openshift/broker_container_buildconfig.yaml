@@ -28,11 +28,12 @@ items:
         uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
         ref: "master"
       type: Git
-      contextDir: openshift/broker
+      contextDir: openshift
     strategy:
       # TODO OCP Builder does not have the right CA to clone public gitlab.
       # TODO Look into making satqe jenkins repo private and using deploy tokens
       dockerStrategy:
+        dockerfilePath: broker/Dockerfile
         env:
           - name: GIT_SSL_NO_VERIFY
             value: 'true'
