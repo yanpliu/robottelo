@@ -155,6 +155,32 @@ unclassified:
                   - "gitBranchDiscovery"
   location:
     adminAddress: "SAT QE Jenkins Notifier <sat-qe-jenkins-notifier@redhat.com>"
+  lockableResourcesManager:
+    declaredResources:
+      - name: "1001"
+        description: "Subnet: 10.1.4.16/28, VLAN_ID:1001"
+        labels: "vlan_pool"
+      - name: "1002"
+        description: "Subnet: 10.1.4.32/28, VLAN_ID:1002"
+        labels: "vlan_pool"
+      - name: "1015"
+        description: "Subnet: 10.1.5.0/29, VLAN_ID:1015"
+        labels: "vlan_pool"
+      - name: "1016"
+        description: "Subnet: 10.1.5.8/29, VLAN_ID:1016"
+        labels: "vlan_pool"
+      - name: "1017"
+        description: "Subnet: 10.1.5.16/29, VLAN_ID:1017"
+        labels: "vlan_pool"
+      - name: "1018"
+        description: "Subnet: 10.1.5.24/29, VLAN_ID:1018"
+        labels: "vlan_pool"
+      - name: "1019"
+        description: "Subnet: 10.1.5.32/29, VLAN_ID:1019"
+        labels: "vlan_pool"
+      - name: "1020"
+        description: "Subnet: 10.1.5.40/29, VLAN_ID:1020"
+        labels: "vlan_pool"
 
 configuration-as-code:
   deprecated: warn

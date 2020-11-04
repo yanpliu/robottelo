@@ -19,6 +19,7 @@ kubernetes-credentials
 kubernetes-credentials-provider
 kerberos-sso
 ldap
+lockable-resources
 mailer
 openshift-client
 openshift-login
