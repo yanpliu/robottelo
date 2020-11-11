@@ -2,6 +2,12 @@
 
 import groovy.json.*
 
+node('master') {
+    // see more at https://www.jenkins.io/doc/pipeline/examples/#load-from-file
+    // with out explicit scm checkout the files are present only on master node
+    snapTemplateSanityCheck = load("${WORKSPACE}@script/src/resources/snapTemplateSanityCheck.groovy")
+}
+
 withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
     def at_vars = [
         containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -141,6 +147,12 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
        
         }
 
+        sanityPassed = snapTemplateSanityCheck(
+            'sat_version': sat_version,
+            'snap_version': snap_version,
+            'at_vars': at_vars,
+        )
+
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
             // Check for any value not set
@@ -152,6 +164,9 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                        " <br><br> sat_jenkins_template: ${sat_jenkins_template} " +
                        "<br><br> sat_lite_template: ${sat_lite_template} " +
                        "<br><br> capsule_template: ${capsule_template}"
+                if(!sanityPassed) {
+                    body += "<br><br>However, template sanity check has failed. Please investigate!"
+                }
             } else {
                 email_to = ['sat-qe-jenkins', 'satellite-lab-list']
                 subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"

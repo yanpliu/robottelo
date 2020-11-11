@@ -27,14 +27,11 @@ def checkout(Map parameters = [:]) {
         // In this function assumption is to get all params spelled out(long version)
         parameters[workflow].each { key, val -> broker_command+="--$key $val " }
         // broker_settings.yaml needs to be present in the BROKER_DIRECTORY before running broker commands
-        output = sh (
-            returnStdout: true,
-            script: "${broker_command} " 
-            )
+        output = sh(returnStdout: true, script: "${broker_command}")
 
     }
-    
-    def yamlInvString = readYaml file: "${BROKER_DIRECTORY}/inventory.yaml"
+    sh 'cp ${BROKER_DIRECTORY}/inventory.yaml ${WORKSPACE}/inventory.yaml'
+    def yamlInvString = readYaml file: "${WORKSPACE}/inventory.yaml"
 
     println("Output Inventory is: "+ yamlInvString)
     archiveArtifacts artifacts: 'inventory.yaml, logs/'
