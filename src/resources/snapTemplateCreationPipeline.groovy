@@ -147,7 +147,11 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
        
         }
 
-        snapTemplateSanityCheck('sat_version': sat_version, 'snap_version': snap_version, 'at_vars': at_vars)
+        sanityPassed = snapTemplateSanityCheck(
+            'sat_version': sat_version,
+            'snap_version': snap_version,
+            'at_vars': at_vars,
+        )
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
@@ -160,6 +164,9 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                        " <br><br> sat_jenkins_template: ${sat_jenkins_template} " +
                        "<br><br> sat_lite_template: ${sat_lite_template} " +
                        "<br><br> capsule_template: ${capsule_template}"
+                if(!sanityPassed) {
+                    body += "<br><br>However, template sanity check has failed. Please investigate!"
+                }
             } else {
                 email_to = ['sat-qe-jenkins', 'satellite-lab-list']
                 subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
