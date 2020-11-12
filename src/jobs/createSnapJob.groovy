@@ -48,7 +48,7 @@ pipelineJob('snap-templatization') {
 
     definition {
         cpsScm {
-            lightweight(true)
+            lightweight(false)
             scm {
                 git {
                     remote {
