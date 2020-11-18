@@ -13,7 +13,7 @@ AnsibleTower:
     # token: "<AT personal access token>"
     release_workflow: "remove-vm"
     extend_workflow: "extend-vm"
-    workflow_timeout: 3600
+    workflow_timeout: 7200
 TestProvider:
     config_value: "something"
 # You can set a nickname as a shortcut for arguments
