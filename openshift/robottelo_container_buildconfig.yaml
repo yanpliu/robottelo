@@ -4,6 +4,21 @@ items:
 - kind: ImageStream
   apiVersion: image.openshift.io/v1
   metadata:
+    name: robottelo-upstream
+  spec:
+    tags:
+      - name: latest
+        from:
+          kind: DockerImage
+          name: 'quay.io/satelliteqe/robottelo:latest'
+        importPolicy:
+          scheduled: true
+        referencePolicy:
+          type: Source
+
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
     labels:
       name: robottelo-container
     name: robottelo-container
@@ -51,13 +66,13 @@ items:
                 name: satqe-casc-secret
       type: Docker
     triggers:
-    # TODO: implement trigger to build when robottelo upstream image changes
-    #- type: ImageChange
-    #  imageChange:
-    #    from:
-    #      kind: ImageStreamTag
-    #      name: "registry.hub.docker.com:5000/satelliteqe/robottelo:latest" ???
-    - type: ConfigChange
+      - type: ImageChange
+        imageChange:
+          automatic: true
+          from:
+            kind: ImageStreamTag
+            name: robottelo-upstream:latest
+      - type: ConfigChange
   status:
     lastVersion: 0
 
