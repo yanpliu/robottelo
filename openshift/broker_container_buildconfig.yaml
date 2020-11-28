@@ -4,6 +4,20 @@ items:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
+    name: broker-upstream
+  spec:
+    tags:
+      - name: latest
+        from:
+          kind: DockerImage
+          name: 'quay.io/satelliteqe/broker:latest'
+        importPolicy:
+          scheduled: true
+        referencePolicy:
+          type: Source
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
     name: broker-container
   spec:
     lookupPolicy:
@@ -38,5 +52,13 @@ items:
           - name: GIT_SSL_NO_VERIFY
             value: 'true'
       type: Docker
+    triggers:
+      - type: ImageChange
+        imageChange:
+          automatic: true
+          from:
+            kind: ImageStreamTag
+            name: broker-upstream:latest
+      - type: ConfigChange
   status:
     lastVersion: 0

@@ -4,7 +4,10 @@ MAINTAINER "SatCI"
 ENV HOME="/opt/app-root/src/broker"
 
 # Install broker
-RUN pip install broker
+RUN git clone https://github.com/SatelliteQE/broker.git && \
+    cd broker && \
+    git log -1 && \
+    pip install .
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml $HOME/broker_settings.yaml
 
