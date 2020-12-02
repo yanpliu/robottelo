@@ -25,6 +25,24 @@ pipeline {
             }
         }
 
-        // stage('Trigger Upgrade Automation Tests') {}
+        stage('Trigger Foreman-Maintain Automation Tests') {
+            steps {
+                script {
+                    ['Satellite', 'Capsule'].each {
+                        build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-maintain-tests",
+                        parameters: [
+                            [$class: 'StringParameterValue', name: 'component', value: "${it}"],
+                            [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],
+                            [$class: 'StringParameterValue', name: 'sat_version', value: params.sat_version],
+                            [$class: 'StringParameterValue', name: 'pytest_options', value: (it=='Capsule')?'-m capsule tests/':'tests/'],
+                            [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url]
+                        ],
+                        wait: false
+                    }
+                }
+            }
+        }
+
+    // stage('Trigger Upgrade Automation Tests') {}
     }
 }

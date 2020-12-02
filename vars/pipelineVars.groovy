@@ -10,6 +10,7 @@ class pipelineVars implements Serializable {
     String ciRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
     String ciCleanScriptImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/cloud-cleanup-container'
     String ciUpgradesImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/sat-upgrade-container'
+    String ciTestFmImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/testfm-container'
 
     String defaultCloud = 'upshift'
     String upshiftNameSpace = 'jenkins-csb-satellite-qe'

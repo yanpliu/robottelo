@@ -188,7 +188,7 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey: 'container_repo_quay_robot_token'))
     }
 
-    if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container')) {
+    if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container')) {
         // secrets that both robottelo-container and broker-container need
         envVars.add(secretEnvVar(
             key: 'BROKER_host_password',
@@ -233,6 +233,18 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'CLEANUP_AZURE__PASSWORD',
             secretName: secretName,
             secretKey: 'azure_client_secret'))
+    }
+
+    // Injecting ssh-key and password vars to container
+    if (image.contains('testfm-container')) {
+        envVars.add(secretEnvVar(
+            key:'SATLAB_PRIVATE_KEY',
+            secretName: secretName,
+            secretKey:'satlab_automation_rsa'))
+       envVars.add(secretEnvVar(
+            key:'TESTFM_SUBSCRIPTION__RHN_PASSWORD',
+            secretName: secretName,
+            secretKey:'rhn_password'))
     }
 
     if (yaml) {
