@@ -42,6 +42,9 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             println("satellite_activation_key " + satellite_activation_key)
             println("capsule_activation_key is " + capsule_activation_key)
 
+            // Set description like '6.9.0 snap: 2.0 on RHEL 7'
+            currentBuild.description = sat_version + " snap: " + snap_version + " on RHEL " + rhel_major_version
+
             // Check for any value not set
             if (sat_version && snap_version && capsule_version && rhel_major_version && satellite_activation_key && capsule_activation_key) {
                 print "All Work flow values have been set"

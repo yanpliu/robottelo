@@ -16,6 +16,10 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 //
 //        }
 
+        stage('Set Build Description') {
+            currentBuild.description = "RHEL: " + "${params.rhel_version}"
+        }
+
         stage('Create RHEL GA Template') {
 
             // Call RHEL GA Template Workflow
