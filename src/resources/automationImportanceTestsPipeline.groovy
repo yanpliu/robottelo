@@ -14,11 +14,11 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
         try {
             stage('Check Out Satellite Instances') {
                 inventory = brokerUtils.checkout(
-                        'deploy-sat-jenkins': [
-                                'sat_version': params.sat_version,
-                                'snap_version': params.snap_version,
-                                'count': params.appliance_count
-                        ],
+                    'deploy-sat-jenkins': [
+                        'sat_version': params.sat_version,
+                        'snap_version': params.snap_version,
+                        'count': params.appliance_count
+                    ],
                 )
             }
 
@@ -34,11 +34,15 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
             stage('Execute Automation Test Suite') {
                 robotteloUtils.execute(inventory: inventory, script: """
-                        py.test -v --importance ${params.importance} -n ${appliance_count} \
-                        --junit-xml=sat-${params.importance}-results.xml -o junit_suite_name=sat-${params.importance} \
-                        tests/foreman/ 
-                    """
-                )
+                    py.test -v \
+                    --importance ${params.importance} \
+                    -n ${appliance_count} \
+                    --junit-xml=sat-${params.importance}-results.xml \
+                    -o junit_suite_name=sat-${params.importance} \
+                    ${pipelineVars.ibutsuBaseOptions} \
+                    ${params.pytest_options}
+                """)
+
                 junit "sat-${params.importance}-results.xml"
 
             }
