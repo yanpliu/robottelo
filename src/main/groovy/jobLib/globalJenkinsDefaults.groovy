@@ -8,5 +8,6 @@ class globalJenkinsDefaults {
     static String tower_prod = "Infra-Ansible-Tower-01"
     static String tower_user = "ansible-tower-jenkins-user"
     static String production_url = "https://satqe-jenkins-csb-satellite-qe.cloud.paas.psi.redhat.com/"
+    static List sat_versions = ["6.7", "6.8", "6.9"]
 
 }
