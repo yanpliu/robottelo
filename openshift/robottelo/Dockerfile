@@ -1,13 +1,17 @@
 FROM registry.access.redhat.com/ubi8/python-38:latest
 MAINTAINER "SatCI"
 
+# REQUESTS_CA_BUNDLE is set for ibutsu client's requests use
 ENV HOME="/opt/app-root/src/robottelo" \
     BROKER_DIRECTORY="/opt/app-root/src/robottelo" \
-    PYCURL_SSL_LIBRARY=openssl
+    PYCURL_SSL_LIBRARY=openssl \
+    REQUESTS_CA_BUNDLE="/etc/pki/tls/certs/ca-bundle.crt"
 
 USER 0
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/c/crudini-0.9.3-1.el8.noarch.rpm && \
-    yum -y clean all
+    yum -y clean all && \
+    curl https://password.corp.redhat.com/RH-IT-Root-CA.crt -o /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt && \
+    update-ca-trust
 
 USER 1001
 RUN git clone https://github.com/SatelliteQE/robottelo.git && \
