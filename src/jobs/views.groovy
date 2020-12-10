@@ -1,15 +1,13 @@
 import javaposse.jobdsl.dsl.views.jobfilter.MatchType
+import jobLib.globalJenkinsDefaults
 
-def versionCFG = ['6.7','6.8','6.9']
-
-
-versionCFG.each { versionName ->
+globalJenkinsDefaults.sat_versions.each { versionName ->
   listView("${versionName}") {
 
     jobFilters {
       regex {
         matchType(MatchType.INCLUDE_MATCHED)
-        regex("sat-${versionName}-.*")
+        regex(".*${versionName}.*")
       }
     }
 
