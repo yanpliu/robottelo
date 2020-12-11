@@ -15,21 +15,14 @@ def call(Map parameters = [:]) {
             }
 
             stage('Snap Template Sanity Check') {
-                sh """
-                    cd /opt/app-root/src/robottelo
-                    git log -3
-                    crudini --set robottelo.properties server hostname ${inventory[0].hostname}
-
-                    py.test -v -m 'tier1' \
-                        --junit-xml=sat-jenkins-sanitycheck.xml -o junit_suite_name=sat-jenkins-sanitycheck \
-                        tests/foreman/cli/test_ping.py \
-                        tests/foreman/endtoend/test_cli_endtoend.py \
-                        tests/foreman/endtoend/test_api_endtoend.py
-
-                    cp robottelo*.log sat-jenkins-sanitycheck.xml ${WORKSPACE}
-                """
-                archiveArtifacts artifacts: 'robottelo*.log, sat-jenkins-sanitycheck.xml'
-                junit 'sat-jenkins-sanitycheck.xml'
+                label = 'sat-jenkins-sanitycheck'
+                robotteloUtils.execute(inventory: inventory, script: """
+                        py.test -v -m 'build_sanity' \
+                        --junit-xml=${label}-results.xml -o junit_suite_name=${label} \
+                        tests/foreman/
+                    """
+                )
+                junit "${label}-results.xml"
             }
 
         }
