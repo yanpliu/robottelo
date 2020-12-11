@@ -26,14 +26,6 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 // Hardcoding the RP values for now
                 rp_url = "http://reportportal-sat-qe.cloud.paas.psi.redhat.com"
                 rp_project = "SatelliteQE"
-                // Use DYNACONF when https://projects.engineering.redhat.com/browse/SATQE-11729 is finished
-                for (int i = 0; i < appliance_count.toInteger(); i++) {
-                    hostname = inventory[i].hostname
-                    if (i == 0) {
-                        sh "crudini --set /opt/app-root/src/robottelo/robottelo.properties server hostname ${hostname}"
-                    }
-                    sh "crudini --set /opt/app-root/src/robottelo/robottelo.properties server gw[${i}] ${hostname}"
-                }
                 sh """
                     crudini --set /opt/app-root/src/robottelo/robottelo.properties report_portal report_portal ${rp_url}
                     crudini --set /opt/app-root/src/robottelo/robottelo.properties report_portal project ${rp_project}
@@ -41,17 +33,12 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             }
 
             stage('Execute Automation Test Suite') {
-               sh """
-                    set +e
-                    cd /opt/app-root/src/robottelo
-                    git log -1
-                    py.test -v --importance ${params.importance} -n ${appliance_count} \
-                        --junit-xml=sat-${params.importance}-results.xml -o junit_suite_name=sat-${params.importance}-results \
+                robotteloUtils.execute(inventory: inventory, script: """
+                        py.test -v --importance ${params.importance} -n ${appliance_count} \
+                        --junit-xml=sat-${params.importance}-results.xml -o junit_suite_name=sat-${params.importance} \
                         tests/foreman/ 
-    
-                    cp robottelo*.log robottelo.properties sat-${params.importance}-results.xml ${WORKSPACE}
-               """
-                archiveArtifacts artifacts: "robottelo*.log, sat-${params.importance}-results.xml, robottelo.properties"
+                    """
+                )
                 junit "sat-${params.importance}-results.xml"
 
             }
