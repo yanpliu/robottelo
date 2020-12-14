@@ -10,6 +10,7 @@ email-ext
 envinject
 git
 gitlab-plugin
+ghprb
 gradle
 groovy
 jms-messaging
