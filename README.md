@@ -4,8 +4,11 @@ This repo is based on a template for Jenkins Job and Pipeline DSL.
 
 # GitLab Runners
 
-This project uses GitLab CI to execute Linting and Priliminary testing on each new Merge Request opened against the repo. In order to allow GitLab CI
-to execute against your Fork of this project, you need to navigate to `Settings->CI/CD->Runners` and enable `docker-runner-satqe-jenkins` for your project.
+This project uses GitLab CI to execute linting and preliminary testing on each new Merge Request opened against the repo. In order to allow GitLab CI
+to execute against your Fork of this project, you need to have maintainer privilege for the repository. Ask current maintainers/owners to grant you this access.
+
+With maintainer privilege, navigate to `Settings->CI/CD->Runners` **on your fork** and enable `docker-runner-satqe-jenkins`.
+
 In case you can't find this runner for any reason, you should contact the maintainers of the repo for more information/help.
 
 ## File structure
