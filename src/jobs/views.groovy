@@ -57,7 +57,8 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
 def utilJobs = ['Master-Seed',
                 'MonitoringTest',
                 'Seed Job',
-                'sla-enforcement',
+                'template-sla-enforcement',
+                'vm-sla-enforcement',
 ]
 
 listView("Utility") {
