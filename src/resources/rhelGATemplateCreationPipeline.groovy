@@ -81,5 +81,18 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 'body':"${BUILD_URL}"
             )
         }
+
+        stage('Trigger RHEL GA Template Update') {
+            if (rhel_ga_template) {
+                build job: 'rhel-ga-template-update',
+                        parameters: [
+                                [$class: 'StringParameterValue', name: 'rhel_version', value: params.rhel_version],
+                                [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
+                        ],
+                        wait: false
+            } else {
+                println("Template failed creation, skipping triggering update job")
+            }
+        }
     }
 }
