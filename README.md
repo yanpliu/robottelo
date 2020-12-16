@@ -234,4 +234,56 @@ This will rebuild your Jenkins docker container and that will trigger rebuild of
 
 This is what finishes adding new credentials to your Jenkins with Git-Crypt and JCasC.
 
-Additional Reference: https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-190-3/cci-jd/docs/git-crypt.md 
+Additional Reference: https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-190-3/cci-jd/docs/git-crypt.md
+
+
+# OCP Jenkins CSB Modifications
+
+Our Jenkins core build configs and docker images (production and stage) are provided by CCIT through the Jenkins CSB program.
+
+The following modifications have been made to the Jenkins CSB build configs, in order to support our project.
+
+## ConfigMaps
+
+Config maps for each Jenkins master image (`stage-jenkins`, `satqe-stage-jenkins`, etc) hold specific key/value pairs that are used to modify the buildconfig or deploymentconfig for the relevant instances.
+
+Example ConfigMap for `satqe-jenkins`, called `satqe-jenkins-casc-vars`, holding values that are used by `casc.yaml` for Jenkins master configuration:
+
+```
+apiVersion: v1
+data:
+  CASC_KUBE_SERVICE: satqe-jenkins
+kind: ConfigMap
+```
+
+## BuildConfigs
+
+The ConfigMap for the relevant Jenkins master pod is added to the BuildConfig for the container image.
+
+For the above example of `satqe-jenkins-casc-vars`, the build config is modified to define `CASC_KUBE_SERVICE` environment variable, with a value pulled from the config map.
+
+This makes the value available to `casc.yaml` during the image build, and Jenkins master configuration is therefore dynamic with its Kubernetes cloud plugin service endpoints.
+
+The below example is a truncated build config yaml for `satqe-jenkins`, and includes the relevant environment variable modifications.  `GIT_SSL_NO_VERIFY`, `TENANT_NAME`, and `JENKINS_SERVICE_NAME` are all set by Jenkins CSB, only the configMapKeyRef is a satelliteqe-jenkins customization.
+
+
+```
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+spec:
+  strategy:
+    sourceStrategy:
+      env:
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+        - name: TENANT_NAME
+          value: satqe
+        - name: JENKINS_SERVICE_NAME
+          value: satqe-jenkins
+        - name: CASC_KUBE_SERVICE
+          valueFrom:
+            configMapKeyRef:
+              key: CASC_KUBE_SERVICE
+              name: stage-jenkins-casc-vars
+
+```
