@@ -4,6 +4,10 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
 
+  config.vm.provider "libvirt" do |domain|
+    domain.memory = 1024
+  end
+
   if Vagrant.has_plugin?("vagrant-hostmanager")
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true

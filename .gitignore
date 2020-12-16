@@ -1,0 +1,4 @@
+.vagrant/
+
+# here ansible galaxy roles get deployed 
+ansible/roles/
