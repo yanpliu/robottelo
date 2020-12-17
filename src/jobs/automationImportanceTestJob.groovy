@@ -55,6 +55,10 @@ versionCFG.each { versionName ->
                 daysToKeep(42)
             }
 
+            properties {
+                disableConcurrentBuilds()
+            }
+
             definition {
                 cpsScm {
                     lightweight(true)

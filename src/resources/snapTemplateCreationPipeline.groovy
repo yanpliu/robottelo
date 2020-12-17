@@ -187,5 +187,14 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 'body': body
             )
         }
+
+        stage('Trigger Auotmation Test') {
+            build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
+            parameters: [
+                [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+            ],
+            wait: false
+        }
     }
 }
