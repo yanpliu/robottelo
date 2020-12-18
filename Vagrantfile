@@ -6,6 +6,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provider "libvirt" do |domain|
     domain.memory = 1024
+    domain.cpus = 1
   end
 
   if Vagrant.has_plugin?("vagrant-hostmanager")

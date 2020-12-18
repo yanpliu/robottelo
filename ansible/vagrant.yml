@@ -50,13 +50,24 @@
       - groovy
       - htmlpublisher
       - ircbot
+      - jms-messaging
       - job-dsl
+      - kubernetes
+      - kubernetes-client-api
+      - kubernetes-credentials
+      - kubernetes-credentials-provider
+      - lockable-resources
       - mask-passwords
+      - openshift-client
+      - openshift-login
+      - openshift-pipeline
+      - openshift-sync
       - ownership
       - parameterized-trigger
       - permissive-script-security
       - pipeline-githubnotify-step
       - progress-bar-column-plugin
+      - rebuild
       - ssh-slaves
       - throttle-concurrents
       - timestamper
@@ -66,7 +77,6 @@
       - workflow-job
       - ws-cleanup
       - xvfb
-      - rebuild
 
   roles:
     - geerlingguy.java

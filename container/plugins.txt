@@ -15,6 +15,7 @@ gradle:latest
 groovy:latest
 htmlpublisher:latest
 ircbot:latest
+jms-messaging:latest
 job-dsl:latest
 kubernetes:latest
 kubernetes-client-api:latest
@@ -31,6 +32,7 @@ parameterized-trigger:latest
 permissive-script-security:latest
 pipeline-githubnotify-step:latest
 progress-bar-column-plugin:latest
+rebuild:latest
 ssh-slaves:latest
 throttle-concurrents:latest
 timestamper:latest
@@ -39,4 +41,3 @@ view-job-filters:latest
 workflow-aggregator:latest
 ws-cleanup:latest
 xvfb:latest
-rebuild:latest
