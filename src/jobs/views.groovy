@@ -61,6 +61,7 @@ def utilJobs = ['Master-Seed',
                 'vm-sla-enforcement',
                 'polarion-testrun-upload',
                 'polarion-testcase-upload',
+                'cloud-resources-cleanup'
 ]
 
 listView("Utility") {

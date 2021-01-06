@@ -44,6 +44,15 @@ def withNode(Map parameters = [:], Closure body) {
             secretName:'satqe-casc-secret',
             secretKey:'satlab_automation_rsa'))
     }
+    //
+
+    // Cloud Resource Cleanup Script Vars
+    if (image.contains('cloud-cleanup-container')) {
+        envVars.add(secretEnvVar(
+            key:'CLEANUP_GCE__SERVICE_ACCOUNT',
+            secretName:'satqe-casc-secret',
+            secretKey:'sat6gce_service_account'))
+    }
 
     if (yaml) {
         podParameters['yaml'] = readTrusted(yaml)

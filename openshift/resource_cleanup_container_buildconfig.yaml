@@ -1,5 +1,17 @@
 apiVersion: v1
-kind: BuildConfig
+kind: List
+items:
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
+    labels:
+      name: cloud-cleanup-container
+    name: cloud-cleanup-container
+  spec:
+    lookupPolicy:
+      local: true
+
+- kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
     creationTimestamp: null
@@ -10,9 +22,9 @@ kind: BuildConfig
     output:
       to:
         kind: ImageStreamTag
-        name: cloud-cleanup-container:latest
+        name: 'cloud-cleanup-container:latest'
     resources: {}
-    runPolicy: Parallel
+    runPolicy: Serial
     source:
       git:
         uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
@@ -26,13 +38,3 @@ kind: BuildConfig
           - name: GIT_SSL_NO_VERIFY
             value: 'true'
       type: Docker
-    triggers:
-      - type: ImageChange
-        imageChange:
-          automatic: true
-          from:
-            kind: ImageStreamTag
-            name: cloud-cleanup-container:latest
-      - type: ConfigChange
-  status:
-    lastVersion: 0
