@@ -25,7 +25,7 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     crudini --set robottelo.properties bugzilla api_key ${BUGZILLA_API_KEY} && \
     crudini --set robottelo.properties robottelo webdriver chrome && \
     crudini --set robottelo.properties robottelo webdriver_desired_capabilities "platform=ANY,maxDuration=5400,idleTimeout=1000,start-maximised=true,screenResolution=1600x1200,tags=[robottelo-container]" && \
-    chmod -cR go+w ${HOME}
+    chmod -cR go+w /opt/app-root
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml $HOME/broker_settings.yaml
