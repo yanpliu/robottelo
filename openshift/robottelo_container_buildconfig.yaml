@@ -64,6 +64,11 @@ items:
               secretKeyRef:
                 key: bz-api-key
                 name: satqe-casc-secret
+          - name: POLARION_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: polarion-password
+                name: satqe-casc-secret
       type: Docker
     triggers:
       - type: ImageChange
