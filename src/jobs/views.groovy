@@ -23,3 +23,48 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
     }
   }
 }
+
+def utilJobs = ['Master-Seed',
+                'MonitoringTest',
+                'Seed Job',
+                'sla-enforcement',
+]
+
+listView("Utility") {
+
+    jobs {
+      utilJobs.each { j ->
+        name(j)
+      }
+    }
+
+    columns {
+      status()
+      weather()
+      name()
+      lastSuccess()
+      lastFailure()
+      lastDuration()
+      progressBar()
+    }
+}
+
+listView("Templatization") {
+
+     jobFilters {
+      regex {
+        matchType(MatchType.INCLUDE_MATCHED)
+        regex(".*templ.*")
+      }
+    }
+
+    columns {
+      status()
+      weather()
+      name()
+      lastSuccess()
+      lastFailure()
+      lastDuration()
+      progressBar()
+    }
+}
