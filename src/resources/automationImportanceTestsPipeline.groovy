@@ -3,18 +3,38 @@
 import groovy.json.*
 
 withCredentials([
-    usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME'),
-    string(credentialsId: 'reportportal-robottelo-token', variable: 'rp_token')
+        usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME'),
+        string(credentialsId: 'reportportal-robottelo-token', variable: 'rp_token')
 ]) {
+
     /* ALLURE_NO_ANALYTICS=1 disables google analytics reporting from pytest-reportportal:
        https://github.com/reportportal/agent-python-pytest#integration-with-ga
     */
+
+    def repo_sat_version = "${params.sat_version.replace('.','_')}"
+
     def robottelo_vars = [
             containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
             containerEnvVar(key: 'DYNACONF_AnsibleTower__username', value: "${USERNAME}"),
             containerEnvVar(key: 'DYNACONF_AnsibleTower__password', value: "${USERPASS}"),
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
-            containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1")
+            containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
+            containerEnvVar(
+                    key: 'ROBOTTELO_Repos__sattools__rhel6',
+                    value: satelliteRepos.tools_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL6')
+            ),
+            containerEnvVar(
+                    key: 'ROBOTTELO_Repos__sattools__rhel7',
+                    value: satelliteRepos.tools_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL7')
+            ),
+            containerEnvVar(
+                    key: 'ROBOTTELO_Repos__capsule_repo',
+                    value: satelliteRepos.capsule_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL7')
+            ),
+            containerEnvVar(
+                    key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
+                    value: "[automation-${params.sat_version}-${params.importance}-rhel7]"
+            )
     ]
     def sat_version = params.sat_version
     def snap_version = params.snap_version
@@ -180,6 +200,7 @@ withCredentials([
                     crudini --set /opt/app-root/src/robottelo/robottelo.properties report_portal project ${rp_project}
                 """
             }
+
             stage('Execute Automation Test Suite') {
                 robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
