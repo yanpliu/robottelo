@@ -21,7 +21,7 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cp conf/robottelo.properties robottelo.properties && \
     cp conf/virtwho.properties virtwho.properties && \
     cp conf/*.yaml . && \
-    cat ${SATLAB_AUTOMATION_PRIVATE_KEY} > .satlab_automation_rsa
+    cat ${SATLAB_AUTOMATION_PRIVATE_KEY} > .satlab_automation_rsa && \
     crudini --set robottelo.properties server ssh_key .satlab_automation_rsa && \
     crudini --set robottelo.properties bugzilla api_key ${BUGZILLA_API_KEY} && \
     crudini --set robottelo.properties robottelo webdriver chrome && \
