@@ -2,7 +2,6 @@
 
 import groovy.json.*
 
-
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
 ]
@@ -64,7 +63,6 @@ openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
 stage('Set Build Description') {
     currentBuild.description = "Create PIT template: ${rhel_nvr}"
 }
-
 
     stage('Create Satlab VM Template ') {
         output_template_jenkins =
