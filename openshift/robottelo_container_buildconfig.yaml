@@ -64,11 +64,6 @@ items:
               secretKeyRef:
                 key: bz-api-key
                 name: satqe-casc-secret
-          - name: SATLAB_AUTOMATION_PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                key: satlab_automation_rsa
-                name: satqe-casc-secret
       type: Docker
     triggers:
       - type: ImageChange

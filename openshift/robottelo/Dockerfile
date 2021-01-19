@@ -2,33 +2,51 @@ FROM registry.access.redhat.com/ubi8/python-38:latest
 MAINTAINER "SatCI"
 
 # REQUESTS_CA_BUNDLE is set for ibutsu client's requests use
-ENV HOME="/opt/app-root/src/robottelo" \
+# BROKER_DIRECTORY is set for robottelo/broker integration
+ENV VIRTUAL_ENV="/opt/app-root" \
+    HOME="/opt/app-root/src" \
+    ROBOTTELO_DIR="/opt/app-root/src/robottelo" \
     BROKER_DIRECTORY="/opt/app-root/src/robottelo" \
     PYCURL_SSL_LIBRARY=openssl \
     REQUESTS_CA_BUNDLE="/etc/pki/tls/certs/ca-bundle.crt"
 
+# need root for yum installs
 USER 0
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/c/crudini-0.9.3-1.el8.noarch.rpm && \
     yum -y clean all && \
     curl https://password.corp.redhat.com/RH-IT-Root-CA.crt -o /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt && \
     update-ca-trust
 
+# switch to OCP uid for robottelo setup
 USER 1001
+WORKDIR "${HOME}"
 RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cd robottelo && \
-    pip install -r requirements.txt && \
+    pip install -U pip && \
+    pip install -qr requirements.txt && \
     git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git conf && \
     cp conf/robottelo.properties robottelo.properties && \
     cp conf/virtwho.properties virtwho.properties && \
     cp conf/*.yaml . && \
-    echo ${SATLAB_AUTOMATION_PRIVATE_KEY} > .satlab_automation_rsa && \
-    crudini --set robottelo.properties server ssh_key .satlab_automation_rsa && \
+    crudini --del robottelo.properties server ssh_key && \
     crudini --set robottelo.properties bugzilla api_key ${BUGZILLA_API_KEY} && \
     crudini --set robottelo.properties robottelo webdriver chrome && \
-    crudini --set robottelo.properties robottelo webdriver_desired_capabilities "platform=ANY,maxDuration=5400,idleTimeout=1000,start-maximised=true,screenResolution=1600x1200,tags=[robottelo-container]" && \
-    chmod -R go+w /opt/app-root
+    crudini --set robottelo.properties robottelo webdriver_desired_capabilities "platform=ANY,maxDuration=5400,idleTimeout=1000,start-maximised=true,screenResolution=1600x1200,tags=[robottelo-container]"
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
-COPY broker_settings.yaml $HOME/broker_settings.yaml
+COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml
 
-WORKDIR "$HOME"
+# TODO: Remove the USER root directive when on latest OCP 4.x, although no harm keeping it.
+# Switch to user root in order to perform `chown` and `fix-permissions`
+# This is required as COPY command above can inadvertently set copied
+# file ownership to root:root and cause `chown` and `fix-permissions` to fail
+# This only happens on older versions OpenShift, latest Podman handles it well
+
+# arbitrary UID handling starting from virtualenv directory for pip permissions 
+USER 0
+RUN chgrp -R 0 ${VIRTUAL_ENV} && \
+    chmod -R g+rwX ${VIRTUAL_ENV} && \
+    fix-permissions ${VIRTUAL_ENV} -P
+
+USER 1001
+WORKDIR "${ROBOTTELO_DIR}"

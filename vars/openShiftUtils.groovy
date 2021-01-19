@@ -35,6 +35,15 @@ def withNode(Map parameters = [:], Closure body) {
             podAnnotation(key: "run-display-url", value: "${env.RUN_DISPLAY_URL}"),
         ]
     ]
+
+    // Inject private ssh key included in satlab-tower vms straight from openshift
+    if (image.contains('robottelo-container')) {
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_server__ssh_key_string',
+            secretName:'satqe-casc-secret',
+            secretKey:'satlab_automation_rsa'))
+    }
+
     if (yaml) {
         podParameters['yaml'] = readTrusted(yaml)
     } else {
