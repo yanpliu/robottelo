@@ -38,8 +38,8 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             println("RHEL Version and Template names are: " + JsonOutput.prettyPrint(JsonOutput.toJson(output_rhel_ga)));
             if (output_rhel_ga.every {it.value}) {
                 print "RHEL GA Templates have been updated"
-                email_to = ['sat-qe-jenkins']
-                subject = "RHEL ${params.rhel_version} GA Templates have been updated"
+                email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
+                subject = "RHEL ${params.rhel_version} GA Template Is Now Available and Updated"
             } else {
                 print "One or more template names were empty"
                 email_to = ['sat-qe-jenkins', 'satellite-lab-list']
