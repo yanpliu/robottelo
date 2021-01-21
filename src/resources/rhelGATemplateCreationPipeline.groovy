@@ -59,14 +59,14 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
         stage('Archive Artifacts'){
             archiveArtifacts artifacts: '*.json'
-
+            // Templates should not be used until they have been updated to the latest rpms
+            // Template availability will be sent to associates after the RHEL update WF executes
+            email_to = ['sat-qe-jenkins', 'satellite-lab-list']
             // Check for any value not set
             if (rhel_ga_template) {
                 print "RHEL GA Template has been created"
-                email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
-                subject = "RHEL ${rhel_version} GA Template now available"
+                subject = "RHEL ${rhel_version} GA Template has been created"
             } else {
-                email_to = ['sat-qe-jenkins', 'satellite-lab-list']
                 subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
                 println("One or more template names were empty")
                 currentBuild.result = 'UNSTABLE'
