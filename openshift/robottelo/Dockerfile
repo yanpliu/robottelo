@@ -24,6 +24,7 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cd robottelo && \
     pip install -U pip && \
     pip install -qr requirements.txt && \
+    pip freeze | tee robottelo-pip-freeze.log && \
     git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git conf && \
     cp conf/robottelo.properties robottelo.properties && \
     cp conf/virtwho.properties virtwho.properties && \
