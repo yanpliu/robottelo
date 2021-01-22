@@ -14,6 +14,12 @@ credentials:
               username: "satqe_gitlab_jenkins_token"
               password: ${casc-secret/jenkins-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
               description: "Username/Password Credentials for gitlab"
+          - usernamePassword:
+              scope: GLOBAL
+              id: pr-tester-gh-token
+              username: "omkarkhatavkar"
+              password: ${casc-secret/pr-tester-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
+              description: "Username/Password Credentials for github"
 jenkins:
   systemMessage: "Satellite QE Jenkins, deployed with JCASC from ${CASC_DECLARATION_PROPERTIES}"
   numExecutors: 1
