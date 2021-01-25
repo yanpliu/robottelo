@@ -165,6 +165,12 @@ unclassified:
     smtpServer: "smtp.corp.redhat.com"
     useSsl: false
     watchingEnabled: false
+  ghprbTrigger:
+    extensions:
+    - ghprbSimpleStatus:
+        addTestResults: false
+        commitStatusContext: "Robottelo-Runner"
+        showMatrixStatus: false
   timestamperConfig:
     allPipelines: True
   globalLibraries:
