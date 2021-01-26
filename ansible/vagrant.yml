@@ -40,8 +40,10 @@
       - configuration-as-code
       - configuration-as-code-support
       - credentials-binding
+      - dashboard-view
       - email-ext
       - envinject
+      - extra-columns
       - fail-the-build-plugin
       - ghprb
       - git

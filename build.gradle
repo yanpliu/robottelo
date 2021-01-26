@@ -108,6 +108,8 @@ dependencies {
   testPlugins 'org.jenkins-ci.plugins:kubernetes-client-api:4.6.4-2'
   testPlugins 'org.jenkinsci.plugins:kubernetes-credentials:0.6.2'
   testPlugins 'org.6wind.jenkins:lockable-resources:2.7'
+  testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.10'
+  testPlugins 'org.jenkins-ci.plugins:extra-columns:1.20'
 }
 
 task resolveTestPlugins(type: Copy) {

@@ -1,9 +1,9 @@
 import javaposse.jobdsl.dsl.views.jobfilter.MatchType
+import javaposse.jobdsl.dsl.views.portlets.TestTrendChartContext.DisplayStatus
 import jobLib.globalJenkinsDefaults
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
-  listView("${versionName}") {
-
+  dashboardView("${versionName}") {
     jobFilters {
       regex {
         matchType(MatchType.INCLUDE_MATCHED)
@@ -11,15 +11,45 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
       }
     }
 
+    leftPortlets {
+        testTrendChart {
+            displayName("FAILED Test Trend")
+            displayStatus(DisplayStatus.FAILED)
+        }
+        testStatisticsChart {
+            displayName("Test Statistics")
+        }
+    }
+
+    rightPortlets {
+        testTrendChart {
+            displayName("SKIPPED Test Trend")
+            displayStatus(DisplayStatus.SKIPPED)
+        }
+        testStatisticsGrid {
+            displayName("Test Results")
+        }
+    }
+
+    bottomPortlets {
+        jenkinsJobsList {
+            displayName("Jobs Matching ${versionName}")
+        }
+    }
+
     // tons of column options: https://jenkinsci.github.io/job-dsl-plugin/#path/listView-columns
     columns {
       status()
-      weather()
       name()
+      buildDescriptionColumn {
+        // These are required for some reason
+        forceWidth(false)
+        columnWidth(80)
+      }
+      lastBuildConsole()
       lastSuccess()
       lastFailure()
       lastDuration()
-      progressBar()
     }
   }
 }
