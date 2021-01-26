@@ -9,9 +9,9 @@ def execute(Map params = [:]) {
     for (int i = 0; i < inventory.size(); i++) {
         hostname = inventory[i].hostname
         if (i == 0) {
-            sh "crudini --set /opt/app-root/src/robottelo/robottelo.properties server hostname ${hostname}"
+            sh "crudini --set \${ROBOTTELO_DIR}/robottelo.properties server hostname ${hostname}"
         }
-        sh "crudini --set /opt/app-root/src/robottelo/robottelo.properties server gw${i} ${hostname}"
+        sh "crudini --set \${ROBOTTELO_DIR}robottelo.properties server gw${i} ${hostname}"
     }
 
     artifacts = ['robottelo*.log', '*-results.xml', '*.properties']
