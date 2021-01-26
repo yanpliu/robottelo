@@ -22,6 +22,18 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 )
             }
 
+            stage('Set Build Description') {
+                // TODO: Add rhel version parsing too
+                // https://projects.engineering.redhat.com/browse/SATQE-12327
+                // uses the name field from inventory, ex. mshriver-sat-jenkins-6.9.0-9.0-fb77ad96
+                first_host_name_parts = inventory[0].name.split('-')
+                // example: [mshriver, sat, jenkins, 6.9.0, 9.0, fb77ad96]
+                desc_sat_version = params.sat_version ?: first_host_name_parts[3]
+                desc_snap_version = params.snap_version ?: first_host_name_parts[4]
+                currentBuild.description = desc_sat_version + " snap: " + desc_snap_version
+
+            }
+
             stage('Set robottelo.properites') {
                 // Hardcoding the RP values for now
                 rp_url = "http://reportportal-sat-qe.cloud.paas.psi.redhat.com"
