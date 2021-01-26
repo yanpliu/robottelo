@@ -37,6 +37,7 @@ def withNode(Map parameters = [:], Closure body) {
     ]
 
     // Inject private ssh key included in satlab-tower vms straight from openshift
+    // TODO: attempted to inject this in the dockerfile ENV block, but paramiko didn't accept it
     if (image.contains('robottelo-container')) {
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_server__ssh_key_string',
