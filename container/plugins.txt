@@ -5,8 +5,10 @@ copyartifact:latest
 configuration-as-code:latest
 configuration-as-code-support:latest
 credentials-binding:latest
+dashboard-view:latest
 email-ext:latest
 envinject:latest
+extra-columns:latest
 fail-the-build-plugin:latest
 ghprb:latest
 git:latest
