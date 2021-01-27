@@ -8,7 +8,7 @@ def versionCFG = ['6.7','6.8','6.9']
 def jobCFG = [
         'critical':   ['num_appliances': '5',
                        'importance': 'Critical',],
-        'high':       ['num_appliances': '5',
+        'high':       ['num_appliances': '10',
                        'importance'  : 'High',],
         'medium':     ['num_appliances': '5',
                        'importance'  : 'Medium',],
