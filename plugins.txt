@@ -4,10 +4,12 @@ ansible-tower
 build-timeout
 configuration-as-code
 credentials
+dashboard-view
 dumpling
 durable-task
 email-ext
 envinject
+extra-columns
 git
 gitlab-plugin
 ghprb
