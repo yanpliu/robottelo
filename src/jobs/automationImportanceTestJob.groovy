@@ -48,7 +48,13 @@ versionCFG.each { versionName ->
                 stringParam(
                     'pytest_options',
                     'tests/foreman/',
-                    'Pytest options, other than those specified with unique string params.')
+                    'Pytest options, other than those specified with unique string params.'
+                )
+                stringParam(
+                    'rerun_of',
+                    '',
+                    'Marks the build as a re-run of the given RP Launch UUID (overrides the default re-run logic)'
+                )
             }
 
             logRotator {
