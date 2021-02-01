@@ -159,7 +159,8 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             stage('Archive Artifacts') {
                 archiveArtifacts artifacts: '*.json'
                 // Check for any value not set
-                if (sat_jenkins_template && sat_lite_template && capsule_template) {
+                template_exists = sat_jenkins_template && sat_lite_template && capsule_template
+                if (template_exists) {
                     print "All template names have been created"
                     email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
                     subject = "Templates for ${sat_version} SNAP ${snap_version} are available"
@@ -180,12 +181,16 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             }
 
             stage('Trigger Automation Test') {
-                build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
-                        parameters: [
-                                [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                                [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                        ],
-                        wait: false
+                if (template_exists){
+                    build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
+                            parameters: [
+                                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                            ],
+                            wait: false
+                } else {
+                    println("Template creation failed, skipping triggering automation job")
+                }
             }
         }
     } catch (exc) {
