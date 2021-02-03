@@ -1,4 +1,5 @@
 # Put here plugin:version to override default plugin:version
+# These plugin IDs can be found on the jenkins.io page next to the plugin title
 ansible
 ansible-tower
 build-timeout
@@ -34,6 +35,7 @@ progress-bar-column-plugin
 role-strategy
 script-security
 testng-plugin
+throttle-concurrents
 timestamper
 view-job-filters
 workflow-job

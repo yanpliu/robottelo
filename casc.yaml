@@ -188,7 +188,11 @@ unclassified:
       - name: "1020"
         description: "Subnet: 10.1.5.40/29, VLAN_ID:1020"
         labels: "vlan_pool"
-
+  throttleJobProperty:
+    categories:
+    - categoryName: "pr-tester"
+      maxConcurrentPerNode: 1
+      maxConcurrentTotal: 10
 
 configuration-as-code:
   deprecated: warn

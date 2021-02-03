@@ -68,6 +68,8 @@ dependencies {
  */
 
   // plugins to install in test instance
+  // These are the Maven IDs for the given plugins, which can be found at:
+  // https://<jenkins.hostname>/pluginManager/plugin/<plugin ID>/thirdPartyLicenses
   testPlugins 'org.jenkins-ci.plugins:ansible:1.0'
   testPlugins 'org.jenkins-ci.plugins:ansible-tower:0.14.1'
   testPlugins 'com.coravy.hudson.plugins.github:github:1.29.4'
@@ -110,6 +112,7 @@ dependencies {
   testPlugins 'org.6wind.jenkins:lockable-resources:2.7'
   testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.10'
   testPlugins 'org.jenkins-ci.plugins:extra-columns:1.20'
+  testPlugins 'org.jenkins-ci.plugins:throttle-concurrents:2.0.1'
 }
 
 task resolveTestPlugins(type: Copy) {
