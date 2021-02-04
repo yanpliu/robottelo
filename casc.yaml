@@ -20,6 +20,11 @@ credentials:
               username: "omkarkhatavkar"
               password: ${casc-secret/pr-tester-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
               description: "Username/Password Credentials for github"
+          - string:
+              scope: GLOBAL
+              id: reportportal-robottelo-token
+              secret: ${casc-secret/reportportal-robottelo-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
+              description: "ReportPortal API token of system robottelo user"
 jenkins:
   systemMessage: "Satellite QE Jenkins, deployed with JCASC from ${CASC_DECLARATION_PROPERTIES}"
   numExecutors: 1

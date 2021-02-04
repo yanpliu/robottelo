@@ -17,4 +17,7 @@ class pipelineVars implements Serializable {
 
     String ibutsuBaseOptions = '--ibutsu https://ibutsu-api.apps.ocp4.prod.psi.redhat.com/ --ibutsu-project satellite-qe '
 
+    String reportPortalServer = 'https://reportportal-sat-qe.apps.ocp4.prod.psi.redhat.com'
+    String reportPortalProject = 'Satellite6'
+
 }
