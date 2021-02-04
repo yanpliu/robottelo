@@ -59,6 +59,8 @@ def utilJobs = ['Master-Seed',
                 'Seed Job',
                 'template-sla-enforcement',
                 'vm-sla-enforcement',
+                'polarion-testrun-upload',
+                'polarion-testcase-upload',
 ]
 
 listView("Utility") {

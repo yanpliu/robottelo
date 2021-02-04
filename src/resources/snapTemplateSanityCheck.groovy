@@ -16,7 +16,7 @@ def call(Map parameters = [:]) {
 
             stage('Snap Template Sanity Check') {
                 label = 'sat-jenkins-sanitycheck'
-                robotteloUtils.execute(inventory: inventory, script: """
+                return_code = robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
                     -m 'build_sanity' \
                     --junit-xml=${label}-results.xml \
@@ -26,6 +26,22 @@ def call(Map parameters = [:]) {
                 junit "${label}-results.xml"
             }
 
+            stage('Trigger Polarion Test Run Upload') {
+                println("Pytest Exit code is ${return_code}")
+                if(return_code.toInteger() <= 2) {
+                    println("Calling Polarion Result Upload")
+                    build job: "polarion-testrun-upload",
+                            parameters: [
+                                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                                    [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                                    [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
+                            ],
+                            wait: false
+                } else {
+                    println("Pytest exited with Internal Error, which will result in invalid XML. Skipping Upload")
+                }
+            }
         }
         catch (error) {
             echo error.getMessage()
@@ -39,8 +55,11 @@ def call(Map parameters = [:]) {
             }
         }
     }
-
-    return !errorCaught
+    if(errorCaught || return_code.toInteger() != 0) {
+        return false
+    } else {
+        return true
+    }
 }
 
 return this;
