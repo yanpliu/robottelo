@@ -1,5 +1,5 @@
 # Publicly cloneable GIT url of the declaration (this) repository.
-CASC_DECLARATION_REPO: 'https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git'
+CASC_DECLARATION_REPO: 'https://gitlab.sat.engineering.redhat.com/mshriver/satelliteqe-jenkins.git'
 # Name of the JCasC YAML file. Expected to be in the same directory as this file.
 CASC_REPO_FILE: 'casc.yaml'
 # Name of the plugins.txt file. Expected to be in the same directory as this file.

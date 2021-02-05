@@ -178,7 +178,7 @@ unclassified:
         addTestResults: false
         commitStatusContext: "Robottelo-Runner"
         showMatrixStatus: false
-  timestamperConfig:
+  timestamper:
     allPipelines: True
   globalLibraries:
     libraries:

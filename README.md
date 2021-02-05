@@ -107,11 +107,10 @@ Check out the `jenkins_plugins` var in `ansible/vagrant.yml` for a list of insta
 Included is a `container/Dockerfile` for building a container to run in openstack or the CP environment.  You will have to edit `script_approval.groovy` and `container/jenkins.yaml` to  your liking (tons of examples [here](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos)).  With this Dockerfile it creates a directory `$JENKINS_HOME/dsl-dev`.  If you run your container and mount this project into it you will get the eqivalent to the dev enviorment that we have in vagrant.  An example of how to run this locally is:
 
 ```
-cd container
-podman build -t jenkins-example .
+podman build -t jenkins-example -f container/Dockerfile .
 podman run --rm --name jenkins-example -p 8080:8080 -v "$HOME/Projects/jenkins-dsl-template":/var/jenkins_home/dsl-dev  jenkins-example
 ```
-* replace `$HOME/Projects/jenkins-dsl-template` with whever you have this project
+* replace `$HOME/Projects/jenkins-dsl-template` with wherever you have this project
 
 ## Jenkins Plugins
 
