@@ -4,9 +4,9 @@ import groovy.json.*
 
 withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
     def at_vars = [
-        containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'DYNACONF_AnsibleTower__username', value: "${USERNAME}"),
-        containerEnvVar(key: 'DYNACONF_AnsibleTower__password', value: "${USERPASS}")
+        containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+        containerEnvVar(key: 'BROKER_AnsibleTower__username', value: "${USERNAME}"),
+        containerEnvVar(key: 'BROKER_AnsibleTower__password', value: "${USERPASS}")
     ]
 
     openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {

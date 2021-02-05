@@ -6,20 +6,24 @@ host_username: "root"
 host_password: "<password>"
 # Provider settings
 AnsibleTower:
-    base_url: "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com/"
-    # Username AND password, OR an OAUTH token can be used for authentication
-    username: "<username>"
-    password: "<plain text password>"
-    # token: "<AT personal access token>"
+    instances:
+      - production:
+          base_url: "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com/"
+          username: "<username>"
+          password: "<plain text password>"
+          # token: "<AT personal access token>"
+          default: True
     release_workflow: "remove-vm"
     extend_workflow: "extend-vm"
     workflow_timeout: 7200
-TestProvider:
-    config_value: "something"
 # You can set a nickname as a shortcut for arguments
-# nicks:
-    # test_nick:
-    #     test_action: "fake"
-    #     arg1: "abc"
-    #     arg2: 123
-    #     arg3: True
+nicks:
+    rhel7:
+        workflow: "deploy-base-rhel"
+        rhel_version: "7.9"
+    sat69:
+        workflow: "deploy-sat-lite"
+        deploy_sat_version: "6.9"
+    cap69:
+        workflow: "deploy-sat-capsule"
+        deploy_sat_version: "6.9"

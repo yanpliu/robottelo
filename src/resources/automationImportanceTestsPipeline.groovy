@@ -14,9 +14,9 @@ withCredentials([
     def repo_sat_version = "${params.sat_version.replace('.','_')}"
 
     def robottelo_vars = [
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__username', value: "${USERNAME}"),
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__password', value: "${USERPASS}"),
+            containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+            containerEnvVar(key: 'BROKER_AnsibleTower__username', value: "${USERNAME}"),
+            containerEnvVar(key: 'BROKER_AnsibleTower__password', value: "${USERPASS}"),
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
             containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
             containerEnvVar(
