@@ -15,17 +15,19 @@ In case you can't find this runner for any reason, you should contact the mainta
 
     .
     ├── src
-    │   ├── jobs          # DSL job definition files
+    │   ├── jobs            # JDSL files
     │   ├── main
-    │   │   ├── groovy    # support classes
-    │   │   └── resources # IDE support for IDEA / IntelliJ
-    │   ├── resources     # resources for DSL scripts
+    │   │   ├── groovy      # support classes
+    │   │   │   └── jobLib  # constants/vars for use in JDSL
+    │   │   └── resources   # IDE support for IDEA / IntelliJ
+    │   ├── resources       # pipelines called by JDSL
     │   └── test
-    │       └── groovy    # spec tests
-    ├── Vagrantfile       # vagrant for a dsl development jenkins
-    ├── ansible           # sources for vagrant
-    ├── container            # container sources
-    └── build.gradle      # build file
+    │       └── groovy      # spec tests
+    ├── vars                # groovy functions for pipelines
+    ├── Vagrantfile         # vagrant for a dsl development jenkins
+    ├── ansible             # sources for vagrant
+    ├── container           # container sources
+    └── build.gradle        # build file
 
 # Script Examples
 

@@ -122,8 +122,6 @@ jenkins:
 security:
   sSHD:
     port: 50022
-  downloadSettings:
-    useBrowser: false
   apiToken:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
@@ -157,7 +155,7 @@ unclassified:
         towerDisplayName: Infra-Ansible-Tower-01
         towerTrustCert: true
         towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
-  extendedEmailPublisher:
+  email-ext:
     adminRequiredForTemplateTesting: false
     allowUnregisteredEnabled: false
     charset: "UTF-8"
@@ -168,11 +166,11 @@ unclassified:
     defaultContentType: "text/plain"
     defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
     defaultSuffix: "@redhat.com"
-    maxAttachmentSize: -1
-    maxAttachmentSizeMb: 0
+    maxAttachmentSizeMb: 10
     precedenceBulk: false
-    smtpServer: "smtp.corp.redhat.com"
-    useSsl: false
+    mailAccount:
+      smtpHost: "smtp.corp.redhat.com"
+      useSsl: false
     watchingEnabled: false
   ghprbTrigger:
     extensions:
