@@ -23,7 +23,7 @@ withCredentials([
     def rp_project = pipelineVars.reportPortalProject
     // use this format once robottelo rerun-failed plugin has this sorted
     // def rp_launch = "Importance_${params.importance}"
-    def rp_launch = "Satellite6"
+    def rp_launch = "OCP-Jenkins-CI"
     def rp_pytest_options = "--reportportal -o rp_endpoint=${rp_url} -o rp_project=${rp_project} -o rp_hierarchy_dirs=false " +
         "--rp-launch=${rp_launch}"
     def rerun_of = params.rerun_of
