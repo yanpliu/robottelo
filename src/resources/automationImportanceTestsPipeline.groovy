@@ -40,6 +40,13 @@ withCredentials([
                         'count': params.appliance_count
                     ],
                 )
+
+                if(inventory.size() != params.appliance_count){
+                    currentBuild.result = 'UNSTABLE'
+                    println("Requested inventory from broker checkout was not met\n" +
+                        "Number of available Satellite Instances: ${inventory.size()}"
+                    )
+                }
             }
 
             stage('Set Build Description') {
@@ -113,8 +120,16 @@ withCredentials([
                                 "value": "${params.importance}"
                             ],
                             [
-                                "key": "appliances",
-                                "value": "${params.appliance_count}"
+                                "key": "instance_count",
+                                "value": "${inventory.size()}"
+                            ],
+                            [
+                                "key": "jenkins_job",
+                                "value": "${env.BUILD_TAG}"
+                            ],
+                            [
+                                "key": "jenkins",
+                                "value": "${env.JENKINS_URL}"
                             ]
                         ]
                     ]
