@@ -196,15 +196,19 @@ withCredentials([
                 """
             }
             stage('Execute Automation Test Suite') {
+                // -n argument should be params.appliance_count when robottelo 8303 is merged
+                if(params.use_ibutsu){
+                    ibutsu_options = pipelineVars.ibutsuBaseOptions
+                } else { ibutsu_options = " "}
                 robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
-                    -n ${appliance_count} \
+                    --importance ${params.importance} \
+                    -n ${inventory.size()} \
                     --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
                     -o junit_suite_name=sat-${params.importance} \
-                    ${pipelineVars.ibutsuBaseOptions} \
+                    ${ibutsu_options} \
                     ${rp_pytest_options} \
-                    --importance ${params.importance} \
                     ${params.pytest_options}
                 """)
 

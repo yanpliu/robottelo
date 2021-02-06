@@ -50,6 +50,11 @@ versionCFG.each { versionName ->
                     'tests/foreman/',
                     'Pytest options, other than those specified with unique string params.'
                 )
+                booleanParam(
+                    'use_ibutsu',
+                    false,  // true when ibutsu is fixed, hitting Exception("Run ID has not yet been set")
+                    'Determines whether or not to push results to ibutsu'
+                )
                 stringParam(
                     'rerun_of',
                     '',
