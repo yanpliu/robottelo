@@ -124,6 +124,19 @@ security:
     usageStatisticsEnabled: true
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
+  scriptApproval:
+    approvedSignatures:
+      - "method java.io.OutputStream write byte[]"
+      - "method java.lang.String getBytes java.lang.String"
+      - "method java.net.HttpURLConnection setRequestMethod java.lang.String"
+      - "method java.net.HttpURLConnection getResponseCode"
+      - "method java.net.URL openConnection"
+      - "method java.net.URLConnection setDoOutput boolean"
+      - "method java.net.URLConnection setRequestProperty java.lang.String java.lang.String"
+      - "method java.net.URLConnection getInputStream"
+      - "method java.net.URLConnection getOutputStream"
+      - "staticMethod groovy.json.JsonOutput toJson java.lang.Object"
+      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream"
 
 unclassified:
   shell:
