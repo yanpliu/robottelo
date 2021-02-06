@@ -101,7 +101,7 @@ withCredentials([
                     launch_req.setRequestProperty("Authorization", "bearer ${rp_token}")
                     launch_req.setRequestProperty("Content-Type", "application/json")
                     def new_launch_payload = [
-                        "description": "robottelo",
+                        "description": "${env.BUILD_URL}",
                         "mode": "DEFAULT",
                         "name": "${rp_launch}",
                         "rerun": "${rerun_of as Boolean}",
@@ -122,14 +122,6 @@ withCredentials([
                             [
                                 "key": "instance_count",
                                 "value": "${inventory.size()}"
-                            ],
-                            [
-                                "key": "jenkins_job",
-                                "value": "${env.BUILD_TAG}"
-                            ],
-                            [
-                                "key": "jenkins",
-                                "value": "${env.JENKINS_URL}"
                             ]
                         ]
                     ]
