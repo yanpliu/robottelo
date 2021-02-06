@@ -183,12 +183,13 @@ withCredentials([
             stage('Execute Automation Test Suite') {
                 robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
-                    --importance ${params.importance} \
                     -n ${appliance_count} \
+                    --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
                     -o junit_suite_name=sat-${params.importance} \
                     ${pipelineVars.ibutsuBaseOptions} \
                     ${rp_pytest_options} \
+                    --importance ${params.importance} \
                     ${params.pytest_options}
                 """)
 
