@@ -40,6 +40,13 @@ withCredentials([
                         'count': params.appliance_count
                     ],
                 )
+
+                if(inventory.size() != params.appliance_count){
+                    currentBuild.result = 'UNSTABLE'
+                    println("Requested inventory from broker checkout was not met\n" +
+                        "Number of available Satellite Instances: ${inventory.size()}"
+                    )
+                }
             }
 
             stage('Set Build Description') {
@@ -94,7 +101,7 @@ withCredentials([
                     launch_req.setRequestProperty("Authorization", "bearer ${rp_token}")
                     launch_req.setRequestProperty("Content-Type", "application/json")
                     def new_launch_payload = [
-                        "description": "robottelo",
+                        "description": "${env.BUILD_URL}",
                         "mode": "DEFAULT",
                         "name": "${rp_launch}",
                         "rerun": "${rerun_of as Boolean}",
@@ -113,8 +120,8 @@ withCredentials([
                                 "value": "${params.importance}"
                             ],
                             [
-                                "key": "appliances",
-                                "value": "${params.appliance_count}"
+                                "key": "instance_count",
+                                "value": "${inventory.size()}"
                             ]
                         ]
                     ]
@@ -181,15 +188,19 @@ withCredentials([
                 """
             }
             stage('Execute Automation Test Suite') {
+                // -n argument should be params.appliance_count when robottelo 8303 is merged
+                if(params.use_ibutsu){
+                    ibutsu_options = pipelineVars.ibutsuBaseOptions
+                } else { ibutsu_options = " "}
                 robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
-                    -n ${appliance_count} \
+                    --importance ${params.importance} \
+                    -n ${inventory.size()} \
                     --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
                     -o junit_suite_name=sat-${params.importance} \
-                    ${pipelineVars.ibutsuBaseOptions} \
+                    ${ibutsu_options} \
                     ${rp_pytest_options} \
-                    --importance ${params.importance} \
                     ${params.pytest_options}
                 """)
 
