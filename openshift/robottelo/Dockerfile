@@ -8,10 +8,7 @@ ENV VIRTUAL_ENV="/opt/app-root" \
     ROBOTTELO_DIR="/opt/app-root/src/robottelo" \
     BROKER_DIRECTORY="/opt/app-root/src/robottelo" \
     PYCURL_SSL_LIBRARY=openssl \
-    REQUESTS_CA_BUNDLE="/etc/pki/tls/certs/ca-bundle.crt" \
-    POLARION_URL=https://polarion.stage.engineering.redhat.com/polarion/ \
-    POLARION_PROJECT=RHSAT6 \
-    POLARION_USERNAME=rhsat6_machine
+    REQUESTS_CA_BUNDLE="/etc/pki/tls/certs/ca-bundle.crt"
 
 # need root for yum installs
 USER 0
