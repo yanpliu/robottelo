@@ -287,3 +287,9 @@ spec:
               name: stage-jenkins-casc-vars
 
 ```
+
+## Manual Configuration not supproted with Casc.yaml
+
+Currently, the GHPRB plugin is no having support for casc.yaml file for setting the credentials for the GHPRB Plugin. Which means we need to set this credentials whenever we reload the Jenkins configuration.
+
+Navigate to Jenkins Url-> Manage Plugin -> Configure System -> GitHub Pull Request Builder -> Select the correct credentials and make sure test the API connections.
