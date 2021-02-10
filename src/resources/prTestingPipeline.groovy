@@ -13,12 +13,19 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
         openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: at_vars) {
 
                 stage('Load Github Comment Config'){
-
-                    comment = env.ghprbCommentBody
-                    comment = comment.replaceAll("\\\\r\\\\n", "\r\n")
-                    pytest_options = ""
-                    config = ""
-                    config = readYaml text: comment
+                    println("Trigger comment: ${env.ghprbCommentBody}")
+                    if (!env.ghprbCommentBody.contains("test-robottelo")) {
+                        // https://projects.engineering.redhat.com/browse/SATQE-13619
+                        currentBuild.description = "BAD TRIGGER COMMENT: " + currentBuild.description
+                        error("The trigger comment did not contain the expected string")
+                    }
+                    config = readYaml text: env.ghprbCommentBody.replaceAll("\\\\r\\\\n", "\r\n")
+                    if (!(config instanceof java.util.LinkedHashMap)) {
+                        // Have to assume that the comment contained test-robottelo trigger string
+                        println("Trigger phrase found, not in expected format, using default")
+                        config = ["trigger": "test-robottelo"]
+                    }
+                    println("Parsed comment: ${config}")
                 }
 
                 // In below block, we can not merge the PR unless has the valid git configs.
