@@ -20,6 +20,12 @@ credentials:
               username: "omkarkhatavkar"
               password: ${casc-secret/pr-tester-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
               description: "Username/Password Credentials for github"
+          - usernamePassword:
+              scope: GLOBAL
+              id: polarion-user
+              username: "rhsat6_machine"
+              password: ${casc-secret/polarion-password} # This is stored in and loaded from OpenShift env as a Secrets obj.
+              description: "Username/Password Credentials for Polarion"
           - string:
               scope: GLOBAL
               id: reportportal-robottelo-token
