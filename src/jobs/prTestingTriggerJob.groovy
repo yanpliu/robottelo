@@ -34,8 +34,8 @@ pipelineJob("robottelo-pr-testing") {
                     startedStatus('PRT Job still in progress ...')
                     statusUrl('--none--')
                     completedStatus('SUCCESS', 'Build ${BUILD_NUMBER} has Passed!')
-                    completedStatus('FAILURE', 'Build ${BUILD_NUMBER} has Failed!')           
-                    completedStatus('ERROR', 'Build ${BUILD_NUMBER} has Failed!')
+                    completedStatus('FAILURE', 'Build ${BUILD_NUMBER} has Failed!')
+                    completedStatus('ERROR', 'Build ${BUILD_NUMBER} encountered an error, please re-trigger the job.')
                 }
             }
         }
