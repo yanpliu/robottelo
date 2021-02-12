@@ -19,7 +19,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             println("CI Message: " + JsonOutput.prettyPrint(JsonOutput.toJson(message)));
 
             // Write CI message to file to be archived
-            writeJSON file: "ci-message.json", json: message
+            //writeJSON file: "ci-message.json", json: message
 
 	    // PIT-specific vars
 	    def rhel_nvr
@@ -92,7 +92,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             
             if (output_template_jenkins.contains("data_out")) {
                 output_template_json = readJSON text: output_template_jenkins.replace("'","\"")
-                writeJSON file: "sat-jenkins-temp-creation.json", json: output_template_json['data_out']
+                //writeJSON file: "sat-jenkins-temp-creation.json", json: output_template_json['data_out']
                 sat_jenkins_template = output_template_json.get('data_out', '').get('template', '')
                 println("Sat Jenkins Template Name is " + sat_jenkins_template)
             } else {
@@ -101,7 +101,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
         }
 
         stage('Archive Artifacts'){
-            archiveArtifacts artifacts: '*.json'
+            //archiveArtifacts artifacts: '*.json'
             // Check for any value not set
             if (sat_jenkins_template) {
                 print "All template names have been created"

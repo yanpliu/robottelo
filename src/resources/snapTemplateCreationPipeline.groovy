@@ -26,7 +26,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 println("CI Message: " + JsonOutput.prettyPrint(JsonOutput.toJson(message)));
 
                 // Write CI message to file to be archived
-                writeJSON file: "ci-message.json", json: message
+                //writeJSON file: "ci-message.json", json: message
 
                 sat_version = message.get('satellite_version', '')
                 capsule_version = sat_version
@@ -121,7 +121,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
                 if (output_sat_jenkins.contains("data_out")) {
                     output_sat_json = readJSON text: output_sat_jenkins.replace("'", "\"")
-                    writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json['data_out']
+                    //writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json['data_out']
                     sat_jenkins_template = output_sat_json.get('data_out', '').get('template', '')
                     println("Sat Jenkins Template Name is " + sat_jenkins_template)
                 } else {
@@ -131,7 +131,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
                 if (output_sat_lite.contains("data_out")) {
                     output_lite_json = readJSON text: output_sat_lite.replace("'", "\"")
-                    writeJSON file: "sat-lite-temp-creation.json", json: output_lite_json['data_out']
+                    //writeJSON file: "sat-lite-temp-creation.json", json: output_lite_json['data_out']
                     sat_lite_template = output_lite_json.get('data_out', '').get('template', '')
                     println("Sat Lite Template Name is " + sat_lite_template)
                 } else {
@@ -141,7 +141,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
                 if (output_capsule.contains("data_out")) {
                     output_capsule_json = readJSON text: output_capsule.replace("'", "\"")
-                    writeJSON file: "capsule-temp-creation.json", json: output_capsule_json['data_out']
+                    //writeJSON file: "capsule-temp-creation.json", json: output_capsule_json['data_out']
                     capsule_template = output_capsule_json.get('data_out', '').get('template', '')
                     println("Sat Capsule Template Name is " + capsule_template)
                 } else {
@@ -157,7 +157,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             )
 
             stage('Archive Artifacts') {
-                archiveArtifacts artifacts: '*.json'
+                //archiveArtifacts artifacts: '*.json'
                 // Check for any value not set
                 template_exists = sat_jenkins_template && sat_lite_template && capsule_template
                 if (template_exists) {
