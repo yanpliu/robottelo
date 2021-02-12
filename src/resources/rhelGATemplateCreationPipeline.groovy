@@ -47,7 +47,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
             if (output_rhel_ga.contains("data_out")) {
                 output_rhel_ga_json = readJSON text: output_rhel_ga.replace("'","\"")
-                writeJSON file: "rhel-ga-temp-creation.json", json: output_rhel_ga_json['data_out']
+                //writeJSON file: "rhel-ga-temp-creation.json", json: output_rhel_ga_json['data_out']
                 rhel_ga_template = output_rhel_ga_json.get('data_out', '').get('template', '')
                 println("RHEL GA Template Name is " + rhel_ga_template)
             } else {
@@ -58,7 +58,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
         }
 
         stage('Archive Artifacts'){
-            archiveArtifacts artifacts: '*.json'
+            //archiveArtifacts artifacts: '*.json'
             // Templates should not be used until they have been updated to the latest rpms
             // Template availability will be sent to associates after the RHEL update WF executes
             email_to = ['sat-qe-jenkins', 'satellite-lab-list']
