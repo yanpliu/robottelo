@@ -25,17 +25,15 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     pip install -U pip && \
     pip install -qr requirements.txt && \
     pip freeze | tee robottelo-pip-freeze.log && \
-    git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git conf && \
-    cp conf/robottelo.properties robottelo.properties && \
-    cp conf/virtwho.properties virtwho.properties && \
-    cp conf/*.yaml . && \
-    crudini --del robottelo.properties server ssh_key && \
-    crudini --set robottelo.properties bugzilla api_key ${BUGZILLA_API_KEY} && \
-    crudini --set robottelo.properties robottelo webdriver chrome && \
-    crudini --set robottelo.properties robottelo webdriver_desired_capabilities "platform=ANY,maxDuration=5400,idleTimeout=1000,start-maximised=true,screenResolution=1600x1200,tags=[robottelo-container]"
+    git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git jenkins_configs && \
+    cp jenkins_configs/robottelo.properties robottelo.properties && \
+    cp jenkins_configs/virtwho.properties virtwho.properties && \
+    cp jenkins_configs/robottelo.yaml robottelo.yaml && \
+    crudini --set robottelo.properties bugzilla api_key ${BUGZILLA_API_KEY}
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml
+COPY conf ${ROBOTTELO_DIR}/conf
 
 # TODO: Remove the USER root directive when on latest OCP 4.x, although no harm keeping it.
 # Switch to user root in order to perform `chown` and `fix-permissions`

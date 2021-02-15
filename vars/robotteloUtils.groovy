@@ -5,22 +5,22 @@ def execute(Map params = [:]) {
 
     def inventory = params.get('inventory', [])
 
-    // Use DYNACONF when https://projects.engineering.redhat.com/browse/SATQE-11729 is finished
     for (int i = 0; i < inventory.size(); i++) {
         hostname = inventory[i].hostname
         if (i == 0) {
-            sh "crudini --set \${ROBOTTELO_DIR}/robottelo.properties server hostname ${hostname}"
+           env.ROBOTTELO_Server__hostname = hostname
         }
-        sh "crudini --set \${ROBOTTELO_DIR}robottelo.properties server gw${i} ${hostname}"
+        env."ROBOTTELO_Server__gw${i}" = hostname
     }
 
-    artifacts = ['robottelo*.log', '*-results.xml', '*.properties']
+    artifacts = ['robottelo*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
 
     def result = sh """
         cd /opt/app-root/src/robottelo
         git log -1
         set +e
         ${params.script}
+        tar -czf screenshots.tar.gz screenshots
         set -e
         cp ${artifacts.join(' ')} ${WORKSPACE}
     """
@@ -28,4 +28,3 @@ def execute(Map params = [:]) {
 
     return result
 }
-
