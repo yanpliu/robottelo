@@ -50,20 +50,30 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 }
 
                 stage("Checkout Airgun/Nailgun Code"){
+                    airgun_status = "<br>Airgun: None"
+                    nailgun_status = "<br>Nailgun: None"
+
                     if(config.get('airgun')){
+                        airgun_link = "https://github.com/SatelliteQE/airgun/pull/${config.get('airgun')}"
+                        airgun_status = "<br>Airgun: <a href=${airgun_link}>PR #${config.get('airgun')}</a>" 
                         sh """
                             pip uninstall airgun -y
                             pip install git+https://github.com/SatelliteQE/airgun.git@refs/pull/${config.get('airgun')}/head
 
                         """
                     }
+
                     if(config.get('nailgun')){
+                        nailgun_link = "https://github.com/SatelliteQE/nailgun/pull/${config.get('nailgun')}"
+                        nailgun_status = "<br>Nailgun: <a href=${nailgun_link}>PR #${config.get('nailgun')}</a>"
                         sh """
                             pip uninstall nailgun -y
                             pip install git+https://github.com/SatelliteQE/nailgun.git@refs/pull/${config.get('nailgun')}/head
 
                         """
                     }
+                    currentBuild.description = currentBuild.description + airgun_status
+                    currentBuild.description = currentBuild.description + nailgun_status
                 }
 
         try {
