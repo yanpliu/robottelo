@@ -17,7 +17,7 @@ AnsibleTower:
 TestProvider:
     config_value: "something"
 # You can set a nickname as a shortcut for arguments
-nicks:
+# nicks:
     # test_nick:
     #     test_action: "fake"
     #     arg1: "abc"
