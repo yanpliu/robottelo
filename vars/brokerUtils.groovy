@@ -20,7 +20,7 @@ def checkout(Map parameters = [:]) {
     */
     println("Deploying (Checking out) instances of following scenarios: " + parameters.keySet())
     for(String workflow in parameters.keySet()){
-        def broker_command = """broker --log-level debug   checkout --workflow  "${workflow}" """
+        def broker_command = """broker checkout --workflow "${workflow}" """
 
         // construct remaining broker command by parsing key:val pairs in parameters[workflow]
         // All params will be passed with `--key` e.g. for count, broker acccepts `-c` or `--count`
