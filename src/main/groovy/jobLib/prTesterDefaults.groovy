@@ -11,6 +11,6 @@ static List userWhitelist = ['omkarkhatavkar', 'jyejare', 'rplevka', 'jameerpath
 // for reference https://github.com/orgs/SatelliteQE/teams/repository-admins/members
 static List admins = ['lpramuk', 'mshriver', 'jacobcallahan', 'jyejare', 'bherrin3', 'vijay8451',
 'okhatavk', 'tstrych']
-static String robotteloRepoUrl = "https://github.com/satelliteqe/robottelo/"
+static String robotteloRepoUrl = "https://github.com/SatelliteQE/robottelo/"
 
 }
