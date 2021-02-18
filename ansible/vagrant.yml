@@ -45,6 +45,7 @@
       - envinject
       - extra-columns
       - fail-the-build-plugin
+      - generic-webhook-trigger
       - ghprb
       - git
       - github
