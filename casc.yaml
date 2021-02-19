@@ -141,6 +141,8 @@ security:
       - "method java.net.URLConnection setRequestProperty java.lang.String java.lang.String"
       - "method java.net.URLConnection getInputStream"
       - "method java.net.URLConnection getOutputStream"
+      - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+      - "new groovy.json.JsonSlurperClassic"
       - "staticMethod groovy.json.JsonOutput toJson java.lang.Object"
       - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream"
 
