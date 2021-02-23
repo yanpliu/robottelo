@@ -64,7 +64,7 @@ pipelineJob("vm-sla-enforcement") {
     }
 
     triggers {
-        cron('H */6 * * *')
+        cron('H */12 * * *')
     }
     definition {
         cpsScm {
