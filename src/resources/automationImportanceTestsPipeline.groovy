@@ -214,7 +214,7 @@ withCredentials([
                     ibutsu_options = pipelineVars.ibutsuBaseOptions
                 } else { ibutsu_options = " "}
                 robotteloUtils.execute(inventory: inventory, script: """
-                    py.test -v \
+                    py.test -v -rEfs --tb=line \
                     --importance ${params.importance} \
                     -n ${inventory.size()} \
                     --dist loadscope \
