@@ -19,10 +19,17 @@ pipelineJob("template-sla-enforcement") {
         }
     }
 
-    triggers {
-	// execute this every Friday
-        cron('H H * * 5')
+    properties {
+        pipelineTriggers {
+            triggers {
+                cron {
+                    // execute this every Friday
+                    spec('H H * * 5')
+                }
+            }
+        }
     }
+
     definition {
         cpsScm {
             lightweight(true)
