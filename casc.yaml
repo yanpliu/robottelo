@@ -145,6 +145,7 @@ security:
       - "new groovy.json.JsonSlurperClassic"
       - "staticMethod groovy.json.JsonOutput toJson java.lang.Object"
       - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream"
+      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toInteger java.lang.Number"
 
 unclassified:
   shell:

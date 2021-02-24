@@ -45,7 +45,7 @@ withCredentials([
     // def rp_launch = "Importance_${params.importance}"
     def rp_launch = "OCP-Jenkins-CI"
     def rp_pytest_options = "--reportportal -o rp_endpoint=${rp_url} -o rp_project=${rp_project} -o rp_hierarchy_dirs=false " +
-        "--rp-launch=${rp_launch}"
+        "-o  rp_log_batch_size=100 --rp-launch=${rp_launch}"
     def rerun_of = params.rerun_of
     def launch_uuid = ''
     def wrapper_test_uuid = ''
@@ -213,7 +213,7 @@ withCredentials([
                 if(params.use_ibutsu){
                     ibutsu_options = pipelineVars.ibutsuBaseOptions
                 } else { ibutsu_options = " "}
-                robotteloUtils.execute(inventory: inventory, script: """
+                return_code = robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v -rEfs --tb=line \
                     --importance ${params.importance} \
                     -n ${inventory.size()} \
@@ -226,6 +226,24 @@ withCredentials([
                 """)
 
                 junit "sat-${params.importance}-results.xml"
+            }
+
+            stage('Trigger Polarion Test Run Upload') {
+                println("Pytest Exit code is ${return_code}")
+                if(return_code.toInteger() <= 2) {
+                    println("Calling Polarion Result Upload")
+                    build job: "polarion-testrun-upload",
+                            parameters: [
+                                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                                    [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                                    [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
+                            ],
+                            wait: false
+                } else {
+                    println("Pytest exited with Internal Error, which will result in invalid XML. Skipping Upload")
+                     currentBuild.result = 'ABORTED'
+                }
             }
         }
         finally {
