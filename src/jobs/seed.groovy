@@ -13,9 +13,15 @@ job('Seed Job') {
       }
     }
   }
-  triggers {
-    // we will poll 5 times an hour for changes
-    scm 'H/5 * * * *'
+  properties {
+    pipelineTriggers {
+      triggers {
+        pollSCM {
+          // we will poll 5 times an hour for changes
+          scmpoll_spec('H/5 * * * *')
+        }
+      }
+    }
   }
   steps {
     // running tests first prevents half deployments which could break
