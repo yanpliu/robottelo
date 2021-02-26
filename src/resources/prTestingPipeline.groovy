@@ -31,7 +31,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 // In below block, we can not merge the PR unless has the valid git configs.
                 stage("Checkout Test PR"){
                     sh """
-                        cd /opt/app-root/src/robottelo/
+                        cd \${ROBOTTELO_DIR}
                         git fetch origin
                         git fetch origin refs/pull/${env.ghprbPullId}/head:refs/remotes/origin/pr/${env.ghprbPullId}
                         git config --local user.name "Omkar Khatavkar"
@@ -43,9 +43,9 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
                 stage("Pip Update"){
                     sh """
-                        cd /opt/app-root/src/robottelo/
-                        pip install --upgrade pip
-                        pip install -U -r requirements.txt
+                        cd \${ROBOTTELO_DIR}
+                        pip install -qU pip
+                        pip install -qU -r requirements.txt
                     """
                 }
 
@@ -72,6 +72,13 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                         """
                         currentBuild.description = currentBuild.description + nailgun_status
                     }
+
+                    // Freeze requirements for artifacts, robotteloUtils will artifact robottelo*.log
+                    sh """
+                        cd \${ROBOTTELO_DIR}
+                        pip freeze > robottelo-freeze.log
+                    """
+
                 }
 
         try {
