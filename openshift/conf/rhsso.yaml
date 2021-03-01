@@ -1,0 +1,13 @@
+# section for RH-SSO integration
+RHSSO:
+# RH-SSO Hostname
+  HOST_NAME: env-rhsso-01.infra.sat.rdu2.redhat.com
+# RH-SSO Host Url
+  HOST_URL: https://env-rhsso-01.infra.sat.rdu2.redhat.com
+# RH-SSO Host Admin of Realm
+  RHSSO_USER: sat_admin
+# RH-SSO Host Admin Password
+  USER_PASSWORD: dog8code
+# RH-SSO Host Realm
+  REALM: satqe
+  TOTP_SECRET: KJHDO6STOJKHG4SLPBZEEVSHOZ2VOQSU
