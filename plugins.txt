@@ -11,9 +11,10 @@ durable-task
 email-ext
 envinject
 extra-columns
+generic-webhook-trigger
+ghprb
 git
 gitlab-plugin
-ghprb
 gradle
 groovy
 jms-messaging

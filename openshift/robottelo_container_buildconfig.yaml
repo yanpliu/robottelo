@@ -73,6 +73,8 @@ items:
             kind: ImageStreamTag
             name: robottelo-upstream:latest
       - type: ConfigChange
+    postCommit: 
+      script: "curl -v https://satqe-jenkins-csb-satellite-qe.cloud.paas.psi.redhat.com/generic-webhook-trigger/invoke?token=polariontestcaseupload"
   status:
     lastVersion: 0
 

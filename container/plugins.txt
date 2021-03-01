@@ -10,6 +10,7 @@ email-ext:latest
 envinject:latest
 extra-columns:latest
 fail-the-build-plugin:latest
+generic-webhook-trigger:latest
 ghprb:latest
 git:latest
 github:latest

@@ -14,6 +14,16 @@ pipelineJob("polarion-testcase-upload") {
 
     properties {
         disableConcurrentBuilds()
+        pipelineTriggers {
+            triggers {
+                GenericTrigger {
+                    causeString('OCP robottelo-container postCommit hook')
+                    regexpFilterExpression('')
+                    regexpFilterText('')
+                    token('polariontestcaseupload')
+                }
+            }
+        }
     }
 
     definition {
