@@ -1,14 +1,14 @@
 ROBOTTELO:
   # The directory where screenshots will be saved,
   # DynaConf env var should set it as per robottelo container
-  SCREENSHOTS_PATH: /opt/app-root/src/robottelo/screenshots/
+  SCREENSHOTS_PATH: "@format {env[ROBOTTELO_DIR]}/screenshots/"
   LOCALE: en_US.UTF-8
   # Update upstream=false for downstream run
   UPSTREAM: false
   # Logging verbosity, one of debug, info, warning, error, critical
   VERBOSITY: debug
   # Directory for temporary files
-  TMP_DIR: /opt/app-root/src/robottelo/tmp
+  TMP_DIR: "@format {env[ROBOTTELO_DIR]}/tmp"
   # Web Server to provide various test artifacts
   ARTIFACTS_SERVER: sesame.lab.eng.rdu2.redhat.com
   # Webdriver logging options
