@@ -25,7 +25,7 @@ withCredentials([usernamePassword(credentialsId: 'polarion-user', passwordVariab
                     target: "${WORKSPACE}"
             )
             sh """
-                cp ${WORKSPACE}/*results.xml \"\$ROBOTTELO_DIR\"
+                cp ${WORKSPACE}/*results.xml \${ROBOTTELO_DIR}
             """
         }
 
@@ -33,7 +33,7 @@ withCredentials([usernamePassword(credentialsId: 'polarion-user', passwordVariab
             file_name = sh (
                     returnStdout: true,
                     script: """
-                    find \"\$ROBOTTELO_DIR\" -name *results.xml -printf "%f\n"
+                    find \${ROBOTTELO_DIR} -name *results.xml -printf "%f\n"
                 """
             )
             println("Filename is ${file_name}")
@@ -43,7 +43,7 @@ withCredentials([usernamePassword(credentialsId: 'polarion-user', passwordVariab
             // Set the ID for the polarion test run
             test_run_id = "Satellite ${sat_version}-${snap_version} rhel${rhel_version}"
             sh """
-                cd \"\$ROBOTTELO_DIR\"
+                cd \${ROBOTTELO_DIR}
                 pip install Betelgeuse==1.8.0
                 scripts/polarion-test-run-upload.sh \
                     -s ${params.polarion_url} \

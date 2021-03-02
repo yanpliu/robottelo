@@ -12,7 +12,7 @@ withCredentials([usernamePassword(credentialsId: 'polarion-user', passwordVariab
         openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: node_vars) {
             stage('Polarion Test Case Upload'){
                 sh """
-                    cd \$ROBOTTELO_DIR
+                    cd \${ROBOTTELO_DIR}
                     git log -1
                     pip install Betelgeuse==1.8.0
                     scripts/polarion-test-case-upload.sh \
