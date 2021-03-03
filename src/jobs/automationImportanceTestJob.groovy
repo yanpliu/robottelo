@@ -3,8 +3,6 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
-def versionCFG = ['6.7','6.8','6.9']
-
 def jobCFG = [
         'critical':   ['num_appliances': '5',
                        'importance': 'Critical',],
@@ -16,7 +14,7 @@ def jobCFG = [
                        'importance': 'Low',],
 ]
 
-versionCFG.each { versionName ->
+globalJenkinsDefaults.sat_versions.each { versionName ->
     jobCFG.each { jobName, config ->
         pipelineJob("sat-${versionName}-${jobName}-tests") {
             disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
