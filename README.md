@@ -289,7 +289,26 @@ spec:
 
 ```
 
-## Manual Configuration not supproted with Casc.yaml
+## DeploymentConfigs
+
+The seed job needs more than the default 500Mi of memory afforded by the `satqe-jenkins-slave` DeploymentConfig.
+
+The DeploymentConfig should be updated to include increased limits on resources for the `satqe-jenkins-slave`
+
+```
+template:
+  spec:
+    containers:
+      - name: jenkins-slave
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2000Mi
+```
+
+
+
+## Manual Configuration not supported with Casc.yaml
 
 Currently, the GHPRB plugin is no having support for casc.yaml file for setting the credentials for the GHPRB Plugin. Which means we need to set this credentials whenever we reload the Jenkins configuration.
 
