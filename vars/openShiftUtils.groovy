@@ -5,7 +5,7 @@ def withNode(Map parameters = [:], Closure body) {
     /*
     Spins up a pod with 2 containers: jnlp, and specified 'image'
     */
-    def image = parameters.get('image', pipelineVars.python36Image)
+    def image = parameters.get('image', pipelineVars.ciRobotteloImage)
     def cloud = parameters.get('cloud', pipelineVars.defaultCloud)
     def jenkinsSlaveImage = parameters.get('jenkinsSlaveImage', pipelineVars.jenkinsSlaveImage)
     def namespace = parameters.get('namespace', pipelineVars.upshiftNameSpace)

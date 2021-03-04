@@ -6,9 +6,6 @@ class pipelineVars implements Serializable {
 
     String jenkinsSlaveImage = 'registry.access.redhat.com/openshift3/jenkins-slave-base-rhel7:v3.11'
 
-    String centralCIjenkinsSlaveImage = 'docker-registry.upshift.redhat.com/insights-qe/jenkins-slave-base:latest'
-
-    String python36Image = 'registry.access.redhat.com/ubi8/python-36:latest'
     String ciBrokerImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/broker-container'
     String ciRobotteloImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
     String ciCleanScriptImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/cloud-cleanup-container'
