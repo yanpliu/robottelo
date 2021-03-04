@@ -1,5 +1,5 @@
 job('Seed Job') {
-  label(name='satqe-jenkins-slave')
+  label(name='swarm')
   wrappers {
     preBuildCleanup()
   }
