@@ -92,7 +92,7 @@ jenkins:
         maxRequestsPerHostStr: "32"
         name: "upshift"
         namespace: "jenkins-csb-satellite-qe"
-        serverCertificate: ${casc-secret/k8s-server-cert}
+        serverCertificate: ${casc-secret/ocpv4-server-cert}
         serverUrl: "https://kubernetes.default.svc.cluster.local:443"
   globalNodeProperties:
     - envVars:
