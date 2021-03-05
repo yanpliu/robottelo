@@ -121,7 +121,7 @@ withCredentials([
                     launch_req.setRequestProperty("Authorization", "bearer ${rp_token}")
                     launch_req.setRequestProperty("Content-Type", "application/json")
                     def new_launch_payload = [
-                        "description": "${env.BUILD_URL}",
+                        "description": "${env.JOB_NAME}",
                         "mode": "DEFAULT",
                         "name": "${rp_launch}",
                         "rerun": "${rerun_of as Boolean}",
