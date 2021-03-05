@@ -1,24 +1,28 @@
 REPOS:
   # RHEL 6,7 and 8 repos for RHAI, OSCAP etc
-  RHEL6_REPO: http://sesame.lab.eng.rdu2.redhat.com/pub/rhel6.repo
-  RHEL7_REPO: http://sesame.lab.eng.rdu2.redhat.com/pub/rhel7.repo
-  RHEL8_REPO: http://sesame.lab.eng.rdu2.redhat.com/pub/rhel8.repo
-  # Provide link to rhel6,7 and 8 repositories URL as we need all OS packages in order
-  # to have real installation media for provisioning procedure
-  RHEL6_OS: http://download.devel.redhat.com/rhel-6/rel-eng/updates/latest-RHEL-6.10/compose/Server/x86_64/os/
-  RHEL7_OS: http://download.devel.redhat.com/rhel-7/rel-eng/updates/RHEL-7/latest-RHEL-7.9/compose/Server/x86_64/os/
+  RHEL_REPO_HOST: http://sesame.lab.eng.rdu2.redhat.com
+  RHEL6_REPO: '@format {this[repos].rhel_repo_host}/pub/rhel6.repo'
+  RHEL7_REPO: '@format {this[repos].rhel_repo_host}/pub/rhel7.repo'
+  RHEL8_REPO: '@format {this[repos].rhel_repo_host}/pub/rhel8.repo'
+  # Provide link to OS repositories URL as we need all OS packages in order to have real installation media for provisioning procedure
+  RHEL_OS_REPO_HOST: http://download.devel.redhat.com
+  RHEL6_OS: '@format {this[repos].rhel_os_repo_host}/rhel-6/rel-eng/updates/latest-RHEL-6.10/compose/Server/x86_64/os/'
+  RHEL7_OS: '@format {this[repos].rhel_os_repo_host}/rhel-7/rel-eng/updates/RHEL-7/latest-RHEL-7.9/compose/Server/x86_64/os/'
   RHEL8_OS:
-    BASEOS: http://download.devel.redhat.com/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/BaseOS/x86_64/os/
-    APPSTREAM: http://download.devel.redhat.com/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/AppStream/x86_64/os/
+    BASEOS: '@format {this[repos].rhel_os_repo_host}/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/BaseOS/x86_64/os/'
+    APPSTREAM: '@format {this[repos].rhel_os_repo_host}/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/AppStream/x86_64/os/'
   # If capsule and satellite tools repositories available related packages will be pulled from there instead of using the CDN channel.
   # CAPSULE_REPO: replace-with-dynaconf-envvar
   # Do the testing of SAT_TOOLS change in format
-  # SATTOOLS_REPO:
-    # RHEL6: replace-with-dynaconf-envvar
-    # RHEL7: replace-with-dynaconf-envvar
-    # RHEL8: replace-with-dynaconf-envvar
+  DOGFOOD_REPO_HOST: http://dogfood.sat.engineering.redhat.com
+  DOGFOOD_QA: '@format {this[repos].dogfood_repo_host}/pulp/repos/Sat6-CI/QA'
+  CAPSULE_REPO: '@format {this[repos].dogfood_qa}/Capsule_{this[robottelo].satellite_version_undr}_with_RHEL7_Server/custom/Satellite_Capsule_{this[robottelo].satellite_version_undr}_Composes/Satellite_Capsule_{this[robottelo].satellite_version_undr}_RHEL7/'
+  SATTOOLS_REPO:
+    RHEL6: '@format {this[repos].dogfood_qa}/Tools_{this[robottelo].satellite_version_undr}_with_RHEL6_Server/custom/Satellite_Tools_{this[robottelo].satellite_version_undr}_Composes/Satellite_Tools_{this[robottelo].satellite_version_undr}_RHEL6_x86_64/'
+    RHEL7: '@format {this[repos].dogfood_qa}/Tools_{this[robottelo].satellite_version_undr}_with_RHEL7_Server/custom/Satellite_Tools_{this[robottelo].satellite_version_undr}_Composes/Satellite_Tools_{this[robottelo].satellite_version_undr}_RHEL7_x86_64/'
+    RHEL8: '@format {this[repos].dogfood_qa}/Tools_{this[robottelo].satellite_version_undr}_with_RHEL8_Server/custom/Satellite_Tools_{this[robottelo].satellite_version_undr}_Composes/Satellite_Tools_{this[robottelo].satellite_version_undr}_RHEL8_x86_64/'
   # Downstream Satellite-maintain repo
-  SATMAINTENANCE_REPO: http://dogfood.sat.engineering.redhat.com/pulp/repos/Sat6-CI/QA/Satellite_Maintenance_Next_RHEL7/custom/Satellite_Maintenance_Next_Composes/Satellite_Maintenance_Next_RHEL7/
+  SATMAINTENANCE_REPO: '@format {this[repos].dogfood_qa}/Satellite_Maintenance_Next_RHEL7/custom/Satellite_Maintenance_Next_Composes/Satellite_Maintenance_Next_RHEL7/'
   # Software Collection Repo
   RHSCL_REPO: http://download.eng.rdu2.redhat.com/released/RHSCL/3.4/RHEL-7/Server/x86_64/os/
   # Ansible 2.8 Repo

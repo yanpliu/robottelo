@@ -11,26 +11,12 @@ withCredentials([
        https://github.com/reportportal/agent-python-pytest#integration-with-ga
     */
 
-    def repo_sat_version = "${params.sat_version.replace('.','_')}"
-
     def robottelo_vars = [
             containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
             containerEnvVar(key: 'BROKER_AnsibleTower__username', value: "${USERNAME}"),
             containerEnvVar(key: 'BROKER_AnsibleTower__password', value: "${USERPASS}"),
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
             containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
-            containerEnvVar(
-                    key: 'ROBOTTELO_Repos__sattools__rhel6',
-                    value: satelliteRepos.tools_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL6')
-            ),
-            containerEnvVar(
-                    key: 'ROBOTTELO_Repos__sattools__rhel7',
-                    value: satelliteRepos.tools_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL7')
-            ),
-            containerEnvVar(
-                    key: 'ROBOTTELO_Repos__capsule_repo',
-                    value: satelliteRepos.capsule_repo.replace('{sat_version}', repo_sat_version).replace('{rhel_version}', 'RHEL7')
-            ),
             containerEnvVar(
                     key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
                     value: "[automation-${params.sat_version}-${params.importance}-rhel7]"
