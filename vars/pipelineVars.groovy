@@ -6,9 +6,9 @@ class pipelineVars implements Serializable {
 
     String jenkinsSlaveImage = 'registry.access.redhat.com/openshift4/ose-jenkins-agent-base'
 
-    String ciBrokerImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/broker-container'
-    String ciRobotteloImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
-    String ciCleanScriptImage = 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/cloud-cleanup-container'
+    String ciBrokerImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/broker-container'
+    String ciRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
+    String ciCleanScriptImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/cloud-cleanup-container'
 
     String defaultCloud = 'upshift'
     String upshiftNameSpace = 'jenkins-csb-satellite-qe'
