@@ -87,7 +87,7 @@ jenkins:
         addMasterProxyEnvVars: true
         containerCapStr: "100"
         credentialsId: ""
-        jenkinsTunnel: "${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:50000"
+        jenkinsTunnel: "${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:31145"
         jenkinsUrl: "http://${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:80"
         maxRequestsPerHostStr: "32"
         name: "upshift"
@@ -109,7 +109,7 @@ jenkins:
   markupFormatter:
     rawHtml:
       disableSyntaxHighlighting: false
-  slaveAgentPort: 50000
+  slaveAgentPort: 31145
   agentProtocols:
   - "JNLP4-connect"
   - "Ping"
