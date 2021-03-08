@@ -8,7 +8,7 @@ openShiftUtils.withNode(image: pipelineVars.ciCleanScriptImage) {
     stage('Cleanup GCE Resources') {
 
         sh """
-            cd ${CLEANER_DIR}
+            cd \${CLEANER_DIR}
             python cleanup.py -d gce --all
             python cleanup.py gce --all
             cp cleanup.log ${WORKSPACE}
