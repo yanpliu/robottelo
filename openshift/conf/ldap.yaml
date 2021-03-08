@@ -2,7 +2,7 @@
 LDAP:
   HOSTNAME: qe-sat6-ad.satqe.lab.eng.rdu2.redhat.com
   USERNAME: foobar
-  PASSWORD: Secret@777
+  # PASSWORD:
   BASEDN: cn=Users,dc=satqe,dc=lab,dc=eng,dc=rdu2,dc=redhat,dc=com
   GRPBASEDN: cn=foobargroup,dc=satqe,dc=lab,dc=eng,dc=rdu2,dc=redhat,dc=com
   REALM: SATQE.LAB.ENG.RDU2.REDHAT.COM

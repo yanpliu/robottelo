@@ -7,7 +7,7 @@ RHSSO:
 # RH-SSO Host Admin of Realm
   RHSSO_USER: sat_admin
 # RH-SSO Host Admin Password
-  USER_PASSWORD: dog8code
+# USER_PASSWORD:
 # RH-SSO Host Realm
   REALM: satqe
-  TOTP_SECRET: KJHDO6STOJKHG4SLPBZEEVSHOZ2VOQSU
+# TOTP_SECRET:
