@@ -1,0 +1,5 @@
+CLIENTS:
+  # Provisioning server hostname where the clients will be created
+  PROVISIONING_SERVER: basil.lab.eng.rdu2.redhat.com
+  # Path on the provisioning server where the virtual images will be stored, default "/var/lib/libvirt/images/"
+  IMAGE_DIR: /opt/robottelo/disks
