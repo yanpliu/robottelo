@@ -17,7 +17,7 @@ withCredentials([usernamePassword(credentialsId:'ansible-tower-jenkins-user', pa
                 returnStdout: true,
                 script: """broker execute --workflow 'remove-template' \
                            --output-format raw --artifacts merge --additional-arg True \
-                           --sat_versions ${JsonOutput.toJson(sat_versions)} \
+                           --sat_versions ${params.sat_versions} \
                         """
             )
         }

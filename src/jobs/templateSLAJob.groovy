@@ -13,7 +13,7 @@ pipelineJob("template-sla-enforcement") {
         }
         stringParam {
            name("sat_versions")
-           defaultValue(globalJenkinsDefaults.sat_versions.join(","))
+           defaultValue(globalJenkinsDefaults.template_sla_versions.join(","))
            description("Comma-separated list of current satellite versions (X.Y).")
            trim(false)
         }
