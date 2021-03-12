@@ -50,7 +50,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                 )
                 booleanParam(
                     'use_ibutsu',
-                    false,  // true when ibutsu is fixed, hitting Exception("Run ID has not yet been set")
+                    true,
                     'Determines whether or not to push results to ibutsu'
                 )
                 stringParam(
