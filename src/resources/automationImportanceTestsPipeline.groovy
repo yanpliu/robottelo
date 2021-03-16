@@ -201,6 +201,7 @@ withCredentials([
                 } else { ibutsu_options = " "}
                 return_code = robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v -rEfs --tb=line \
+                    --durations=20 --durations-min=600.0 \
                     --importance ${params.importance} \
                     -n ${inventory.size()} \
                     --dist loadscope \
