@@ -19,6 +19,7 @@ def call(Map parameters = [:]) {
                 return_code = robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
                     -m 'build_sanity' \
+                    --include-stubbed \
                     --junit-xml=${label}-results.xml \
                     -o junit_suite_name=${label} \
                     tests/foreman/
