@@ -36,6 +36,7 @@
       - ansible
       - ansicolor
       - build-timeout
+      - cachet-gating
       - copyartifact
       - configuration-as-code
       - configuration-as-code-support

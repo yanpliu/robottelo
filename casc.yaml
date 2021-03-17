@@ -226,7 +226,9 @@ unclassified:
     - categoryName: "pr-tester"
       maxConcurrentPerNode: 1
       maxConcurrentTotal: 10
-
+  globalCachetConfiguration:
+    cachetUrl: "https://internal.status.redhat.com/api/v1/"
+    ignoreSSL: true
 configuration-as-code:
   deprecated: warn
 

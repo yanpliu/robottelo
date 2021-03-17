@@ -7,6 +7,13 @@ pipelineJob("polarion-testrun-upload"){
 
     description('Job to upload junit xml test results into Polarion')
 
+    properties {
+        cachetJobProperty {
+            requiredResources(true)
+            resources(["polarion"])
+        }
+    }
+
     parameters {
         stringParam(
                 'snap_version',

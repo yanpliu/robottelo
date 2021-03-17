@@ -3,6 +3,7 @@
 ansible
 ansible-tower
 build-timeout
+cachet-gating
 configuration-as-code
 credentials
 dashboard-view

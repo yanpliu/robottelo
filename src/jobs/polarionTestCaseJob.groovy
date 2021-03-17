@@ -13,6 +13,10 @@ pipelineJob("polarion-testcase-upload") {
     }
 
     properties {
+        cachetJobProperty {
+            requiredResources(true)
+            resources(["polarion"])
+        }
         disableConcurrentBuilds()
         pipelineTriggers {
             triggers {

@@ -1,6 +1,7 @@
 ansible:latest
 ansicolor:latest
 build-timeout:latest
+cachet-gating:latest
 copyartifact:latest
 configuration-as-code:latest
 configuration-as-code-support:latest
