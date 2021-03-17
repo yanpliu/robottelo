@@ -59,6 +59,11 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_azurerm__password',
             secretName:'satqe-casc-secret',
             secretKey:'azure_admin_passwd'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_docker__private_registry_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'docker_password'))
     }
     //
 
