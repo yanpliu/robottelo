@@ -178,7 +178,7 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'gce_client_email'))
     }
 
-    if (image.contains('robottelo-container') || image.contains('broker-container')) {
+    if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container')) {
         // secrets that both robottelo-container and broker-container need
         envVars.add(secretEnvVar(
             key: 'BROKER_host_password',
@@ -188,6 +188,29 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'BROKER_AnsibleTower__password',
             secretName: secretName,
             secretKey: 'tower-password'))
+    }
+
+    if (image.contains('sat-upgrade-container')) {
+        envVars.add(secretEnvVar(
+            key:'SATLAB_PRIVATE_KEY',
+            secretName:'satqe-casc-secret',
+            secretKey:'satlab_automation_rsa'))
+        envVars.add(secretEnvVar(
+            key:'UPGRADE_subscription__rhn_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'rhn_password'))
+        envVars.add(secretEnvVar(
+            key:'UPGRADE_upgrade__oauth_consumer_key',
+            secretName:'satqe-casc-secret',
+            secretKey:'oauth_consumer_key'))
+        envVars.add(secretEnvVar(
+            key:'UPGRADE_upgrade__oauth_consumer_secret',
+            secretName:'satqe-casc-secret',
+            secretKey:'oauth_consumer_secret'))
+        envVars.add(secretEnvVar(
+            key:'UPGRADE_upgrade__remote_ssh_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'satqe_shared_password'))
     }
 
     // Cloud Resource Cleanup Script Vars

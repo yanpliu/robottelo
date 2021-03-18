@@ -44,3 +44,16 @@ nicks:
     cap69:
         workflow: "deploy-sat-capsule"
         deploy_sat_version: "6.9"
+    sat-cap-integration:
+        workflow: "satellite-capsule-integration"
+        deploy_sat_version: "6.9"
+    deploy-satellite-upgrade:
+        workflow: "deploy-satellite-upgrade"
+        deploy_sat_version: "6.9"
+        deploy_scenario: "satellite-upgrade"
+        deploy_rhel_version: "7"
+    deploy-capsule-upgrade:
+        workflow: "deploy-capsule-upgrade"
+        deploy_sat_version: "6.9"
+        deploy_scenario: "capsule-upgrade"
+        deploy_rhel_version: "7"
