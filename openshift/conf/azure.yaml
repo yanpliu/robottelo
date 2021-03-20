@@ -1,0 +1,19 @@
+AZURERM:
+  # Client ID of the AzureRM account
+  CLIENT_ID: eade466a-9a33-4eb6-9691-b468cd27bde7
+  # Client Secret of the AzureRM account
+  CLIENT_SECRET:
+  # The subscription ID is a GUID that uniquely identifies your subscription to use Azure services.
+  SUBSCRIPTION_ID: c9e72ccc-b20e-48bd-a0c8-879c6dbcbfbb
+  # Tenant ID, the ID of the AAD directory in which you created the application
+  TENANT_ID: 2e64678d-2fa8-40ed-8922-c9b8e2c3f100
+  # Azure Region
+  AZURE_REGION: East US
+  # SSH Public Key of the user from which login as passwordless in VM
+  SSH_PUB_KEY:
+  # Username of admin user(non-root)
+  USERNAME: azureroot
+  # Password of the admin user
+  PASSWORD:
+  # Azure Private subnet details
+  AZURE_SUBNET: SATQE-vnet-default 10.0.0.0/24
