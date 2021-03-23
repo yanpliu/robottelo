@@ -94,8 +94,12 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_rhsso__totp_secret',
             secretName:'satqe-casc-secret',
             secretKey:'totp_rhsso_secret'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_bugzilla__api_key',
+            secretName:'satqe-casc-secret',
+            secretKey:'bz-api-key'))
     }
-    //
 
     // Cloud Resource Cleanup Script Vars
     if (image.contains('cloud-cleanup-container')) {
