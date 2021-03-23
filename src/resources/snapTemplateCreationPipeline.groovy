@@ -73,21 +73,6 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                                 """
                                     )
                         },
-                        "create-sat-lite-template": {
-                            output_sat_lite =
-                                    sh(
-                                            returnStdout: true,
-                                            script:
-                                                    """
-                                    broker execute --workflow 'create-sat-lite-template' \
-                                    --output-format raw --artifacts last --additional-arg True \
-                                    --activation_key ${satellite_activation_key}\
-                                    --rhel_major_version ${rhel_major_version} \
-                                    --sat_version ${sat_version} \
-                                    --snap_version ${snap_version}
-                                """
-                                    )
-                        },
                         "create-capsule-template": {
                             output_capsule =
                                     sh(
@@ -110,13 +95,11 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
                 // Print raw output, small JSON so not pretty printing
                 println("create-sat-jenkins-template output: " + output_sat_jenkins)
-                println("create-sat-lite-template output: " + output_sat_lite)
                 println("create-capsule-template output: " + output_capsule)
 
                 // Output to JSON files
                 // Single quotes in the broker console output, replace with double quote
                 sat_jenkins_template = null
-                sat_lite_template = null
                 capsule_template = null
 
                 if (output_sat_jenkins.contains("data_out")) {
@@ -127,17 +110,6 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                 } else {
                     println("ERROR: broker call for sat-jenkins workflow must have failed, nothing was returned")
                 }
-
-
-                if (output_sat_lite.contains("data_out")) {
-                    output_lite_json = readJSON text: output_sat_lite.replace("'", "\"")
-                    //writeJSON file: "sat-lite-temp-creation.json", json: output_lite_json['data_out']
-                    sat_lite_template = output_lite_json.get('data_out', '').get('template', '')
-                    println("Sat Lite Template Name is " + sat_lite_template)
-                } else {
-                    println("ERROR: broker call for sat-lite workflow must have failed, nothing was returned")
-                }
-
 
                 if (output_capsule.contains("data_out")) {
                     output_capsule_json = readJSON text: output_capsule.replace("'", "\"")
@@ -159,14 +131,13 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             stage('Archive Artifacts') {
                 //archiveArtifacts artifacts: '*.json'
                 // Check for any value not set
-                template_exists = sat_jenkins_template && sat_lite_template && capsule_template
+                template_exists = sat_jenkins_template && capsule_template
                 if (template_exists) {
                     print "All template names have been created"
                     email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
                     subject = "Templates for ${sat_version} SNAP ${snap_version} are available"
                     body = "Following snap ${snap_version} templates have been created:" +
                             " <br><br> sat_jenkins_template: ${sat_jenkins_template} " +
-                            "<br><br> sat_lite_template: ${sat_lite_template} " +
                             "<br><br> capsule_template: ${capsule_template}"
                     if (!sanityPassed) {
                         body += "<br><br>However, template sanity check has failed. Please investigate!"
