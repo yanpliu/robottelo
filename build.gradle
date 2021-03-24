@@ -92,6 +92,7 @@ dependencies {
   testPlugins 'org.jenkins-ci.plugins:groovy:2.3'
   testPlugins 'org.jenkins-ci.plugins:htmlpublisher:1.23'
   testPlugins 'org.jenkins-ci.plugins:jms-messaging:1.1.19'
+  testPlugins 'org.jenkins-ci.plugins:junit:1.49'
   testPlugins 'org.jenkins-ci.plugins:mailer:1.32.1'
   testPlugins 'org.jenkins-ci.plugins:matrix-project:1.18'
   testPlugins 'org.jenkins-ci.plugins:parameterized-trigger:2.37'
