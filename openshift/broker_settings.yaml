@@ -21,6 +21,9 @@ nicks:
     rhel7:
         workflow: "deploy-base-rhel"
         rhel_version: "7.9"
+    rhel8:
+        workflow: "deploy-base-rhel"
+        rhel_version: "8.3"
     sat69:
         workflow: "deploy-sat-lite"
         deploy_sat_version: "6.9"
