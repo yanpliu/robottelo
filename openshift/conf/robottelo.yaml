@@ -41,7 +41,5 @@ ROBOTTELO:
   # Run one datapoint or multiple datapoints for tests
   RUN_ONE_DATAPOINT: false
   # Satellite version supported by this branch
-  # UNDR version is used for some URL composition
   # Set this via envvar when building robottelo-container for z-stream branches
   SATELLITE_VERSION: "6.9"
-  SATELLITE_VERSION_UNDR: "@jinja {{this.robottelo.satellite_version | replace('.', '_')}}"
