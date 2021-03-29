@@ -18,7 +18,7 @@ def call(Map parameters = [:]) {
                 label = 'sat-jenkins-sanitycheck'
                 return_code = robotteloUtils.execute(inventory: inventory, script: """
                     py.test -v \
-                    -m 'build_sanity' \
+                    -m 'build_sanity or stubbed' \
                     --include-stubbed \
                     --junit-xml=${label}-results.xml \
                     -o junit_suite_name=${label} \
