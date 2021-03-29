@@ -37,6 +37,7 @@ pipeline-utility-steps
 progress-bar-column-plugin
 role-strategy
 script-security
+test-results-analyzer
 testng-plugin
 throttle-concurrents
 timestamper
