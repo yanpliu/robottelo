@@ -15,17 +15,19 @@ In case you can't find this runner for any reason, you should contact the mainta
 
     .
     ├── src
-    │   ├── jobs          # DSL job definition files
+    │   ├── jobs            # JDSL files
     │   ├── main
-    │   │   ├── groovy    # support classes
-    │   │   └── resources # IDE support for IDEA / IntelliJ
-    │   ├── resources     # resources for DSL scripts
+    │   │   ├── groovy      # support classes
+    │   │   │   └── jobLib  # constants/vars for use in JDSL
+    │   │   └── resources   # IDE support for IDEA / IntelliJ
+    │   ├── resources       # pipelines called by JDSL
     │   └── test
-    │       └── groovy    # spec tests
-    ├── Vagrantfile       # vagrant for a dsl development jenkins
-    ├── ansible           # sources for vagrant
-    ├── container            # container sources
-    └── build.gradle      # build file
+    │       └── groovy      # spec tests
+    ├── vars                # groovy functions for pipelines
+    ├── Vagrantfile         # vagrant for a dsl development jenkins
+    ├── ansible             # sources for vagrant
+    ├── container           # container sources
+    └── build.gradle        # build file
 
 # Script Examples
 
@@ -105,11 +107,10 @@ Check out the `jenkins_plugins` var in `ansible/vagrant.yml` for a list of insta
 Included is a `container/Dockerfile` for building a container to run in openstack or the CP environment.  You will have to edit `script_approval.groovy` and `container/jenkins.yaml` to  your liking (tons of examples [here](https://github.com/jenkinsci/configuration-as-code-plugin/tree/master/demos)).  With this Dockerfile it creates a directory `$JENKINS_HOME/dsl-dev`.  If you run your container and mount this project into it you will get the eqivalent to the dev enviorment that we have in vagrant.  An example of how to run this locally is:
 
 ```
-cd container
-podman build -t jenkins-example .
+podman build -t jenkins-example -f container/Dockerfile .
 podman run --rm --name jenkins-example -p 8080:8080 -v "$HOME/Projects/jenkins-dsl-template":/var/jenkins_home/dsl-dev  jenkins-example
 ```
-* replace `$HOME/Projects/jenkins-dsl-template` with whever you have this project
+* replace `$HOME/Projects/jenkins-dsl-template` with wherever you have this project
 
 ## Jenkins Plugins
 
@@ -288,7 +289,26 @@ spec:
 
 ```
 
-## Manual Configuration not supproted with Casc.yaml
+## DeploymentConfigs
+
+The seed job needs more than the default 500Mi of memory afforded by the `satqe-jenkins-slave` DeploymentConfig.
+
+The DeploymentConfig should be updated to include increased limits on resources for the `satqe-jenkins-slave`
+
+```
+template:
+  spec:
+    containers:
+      - name: jenkins-slave
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2000Mi
+```
+
+
+
+## Manual Configuration not supported with Casc.yaml
 
 Currently, the GHPRB plugin is no having support for casc.yaml file for setting the credentials for the GHPRB Plugin. Which means we need to set this credentials whenever we reload the Jenkins configuration.
 

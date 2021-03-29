@@ -20,6 +20,7 @@ gradle
 groovy
 jms-messaging
 job-dsl
+junit
 kubernetes-client-api
 kubernetes-credentials
 kubernetes-credentials-provider
