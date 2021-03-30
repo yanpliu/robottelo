@@ -114,6 +114,7 @@ dependencies {
   testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.14'
   testPlugins 'org.jenkins-ci.plugins:extra-columns:1.22'
   testPlugins 'org.jenkins-ci.plugins:throttle-concurrents:2.1'
+  testPlugins 'org.jenkins-ci.plugins:test-results-analyzer:0.3.5'
 }
 
 task resolveTestPlugins(type: Copy) {
