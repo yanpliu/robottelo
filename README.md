@@ -244,18 +244,16 @@ Our Jenkins core build configs and docker images (production and stage) are prov
 
 The following modifications have been made to the Jenkins CSB build configs, in order to support our project.
 
+
 ## ConfigMaps
 
-Config maps for each Jenkins master image (`stage-jenkins`, `satqe-stage-jenkins`, etc) hold specific key/value pairs that are used to modify the buildconfig or deploymentconfig for the relevant instances.
+ConfigMaps hold specific key/value pairs that are used by the builder pods or the Jenkins master/slave pods.
 
-Example ConfigMap for `satqe-jenkins`, called `satqe-jenkins-casc-vars`, holding values that are used by `casc.yaml` for Jenkins master configuration:
+There are specific ConfigMaps defined in the `openshift` directory, which need to be loaded into OCP on new deployments or migrations.
 
-```
-apiVersion: v1
-data:
-  CASC_KUBE_SERVICE: satqe-jenkins
-kind: ConfigMap
-```
+These ConfigMap keys should then be attached to the `satqe-jenkins` or `satqe-stage-jenkins` BuildConfig defined by CCIT.  The environment variable name in the BuildConfig should match the ConfigMap data key, like `CASC_KUBE_SERVICE`
+
+
 
 ## BuildConfigs
 
