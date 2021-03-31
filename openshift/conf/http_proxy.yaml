@@ -1,0 +1,5 @@
+HTTP_PROXY:
+  UN_AUTH_PROXY_URL: http://env-proxy-01.infra.sat.rdu2.redhat.com:3128
+  AUTH_PROXY_URL: http://env-proxy-02.infra.sat.rdu2.redhat.com:3128
+  USERNAME: admin
+  # PASSWORD:
