@@ -232,8 +232,23 @@ withCredentials([
                      currentBuild.result = 'ABORTED'
                 }
             }
+        } 
+        catch (exc) {
+            print "Pipeline failed with ${exc}"
+            email_to = ['sat-qe-jenkins', 'satellite-lab-list']
+            subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
+            body = "Jenkins Console Log: ${BUILD_URL}. Error that was caught:<br><br> ${exc}"
+            currentBuild.result = 'FAILURE'
         }
         finally {
+            if(exc) {
+                emailUtils.sendEmail(
+                    'to_nicks': email_to,
+                    'reply_nicks': email_to,
+                    'subject': subject,
+                    'body': body
+                )
+            }
             if(launch_uuid){
                 stage('Finish the Report Portal Launch') {
                     def finish_launch_req = new URL("${rp_url}/api/v2/${rp_project}/launch/${launch_uuid}/finish").openConnection()
