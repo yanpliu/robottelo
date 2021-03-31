@@ -64,6 +64,11 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_docker__private_registry_password',
             secretName:'satqe-casc-secret',
             secretKey:'docker_password'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_http_proxy__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'env-proxy-02-password'))
     }
     //
 
