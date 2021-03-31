@@ -13,6 +13,8 @@ REPOS:
   RHEL8_OS:
     BASEOS: '@format {this[repos].rhel_os_repo_host}/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/BaseOS/x86_64/os/'
     APPSTREAM: '@format {this[repos].rhel_os_repo_host}/rhel-8/rel-eng/updates/RHEL-8/latest-RHEL-8.2.0/compose/AppStream/x86_64/os/'
+  RHEL7_EXTRAS: '@format {this[repos].rhel_os_repo_host}/rhel-7/rel-eng/EXTRAS-7/latest-EXTRAS-7.9-RHEL-7/compose/Server/x86_64/os/'
+  RHEL7_OPTIONAL: '@format {this[repos].rhel_os_repo_host}/rhel-7/rel-eng/RHEL-7/latest-RHEL-7/compose/Server-optional/x86_64/os/'
   # If capsule and satellite tools repositories available related packages will be pulled from there instead of using the CDN channel.
   # CAPSULE_REPO: replace-with-dynaconf-envvar
   # Do the testing of SAT_TOOLS change in format

@@ -1,0 +1,11 @@
+DOCKER:
+  # External docker registry URL
+  EXTERNAL_REGISTRY_1: https://registry.access.redhat.com
+  # Private docker registry URL
+  PRIVATE_REGISTRY_URL: https://registry.hub.docker.com
+  # Private docker registry name
+  PRIVATE_REGISTRY_NAME: satqeauto/alpine
+  # Private docker registry username
+  PRIVATE_REGISTRY_USERNAME: satqeauto
+  # Private docker registry password
+  PRIVATE_REGISTRY_PASSWORD:
