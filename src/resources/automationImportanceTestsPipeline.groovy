@@ -241,7 +241,7 @@ withCredentials([
             currentBuild.result = 'FAILURE'
         }
         finally {
-            if(exc) {
+            if(currentBuild.result == 'FAILURE') {
                 emailUtils.sendEmail(
                     'to_nicks': email_to,
                     'reply_nicks': email_to,
