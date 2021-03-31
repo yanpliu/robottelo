@@ -1,0 +1,11 @@
+FAKE_MANIFEST:
+  # URL of the base manifests
+  URL:
+    DEFAULT: http://sesame.lab.eng.rdu2.redhat.com/manifests/manifest-latest.zip
+    GOLDEN_TICKET: http://sesame.lab.eng.rdu2.redhat.com/manifests/golden-ticket.zip
+
+  # URL of the key file
+  KEY_URL: http://sesame.lab.eng.rdu2.redhat.com/manifests/fake_manifest.key
+
+  # URL of the certificate file
+  CERT_URL: http://sesame.lab.eng.rdu2.redhat.com/manifests/fake_manifest.crt
