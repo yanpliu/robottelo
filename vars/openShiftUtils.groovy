@@ -69,6 +69,31 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_http_proxy__password',
             secretName:'satqe-casc-secret',
             secretKey:'env-proxy-02-password'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_ipa__password_ipa',
+            secretName:'satqe-casc-secret',
+            secretKey:'ipa_password'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_ipa__time_based_secret',
+            secretName:'satqe-casc-secret',
+            secretKey:'totp_ipa_secret'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_ldap__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'ad_password'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_open_ldap__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'open_ldap_password'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_rhsso__user_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'rhsso_password'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_rhsso__totp_secret',
+            secretName:'satqe-casc-secret',
+            secretKey:'totp_rhsso_secret'))
     }
     //
 

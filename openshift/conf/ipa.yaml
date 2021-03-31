@@ -1,0 +1,17 @@
+# For LDAP freeIPA Authentication.
+IPA:
+  HOSTNAME_IPA: env-idm-01.infra.sat.rdu2.redhat.com
+  USERNAME_IPA: uid=foreman,cn=users,cn=accounts,dc=infra,dc=sat,dc=rdu2,dc=redhat,dc=com
+  # PASSWORD_IPA:
+  BASEDN_IPA: cn=users,cn=accounts,dc=infra,dc=sat,dc=rdu2,dc=redhat,dc=com
+  GROUPBASEDN_IPA: cn=groups,cn=accounts,dc=infra,dc=sat,dc=rdu2,dc=redhat,dc=com
+  USER_IPA: foreman
+  OTP_USER: otp_user
+  # TIME_BASED_SECRET:
+  DISABLED_IPA_USER: disabled_user
+  GROUP_USERS:
+    - satadmin_01
+    - satuser_01
+  GROUPS:
+    - satadmins
+    - satusers
