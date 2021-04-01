@@ -3,6 +3,7 @@
 ansible
 ansible-tower
 build-timeout
+build-blocker-plugin
 cachet-gating
 configuration-as-code
 credentials

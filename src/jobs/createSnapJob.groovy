@@ -5,7 +5,11 @@ import jenkins.model.*
 
 pipelineJob('snap-templatization') {
     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
-    
+    blockOn(['rhel-templatization', 'rhel-ga-template-update']) {
+        blockLevel('GLOBAL')
+        scanQueueFor('ALL')
+    }
+
     def uuid = { UUID.randomUUID().toString() }
     def consumerID = { "Consumer.rh-jenkins-ci-plugin.${uuid()}" }
     String consumerTopic = "${consumerID()}.VirtualTopic.eng.sat6eng-ci.snap.ready"
