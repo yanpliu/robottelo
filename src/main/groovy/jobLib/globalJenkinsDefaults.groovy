@@ -10,7 +10,7 @@ class globalJenkinsDefaults {
     static String tower_url = "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com"
     static String tower_user = "ansible-tower-jenkins-user"
 
-    static List sat_versions = ["6.7", "6.8", "6.9", "6.10"]
+    static List sat_versions = ["6.9", "6.10"]
     // The template SLA currently ignores the last version passed to it
     // With pre-snaps for the future y-stream, this would remove snaps for the active y-stream
     // When the workflow has been updated and GA templates are available, we can pass sat_versions
