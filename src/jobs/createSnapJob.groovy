@@ -37,7 +37,7 @@ pipelineJob('snap-templatization') {
 //                       checks {
 //                        msgCheck {
 //                          field('$..satellite_version')
-//                          expectedValue('6.8.0')
+//                          expectedValue('6.9.0')
 //                        }
 //                      }
                     }
