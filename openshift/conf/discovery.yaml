@@ -1,0 +1,4 @@
+# For unattended discovery tests
+DISCOVERY:
+  SATELLITE_VERSION_SHORT: "@jinja {{this.robottelo.satellite_version | replace('.', '')}}"
+  DISCOVERY_ISO: "@format foreman-discovery-image-unattended_{this[discovery].satellite_version_short}.iso"
