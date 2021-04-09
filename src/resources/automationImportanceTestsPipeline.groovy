@@ -180,13 +180,6 @@ withCredentials([
                 rp_pytest_options += " --rp-launch-id=${launch_uuid} --rp-parent-item-id=${wrapper_test_uuid}"
             }
 
-            stage('Set robottelo.properites') {
-                sh """
-                    crudini --set /opt/app-root/src/robottelo/robottelo.properties report_portal report_portal ${rp_url}
-                    crudini --set /opt/app-root/src/robottelo/robottelo.properties report_portal project ${rp_project}
-                """
-            }
-
             stage('Execute Automation Test Suite') {
                 // -n argument should be params.appliance_count when robottelo 8303 is merged
                 if(params.use_ibutsu){

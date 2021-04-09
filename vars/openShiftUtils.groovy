@@ -99,6 +99,12 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_bugzilla__api_key',
             secretName:'satqe-casc-secret',
             secretKey:'bz-api-key'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_report_portal__api_key',
+            secretName:'satqe-casc-secret',
+            secretKey:'reportportal-robottelo-token',
+        ))
     }
 
     // Cloud Resource Cleanup Script Vars
