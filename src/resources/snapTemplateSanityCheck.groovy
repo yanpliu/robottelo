@@ -9,14 +9,14 @@ def call(Map parameters = [:]) {
     openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: at_vars) {
         try {
             stage('Check Out Satellite Instances') {
-                inventory = brokerUtils.checkout(
+                brokerUtils.checkout(
                     'deploy-sat-jenkins':[ 'sat_version': sat_version, 'snap_version': snap_version, 'count': 1 ],
                 )
             }
 
             stage('Snap Template Sanity Check') {
                 label = 'sat-jenkins-sanitycheck'
-                return_code = robotteloUtils.execute(inventory: inventory, script: """
+                return_code = robotteloUtils.execute(script: """
                     py.test -v \
                     -m 'build_sanity or stubbed' \
                     --include-stubbed \
@@ -49,10 +49,8 @@ def call(Map parameters = [:]) {
             errorCaught = true
         }
         finally {
-            if(inventory) {
-                stage('Check In Satellite Instances') {
-                    brokerUtils.checkin_all()
-                }
+            stage('Check In Satellite Instances') {
+                brokerUtils.checkin_all()
             }
         }
     }

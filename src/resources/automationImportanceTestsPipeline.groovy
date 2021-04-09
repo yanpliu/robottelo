@@ -46,13 +46,6 @@ withCredentials([
                         'count': params.appliance_count
                     ],
                 )
-
-                if(inventory.size() != params.appliance_count){
-                    currentBuild.result = 'UNSTABLE'
-                    println("Requested inventory from broker checkout was not met\n" +
-                        "Number of available Satellite Instances: ${inventory.size()}"
-                    )
-                }
             }
 
             stage('Set Build Description') {
@@ -127,7 +120,7 @@ withCredentials([
                             ],
                             [
                                 "key": "instance_count",
-                                "value": "${inventory.size()}"
+                                "value": "${params.appliance_count}"
                             ]
                         ]
                     ]
@@ -199,11 +192,11 @@ withCredentials([
                 if(params.use_ibutsu){
                     ibutsu_options = pipelineVars.ibutsuBaseOptions
                 } else { ibutsu_options = " "}
-                return_code = robotteloUtils.execute(inventory: inventory, script: """
+                return_code = robotteloUtils.execute(script: """
                     py.test -v -rEfs --tb=line \
                     --durations=20 --durations-min=600.0 \
                     --importance ${params.importance} \
-                    -n ${inventory.size()} \
+                    -n ${params.appliance_count} \
                     --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
                     -o junit_suite_name=sat-${params.importance} \
@@ -268,10 +261,8 @@ withCredentials([
                     println("Finish launch request got response: ${finish_rc}")
                 }
             }
-            if(inventory) {
-                stage('Check In Satellite Instances') {
-                    brokerUtils.checkin_all()
-                }
+            stage('Check In Satellite Instances') {
+                brokerUtils.checkin_all()
             }
         }
     }

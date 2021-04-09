@@ -83,7 +83,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
 
         try {
                 stage('Check Out Satellite Instances') {
-                    inventory = brokerUtils.checkout(
+                    brokerUtils.checkout(
                         'deploy-sat-jenkins': [
                             'sat_version': 'latest',
                             'count': 1
@@ -96,7 +96,7 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
                     if(config.get('pytest')) {
                         pytest_command = "py.test ${config.get('pytest')}"
                     }
-                    robotteloUtils.execute(inventory: inventory, script: """
+                    robotteloUtils.execute(script: """
                         $pytest_command \
                         --junit-xml=sat-results.xml \
                         -o junit_suite_name=sat-result \
@@ -108,10 +108,8 @@ withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', p
             }
 
         finally {
-                if(inventory) {
-                    stage('Check In Satellite Instances') {
-                        brokerUtils.checkin_all()
-                    }
+                stage('Check In Satellite Instances') {
+                    brokerUtils.checkin_all()
                 }
             }
         }
