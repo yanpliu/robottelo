@@ -33,14 +33,20 @@ def checkout(Map parameters = [:]) {
     sh 'cp ${BROKER_DIRECTORY}/inventory.yaml ${WORKSPACE}/inventory.yaml'
     def yamlInvString = readYaml file: "${WORKSPACE}/inventory.yaml"
 
+    sh 'cp ${BROKER_DIRECTORY}/logs/broker.log ${WORKSPACE}/broker.$(date +%s).log'
+
     println("Output Inventory is: "+ yamlInvString)
-    archiveArtifacts artifacts: 'inventory.yaml, logs/'
+    archiveArtifacts artifacts: 'inventory.yaml, broker*.log'
     return yamlInvString
 }
 
 def checkin_all(){
     // function to checkin all the available hosts in the inventory.yaml under BROKER_DIRECTORY dir
+    sh 'cp ${BROKER_DIRECTORY}/inventory.yaml ${WORKSPACE}/inventory_pre_checkin_all.yaml'
     output = sh (returnStdout: true,
-                 script: """broker --log-level debug checkin --all """
+                 script: """broker checkin --all"""
                 )
+
+    sh 'cp ${BROKER_DIRECTORY}/logs/broker.log ${WORKSPACE}/broker.$(date +%s).log'
+    archiveArtifacts artifacts: 'inventory_pre_checkin_all.yaml, broker*.log'
 }
