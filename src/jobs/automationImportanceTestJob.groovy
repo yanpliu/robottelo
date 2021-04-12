@@ -45,7 +45,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                 )
                 stringParam(
                     'pytest_options',
-                    'tests/foreman/',
+                    "-m 'not destructive' tests/foreman/",
                     'Pytest options, other than those specified with unique string params.'
                 )
                 booleanParam(
