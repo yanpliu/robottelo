@@ -53,6 +53,11 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     true,
                     'Determines whether or not to push results to ibutsu'
                 )
+                booleanParam(
+                    'use_reportportal',
+                    true,
+                    'Determines whether or not to push results to report portal'
+                )
                 stringParam(
                     'rerun_of',
                     '',
