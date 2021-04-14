@@ -13,6 +13,7 @@ AnsibleTower:
           password: "<plain text password>"
           # token: "<AT personal access token>"
           default: True
+          inventory: "satlab-rhv-02-inventory"
     release_workflow: "remove-vm"
     extend_workflow: "extend-vm"
     workflow_timeout: 7200
