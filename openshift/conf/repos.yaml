@@ -1,6 +1,8 @@
 REPOS:
   # UNDR is used for some URL composition, mangle sat y-stream version
   SATELLITE_VERSION_UNDR: "@jinja {{this.robottelo.satellite_version | replace('.', '_')}}"
+  # Next repos tag for the maintenance repos
+  NEXT_MAINTENANCE_REPOS_TAG: '@jinja {{"_Next" if this.robottelo.satellite_version == "6.10" else ""}}'
   # RHEL 6,7 and 8 repos for RHAI, OSCAP etc
   RHEL_REPO_HOST: http://sesame.lab.eng.rdu2.redhat.com
   RHEL6_REPO: '@format {this[repos].rhel_repo_host}/pub/rhel6.repo'
@@ -26,10 +28,16 @@ REPOS:
     RHEL7: '@format {this[repos].dogfood_qa}/Tools_{this[repos].satellite_version_undr}_with_RHEL7_Server/custom/Satellite_Tools_{this[repos].satellite_version_undr}_Composes/Satellite_Tools_{this[repos].satellite_version_undr}_RHEL7_x86_64/'
     RHEL8: '@format {this[repos].dogfood_qa}/Tools_{this[repos].satellite_version_undr}_with_RHEL8_Server/custom/Satellite_Tools_{this[repos].satellite_version_undr}_Composes/Satellite_Tools_{this[repos].satellite_version_undr}_RHEL8_x86_64/'
   # Downstream Satellite-maintain repo
-  SATMAINTENANCE_REPO: '@format {this[repos].dogfood_qa}/Satellite_Maintenance_Next_RHEL7/custom/Satellite_Maintenance_Next_Composes/Satellite_Maintenance_Next_RHEL7/'
+  SATMAINTENANCE_REPO: '@format {this[repos].dogfood_qa}/Satellite_Maintenance{this[repos].next_maintenance_repos_tag}_RHEL7/custom/Satellite_Maintenance{this[repos].next_maintenance_repos_tag}_Composes/Satellite_Maintenance{this[repos].next_maintenance_repos_tag}_RHEL7/'
   # Software Collection Repo
   RHSCL_REPO: http://download.eng.rdu2.redhat.com/released/RHSCL/3.4/RHEL-7/Server/x86_64/os/
   # Ansible 2.8 Repo
   ANSIBLE_REPO: http://cdn.stage.redhat.com/content/dist/rhel/server/7/7Server/x86_64/ansible/2.8/os/
   # Swid Tools required for generating swid tags in RHEL8 content host
   SWID_TOOLS_REPO: https://copr.devel.redhat.com/coprs/jpazdzio/swid/repo/rhel-8.dev/jpazdzio-swid-rhel-8.dev.repo
+  # Satellite 6 repository
+  SATELLITE6_REPO: '@format {this[repos].dogfood_qa}/Satellite_{this[repos].satellite_version_undr}_with_RHEL7_Server/custom/Satellite_{this[repos].satellite_version_undr}_Composes/Satellite_{this[repos].satellite_version_undr}_RHEL7/'
+  # Puppet repos
+  PUPPET4_REPO: ""
+  # Fake repos
+  FAKE_REPO_ZOO3: "http://inecas.fedorapeople.org/fakerepos/zoo3/"

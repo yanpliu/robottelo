@@ -13,3 +13,17 @@ OSP:
   # vm_name: Name of VM to power On/Off & delete
   VM_NAME: automation-robottelo-vm
   PROJECT_DOMAIN_ID:
+  # Openstack project name
+  PROJECT_NAME: satellite-jenkins
+  # Openstack network name
+  NETWORK_NAME: provider_net_cci_5
+  # Openstack domain name
+  DOMAIN_NAME: redhat.com
+  # Openstack rhel7 image name
+  RHEL7_IMAGE: rhel-7.6-server-x86_64-released
+  # Openstack template's configuration flavour name
+  FLAVOR_NAME: ci.m4.xlarge.xmem
+  # Openstack ssh-key configuration
+  SSHKEY: jenkins
+  # Openstack authentication url
+  AUTH_URL: https://rhos-d.infra.prod.upshift.rdu2.redhat.com:13000
