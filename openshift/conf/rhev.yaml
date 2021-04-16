@@ -1,0 +1,31 @@
+RHEV:
+  # RHEV to be added as a compute resource.
+  # hostname: RHEV API URL, for example: https://ovirt.example.com/api
+  HOSTNAME: https://rhevm1.satellite.lab.eng.rdu2.redhat.com/ovirt-engine/api
+  # username: Login for RHEVM
+  USERNAME: admin@internal
+  # password: Password for RHEVM
+  # PASSWORD: 
+  # datacenter: RHEVM datacenter, for example: Default
+  DATACENTER: Satellite-Engineering
+  # vm_name: Name of VM to power On/Off & delete
+  VM_NAME: automation-robottelo-rhev-vm
+  # storage_domain: VM storage domain, possible values NFS-BOS, NFS-SATENG, VMS,
+  # default value VMS
+  STORAGE_DOMAIN: VMS
+
+  # RHEV Compute resource image data
+  # image_os: Operating system of the image
+  IMAGE_OS: RedHat 7.7
+  # image_arch: Architecture of the image
+  IMAGE_ARCH: x86_64
+  # image_username: Login to the image
+  IMAGE_USERNAME: root
+  # image_password: Password to the image
+  # IMAGE_PASSWORD: 
+  # image_name: Image name on the external provider
+  IMAGE_NAME: robottelo-automation-rhel74
+  # image_uuid: Unique image id
+  IMAGE_UUID: 0a88ac34-361c-45bf-bd75-3de1969c2863
+  # RHV CA cert url for adding RHV as compute resource
+  CA_CERT: http://sesame.lab.eng.rdu2.redhat.com/pub/rhevm1-ca.pem

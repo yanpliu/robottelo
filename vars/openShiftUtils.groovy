@@ -110,10 +110,53 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_osp__password',
             secretName:'satqe-casc-secret',
             secretKey:'osp_password'))
+
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_osp__project_domain_id',
             secretName:'satqe-casc-secret',
             secretKey:'osp_project_domain_id'))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_ec2__access_key',
+            secretName:'satqe-casc-secret',
+            secretKey:'ec2_access_key',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_ec2__secret_key',
+            secretName:'satqe-casc-secret',
+            secretKey:'ec2_secret_key',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_rhev__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'rhev_password',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_rhev__image_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'satqe_shared_password',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_vmware__username',
+            secretName:'satqe-casc-secret',
+            secretKey:'vmware_username',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_vmware__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'vmware_password',
+        ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_vmware__image_password',
+            secretName:'satqe-casc-secret',
+            secretKey:'satqe_shared_password',
+        ))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container')) {
