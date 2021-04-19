@@ -8,7 +8,7 @@ pipelineJob('rhel-ga-template-update') {
 
     description('RHEL Template Update Pipeline.')
     parameters {
-        stringParam('rhel_version',"7.6,7.7,7.8,7.9,8.0,8.1,8.2,8.3","RHEL version to be update, format is a comma separated list of x.y with no spaces")
+        stringParam('rhel_version',"6.10,7.6,7.7,7.8,7.9,8.0,8.1,8.2,8.3","RHEL version to be update, format is a comma separated list of x.y with no spaces")
         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
     }
 
