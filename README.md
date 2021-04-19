@@ -198,7 +198,7 @@ Decrypt: git crypt unlock
 * Enter into 'ccit/jenkins-csb' repo and run the following command:
 ```
 
-oc login paas.psi.redhat.com
+oc login api.ocp4.prod.psi.redhat.com:6443
 < use your ldap login creds >
 
 ./cci-jd/push-credentials.sh ../satelliteqe-jenkins
