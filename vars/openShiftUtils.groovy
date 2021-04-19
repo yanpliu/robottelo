@@ -63,12 +63,12 @@ def withNode(Map parameters = [:], Closure body) {
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_docker__private_registry_password',
             secretName:'satqe-casc-secret',
-            secretKey:'docker_password'))
+            secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_http_proxy__password',
             secretName:'satqe-casc-secret',
-            secretKey:'env-proxy-02-password'))
+            secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ipa__password_ipa',
@@ -89,7 +89,7 @@ def withNode(Map parameters = [:], Closure body) {
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhsso__user_password',
             secretName:'satqe-casc-secret',
-            secretKey:'rhsso_password'))
+            secretKey:'satqe_shared_password'))
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhsso__totp_secret',
             secretName:'satqe-casc-secret',
@@ -104,6 +104,15 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_report_portal__api_key',
             secretName:'satqe-casc-secret',
             secretKey:'reportportal-robottelo-token',
+        ))
+    }
+
+    if (image.contains('robottelo-container') || image.contains('broker-container')) {
+        // secrets that both robottelo-container and broker-container need
+        envVars.add(secretEnvVar(
+            key: 'BROKER_host_password',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'satqe_shared_password'
         ))
     }
 
