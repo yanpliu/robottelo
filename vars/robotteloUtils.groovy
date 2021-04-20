@@ -1,7 +1,7 @@
 def execute(Map parameters = [:]) {
 
     // Default artifacts to collect for importance jobs
-    defaultArtifacts = ['robottelo*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
+    defaultArtifacts = ['logs/*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
     def artifacts = parameters.get('artifacts', defaultArtifacts)
 
     returnCode = sh (
@@ -14,7 +14,7 @@ def execute(Map parameters = [:]) {
                 pytest_rc=\$?
                 tar --ignore-failed-read -czf screenshots.tar.gz screenshots
                 set -e
-                cp ${artifacts.join(' ')} ${WORKSPACE}
+                cp --parents ${artifacts.join(' ')} ${WORKSPACE}
                 exit \$pytest_rc
             """
     )
