@@ -105,6 +105,15 @@ def withNode(Map parameters = [:], Closure body) {
             secretName:'satqe-casc-secret',
             secretKey:'reportportal-robottelo-token',
         ))
+
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_osp__password',
+            secretName:'satqe-casc-secret',
+            secretKey:'osp_password'))
+        envVars.add(secretEnvVar(
+            key:'ROBOTTELO_osp__project_domain_id',
+            secretName:'satqe-casc-secret',
+            secretKey:'osp_project_domain_id'))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container')) {

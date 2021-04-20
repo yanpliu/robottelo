@@ -1,0 +1,15 @@
+OSP:
+  # Openstack to be added as a compute resource
+  # hostname: Openstack api url For eg: https://hostname:port/v3/auth/tokens
+  HOSTNAME: https://rhos-d.infra.prod.upshift.rdu2.redhat.com:13000/v3/auth/tokens
+  # username: Login for Openstack
+  USERNAME: psi-satellite-jenkins
+  # password: Password for Openstack
+  PASSWORD:
+  # tenant: Openstack tenant to be used
+  TENANT: satellite-jenkins
+  # security_group: Name of group for provisioning
+  SECURITY_GROUP: satellite5
+  # vm_name: Name of VM to power On/Off & delete
+  VM_NAME: automation-robottelo-vm
+  PROJECT_DOMAIN_ID:
