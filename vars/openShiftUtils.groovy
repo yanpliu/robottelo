@@ -159,6 +159,12 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'POLARION_PASSWORD',
             secretName: 'satqe-casc-secret',
             secretKey: 'polarion-password'))
+
+        // needs for subscribing the satellite with cdn
+        envVars.add(secretEnvVar(
+            key: 'RHN_PASSWORD',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'rhn_password'))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container')) {

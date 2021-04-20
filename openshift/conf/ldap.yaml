@@ -1,9 +1,16 @@
 # For Active Directory LDAP Authentication.
 LDAP:
-  HOSTNAME: qe-sat6-ad.satqe.lab.eng.rdu2.redhat.com
+  HOSTNAME: 
+    2016: env-ad-2016.infra.sat.rdu2.redhat.com
+    2019: env-ad-2019.infra.sat.rdu2.redhat.com
   USERNAME: foobar
   # PASSWORD:
-  BASEDN: cn=Users,dc=satqe,dc=lab,dc=eng,dc=rdu2,dc=redhat,dc=com
-  GRPBASEDN: cn=foobargroup,dc=satqe,dc=lab,dc=eng,dc=rdu2,dc=redhat,dc=com
-  REALM: SATQE.LAB.ENG.RDU2.REDHAT.COM
-  NAMESERVER: 10.8.104.52
+  BASEDN: cn=Users,dc=infra,dc=sat,dc=rdu2,dc=redhat,dc=com
+  GRPBASEDN: dc=infra,dc=sat,dc=rdu2,dc=redhat,dc=com
+  REALM: INFRA.SAT.RDU2.REDHAT.COM
+  NAMESERVER: 
+    2016: 10.1.1.42
+    2019: 10.1.1.43
+  WORKGROUP:
+    2016: SATQE
+    2019: SATQE2019
