@@ -201,6 +201,8 @@ Decrypt: git crypt unlock
 oc login api.ocp4.prod.psi.redhat.com:6443
 < use your ldap login creds >
 
+oc project jenkins-csb-satellite-qe
+
 ./cci-jd/push-credentials.sh ../satelliteqe-jenkins
 ```
 * Above step will create you new set of secrets in openshift.
