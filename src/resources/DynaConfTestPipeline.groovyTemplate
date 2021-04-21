@@ -2,53 +2,48 @@
 
 import groovy.json.*
 
-withCredentials([usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME')]) {
 
+def at_vars = [
+        containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
+        containerEnvVar(
+                key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
+                value: "[automation-${params.sat_version}-jyejare-test-rhel7]"
+        )
+]
 
-    def at_vars = [
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__base_url', value: "${params.tower_url}"),
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__username', value: "${USERNAME}"),
-            containerEnvVar(key: 'DYNACONF_AnsibleTower__password', value: "${USERPASS}"),
-            containerEnvVar(
-                    key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
-                    value: "[automation-${params.sat_version}-jyejare-test-rhel7]"
+openShiftUtils.withNode(image: 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/robottelo-container:MR86', envVars: at_vars) {
+
+    try {
+
+        stage('Check Out Satellite Instances') {
+            inventory = brokerUtils.checkout(
+                    'deploy-sat-jenkins': [
+                            'sat_version': params.sat_version,
+                            'snap_version': params.snap_version,
+                            'count': 2
+                    ],
             )
-    ]
-
-    openShiftUtils.withNode(image: 'docker-registry.default.svc:5000/jenkins-csb-satellite-qe/robottelo-container:MR86', envVars: at_vars) {
-
-        try {
-
-            stage('Check Out Satellite Instances') {
-                inventory = brokerUtils.checkout(
-                        'deploy-sat-jenkins': [
-                                'sat_version': params.sat_version,
-                                'snap_version': params.snap_version,
-                                'count': 2
-                        ],
-                )
-            }
-
-            stage('Execute Automation Test Suite') {
-                robotteloUtils.execute(inventory: inventory, script: """
-                    py.test -v \
-                    -n 2 \
-                    --junit-xml=sat-dyna-test-results.xml \
-                    -o junit_suite_name=sat-dyna-test \
-                    tests/foreman/*/test_product.py
-                """)
-
-                junit "sat-dyna-test-results.xml"
-            }
         }
 
-        finally {
-            if(inventory) {
-                stage('Check In Satellite Instances') {
-                    brokerUtils.checkin_all()
-                }
-            }
-        }
+        stage('Execute Automation Test Suite') {
+            robotteloUtils.execute(inventory: inventory, script: """
+                py.test -v \
+                -n 2 \
+                --junit-xml=sat-dyna-test-results.xml \
+                -o junit_suite_name=sat-dyna-test \
+                tests/foreman/*/test_product.py
+            """)
 
+            junit "sat-dyna-test-results.xml"
+        }
     }
+
+    finally {
+        if(inventory) {
+            stage('Check In Satellite Instances') {
+                brokerUtils.checkin_all()
+            }
+        }
+    }
+
 }

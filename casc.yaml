@@ -4,12 +4,6 @@ credentials:
       - credentials:
           - usernamePassword:
               scope: GLOBAL
-              id: ansible-tower-jenkins-user
-              username: "satqe_auto_droid"
-              password: ${casc-secret/tower-password} # This is stored in and loaded from OpenShift env as a Secrets obj.
-              description: "Username/Password Credentials for Ansible Tower"
-          - usernamePassword:
-              scope: GLOBAL
               id: gitlab-jenkins-user
               username: "satqe_gitlab_jenkins_token"
               password: ${casc-secret/jenkins-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
@@ -20,12 +14,6 @@ credentials:
               username: "omkarkhatavkar"
               password: ${casc-secret/pr-tester-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
               description: "Username/Password Credentials for github"
-          - usernamePassword:
-              scope: GLOBAL
-              id: polarion-user
-              username: "rhsat6_machine"
-              password: ${casc-secret/polarion-password} # This is stored in and loaded from OpenShift env as a Secrets obj.
-              description: "Username/Password Credentials for Polarion"
           - string:
               scope: GLOBAL
               id: reportportal-robottelo-token

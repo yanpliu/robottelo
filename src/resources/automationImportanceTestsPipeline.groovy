@@ -3,7 +3,6 @@
 import groovy.json.*
 
 withCredentials([
-        usernamePassword(credentialsId: 'ansible-tower-jenkins-user', passwordVariable: 'USERPASS', usernameVariable: 'USERNAME'),
         string(credentialsId: 'reportportal-robottelo-token', variable: 'rp_token')
 ]) {
 
@@ -13,8 +12,6 @@ withCredentials([
 
     def robottelo_vars = [
             containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-            containerEnvVar(key: 'BROKER_AnsibleTower__username', value: "${USERNAME}"),
-            containerEnvVar(key: 'BROKER_AnsibleTower__password', value: "${USERPASS}"),
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
             containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
             containerEnvVar(

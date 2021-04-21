@@ -8,7 +8,6 @@ class globalJenkinsDefaults {
     static String production_url = "https://satqe-jenkins-csb-satellite-qe.apps.ocp4.prod.psi.redhat.com/"
     static String tower_prod = "Infra-Ansible-Tower-01"
     static String tower_url = "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com"
-    static String tower_user = "ansible-tower-jenkins-user"
 
     static List sat_versions = ["6.9", "6.10"]
     // The template SLA currently ignores the last version passed to it

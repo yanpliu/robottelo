@@ -3,15 +3,14 @@ debug: False
 inventory_file: "inventory.yaml"
 # Host Settings
 host_username: "root"
-host_password: "<password>"
+host_password:
 # Provider settings
 AnsibleTower:
     instances:
       - production:
           base_url: "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com/"
-          username: "<username>"
-          password: "<plain text password>"
-          # token: "<AT personal access token>"
+          username: satqe_auto_droid
+          password:
           default: True
           inventory: "satlab-rhv-02-inventory"
     release_workflow: "remove-vm"

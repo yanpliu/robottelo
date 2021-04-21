@@ -18,6 +18,7 @@ class pipelineVars implements Serializable {
     String reportPortalServer = 'https://reportportal-sat-qe.apps.ocp4.prod.psi.redhat.com'
     String reportPortalProject = 'Satellite6'
 
-    String polarionProject= 'RHSAT6'
+    String polarionProject = 'RHSAT6'
+    String polarionUser = 'rhsat6_machine'
 
 }
