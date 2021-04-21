@@ -19,7 +19,7 @@ def withNode(Map parameters = [:], Closure body) {
     def jnlpLimitMemory = parameters.get('jnlpLimitMemory', "4Gi")
     def buildingContainer = parameters.get('buildingContainer', "builder")
     def yaml = parameters.get('yaml')
-    def envVars = parameters.get('envVars', [])
+    def envVars = parameters.get('envVars', []).collect()
     def extraContainers = parameters.get('extraContainers', [])
 
     def label = "node-${UUID.randomUUID().toString()}"
