@@ -27,7 +27,8 @@ def checkout(Map parameters = [:]) {
         // In this function assumption is to get all params spelled out(long version)
         parameters[workflow].each { key, val -> broker_command+="--$key $val " }
         // broker_settings.yaml needs to be present in the BROKER_DIRECTORY before running broker commands
-        output = sh(returnStdout: true, script: "${broker_command}")
+        checkout_rc = sh(returnStatus: true, script: "${broker_command}")
+        println('Broker RC for checkout: ' + checkout_rc)
 
     }
     sh 'cp ${BROKER_DIRECTORY}/inventory.yaml ${WORKSPACE}/inventory.yaml'
@@ -35,7 +36,7 @@ def checkout(Map parameters = [:]) {
 
     sh 'cp ${BROKER_DIRECTORY}/logs/broker.log ${WORKSPACE}/broker.$(date +%s).log'
 
-    println("Output Inventory is: "+ yamlInvString)
+    println("Output Inventory is: " + yamlInvString)
     archiveArtifacts artifacts: 'inventory.yaml, broker*.log'
     return yamlInvString
 }
@@ -43,9 +44,11 @@ def checkout(Map parameters = [:]) {
 def checkin_all(){
     // function to checkin all the available hosts in the inventory.yaml under BROKER_DIRECTORY dir
     sh 'cp ${BROKER_DIRECTORY}/inventory.yaml ${WORKSPACE}/inventory_pre_checkin_all.yaml'
-    output = sh (returnStdout: true,
-                 script: """broker checkin --all"""
-                )
+    checkin_rc = sh (
+        returnStatus: true,
+        script: """broker checkin --all"""
+    )
+    println('Broker RC for "checkin --all": ' + checkin_rc)
 
     sh 'cp ${BROKER_DIRECTORY}/logs/broker.log ${WORKSPACE}/broker.$(date +%s).log'
     archiveArtifacts artifacts: 'inventory_pre_checkin_all.yaml, broker*.log'
