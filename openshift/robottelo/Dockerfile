@@ -29,7 +29,8 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cp jenkins_configs/robottelo.properties robottelo.properties && \
     cp jenkins_configs/virtwho.properties virtwho.properties && \
     cp jenkins_configs/robottelo.yaml robottelo.yaml && \
-    crudini --del robottelo.properties server ssh_key
+    crudini --del robottelo.properties server ssh_key && \
+    crudini --del robottelo.properties server hostname
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml
