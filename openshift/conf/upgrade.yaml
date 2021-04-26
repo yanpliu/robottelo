@@ -55,9 +55,9 @@ UPGRADE:
   UPGRADE_WITH_HTTP_PROXY: false
   # Default size of client's which we use for content host upgrade.
   CLIENTS_COUNT: '8'
-  # Satellite's REMOTE_SSH_PASSWORD
-  # Satellite's OAUTH_CONSUMER_KEY
-  # Satellite's OAUTH_CONSUMER_SECRET
+  # REMOTE_SSH_PASSWORD: replace with satqe_shared_password
+  # OAUTH_CONSUMER_KEY: replace with oauth_consumer_key
+  # OAUTH_CONSUMER_SECRET: replace with oauth_consumer_secret
   # Supported Satellite versions
   SUPPORTED_SAT_VERSIONS:
   - '6.7'

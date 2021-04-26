@@ -179,12 +179,12 @@ def withNode(Map parameters = [:], Closure body) {
 
         envVars.add(secretEnvVar(
             key: 'ROBOTTELO_container_repo__registries__redhat__password',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'container_repo_rh_registry_token'))
 
         envVars.add(secretEnvVar(
             key: 'ROBOTTELO_container_repo__registries__quay__password',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'container_repo_quay_robot_token'))
 
         envVars.add(secretEnvVar(
@@ -230,26 +230,26 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey: 'tower-password'))
         envVars.add(secretEnvVar(
             key:'SATLAB_PRIVATE_KEY',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satlab_automation_rsa'))
     }
 
-    if (image.contains('sat-upgrade-container')) {
+    if (image.contains('sat-upgrade-container') || image.contains('sat-upgrades-robottelo-container')) {
         envVars.add(secretEnvVar(
             key:'UPGRADE_subscription__rhn_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'rhn_password'))
         envVars.add(secretEnvVar(
             key:'UPGRADE_upgrade__oauth_consumer_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'oauth_consumer_key'))
         envVars.add(secretEnvVar(
             key:'UPGRADE_upgrade__oauth_consumer_secret',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'oauth_consumer_secret'))
         envVars.add(secretEnvVar(
             key:'UPGRADE_upgrade__remote_ssh_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
     }
 
