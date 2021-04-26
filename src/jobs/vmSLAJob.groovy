@@ -86,7 +86,7 @@ pipelineJob("vm-sla-enforcement") {
                     branch(globalJenkinsDefaults.master_branch)
                 }
             }
-            scriptPath("src/resources/slaCheck.groovy")
+            scriptPath("src/resources/vmSLA.groovy")
         }
     }
 }
