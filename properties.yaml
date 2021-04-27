@@ -14,4 +14,4 @@ OS_PROJECT_NAME: 'jenkins-csb-satellite-qe'
 # Name of the OpenShift tenant the deployment is in (TENANT_NAME-PROJECT_NAME.cloud.paas.psi.redhat.com)
 OS_TENANT_NAME: 'satqe'
 # this tells which version of Jenkins to build
-JENKINS_CSB_VERSION: '2-235'
+JENKINS_CSB_VERSION: '2-277'
