@@ -176,9 +176,13 @@ def withNode(Map parameters = [:], Closure body) {
     // Cloud Resource Cleanup Script Vars
     if (image.contains('cloud-cleanup-container')) {
         envVars.add(secretEnvVar(
-            key:'CLEANUP_GCE__SERVICE_ACCOUNT',
-            secretName:'satqe-casc-secret',
-            secretKey:'sat6gce_service_account'))
+            key: 'CLEANUP_GCE__SERVICE_ACCOUNT',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'sat6gce_service_account'))
+        envVars.add(secretEnvVar(
+            key: 'CLEANUP_AZURE__PASSWORD',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'azure_client_secret'))
     }
 
     if (yaml) {
