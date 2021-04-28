@@ -313,3 +313,8 @@ template:
 Currently, the GHPRB plugin is no having support for casc.yaml file for setting the credentials for the GHPRB Plugin. Which means we need to set this credentials whenever we reload the Jenkins configuration.
 
 Navigate to Jenkins Url-> Manage Plugin -> Configure System -> GitHub Pull Request Builder -> Select the correct credentials and make sure test the API connections.
+
+
+# Testing pull requests
+
+A tl;dr style guide to testing your pull requests can be found at: https://docs.engineering.redhat.com/display/SQE/Creating+and+testing+satelliteqe-jenkins+PRs
