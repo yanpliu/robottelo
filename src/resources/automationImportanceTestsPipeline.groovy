@@ -48,10 +48,10 @@ withCredentials([
             stage('Set Build Description') {
                 // TODO: Add rhel version parsing too
                 // https://projects.engineering.redhat.com/browse/SATQE-12327
-                // uses the name field from inventory, ex. mshriver-sat-jenkins-6.9.0-9.0-fb77ad96
-                first_host_name_parts = inventory[0].name.split('-')
-                // example: [mshriver, sat, jenkins, 6.9.0, 9.0, fb77ad96]
-                sat_version = params.sat_version ?: first_host_name_parts[3]
+                // uses the template name field from inventory, ex. template: tpl-sat-jenkins-6.9.2-1.0-rhel-7.9
+                first_host_name_parts = inventory[0]._broker_args.template.split('-')
+                // example: [tpl, sat, jenkins, 6.9.2, 1.0, rhel, 7.9]
+                sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
                 snap_version = params.snap_version ?: first_host_name_parts[4]
                 currentBuild.description = sat_version + " snap: " + snap_version
 
