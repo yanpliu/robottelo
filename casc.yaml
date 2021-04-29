@@ -70,10 +70,6 @@ jenkins:
               - "View/Read"
             assignments:
               - "authenticated"
-  clouds:
-    - kubernetes:
-        jenkinsTunnel: "${CASC_KUBE_SERVICE}:"
-        skipTlsVerify: true
   globalNodeProperties:
     - envVars:
         env:
