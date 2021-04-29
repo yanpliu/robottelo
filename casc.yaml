@@ -72,16 +72,8 @@ jenkins:
               - "authenticated"
   clouds:
     - kubernetes:
-        addMasterProxyEnvVars: true
-        containerCapStr: "100"
-        credentialsId: ""
-        jenkinsTunnel: "${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:${CASC_JNLP_PORT}"
-        jenkinsUrl: "http://${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:80"
-        maxRequestsPerHostStr: "32"
-        name: "upshift"
-        namespace: "jenkins-csb-satellite-qe"
-        serverCertificate: ${casc-secret/ocpv4-server-cert}
-        serverUrl: "https://kubernetes.default.svc.cluster.local:443"
+        jenkinsTunnel: "${CASC_KUBE_SERVICE}:"
+        skipTlsVerify: true
   globalNodeProperties:
     - envVars:
         env:
