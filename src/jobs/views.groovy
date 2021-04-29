@@ -15,9 +15,12 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
         testTrendChart {
             displayName("FAILED Test Trend")
             displayStatus(DisplayStatus.FAILED)
+            dateRange(14)
+            graphHeight(300)
+            graphWidth(450)
         }
         testStatisticsChart {
-            displayName("Test Statistics")
+            displayName("Test Result Proportions")
         }
     }
 
@@ -25,9 +28,13 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
         testTrendChart {
             displayName("SKIPPED Test Trend")
             displayStatus(DisplayStatus.SKIPPED)
+            dateRange(14)
+            graphHeight(300)
+            graphWidth(450)
         }
         testStatisticsGrid {
-            displayName("Test Results")
+            displayName("Test Result Statistics")
+            useBackgroundColors(true)
         }
     }
 
