@@ -21,4 +21,6 @@ class pipelineVars implements Serializable {
     String polarionProject = 'RHSAT6'
     String polarionUser = 'rhsat6_machine'
 
+    String towerUser = 'satqe_auto_droid'
+
 }
