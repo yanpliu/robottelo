@@ -1,5 +1,5 @@
 job('Seed Job') {
-  label(name='swarm')
+  label(name='master')
   wrappers {
     preBuildCleanup()
   }
