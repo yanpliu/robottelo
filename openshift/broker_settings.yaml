@@ -21,6 +21,9 @@ nicks:
     rhel7:
         workflow: "deploy-base-rhel"
         rhel_version: "7.9"
+    rhel7_fips:
+        workflow: "deploy-base-rhel-fips"
+        rhel_version: "7.9"
     rhel8:
         workflow: "deploy-base-rhel"
         rhel_version: "8.3"
