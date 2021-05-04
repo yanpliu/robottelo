@@ -162,7 +162,7 @@ def withNode(Map parameters = [:], Closure body) {
 
         // needs for subscribing the satellite with cdn
         envVars.add(secretEnvVar(
-            key: 'RHN_PASSWORD',
+            key: 'ROBOTTELO_subscription__rhn_password',
             secretName: 'satqe-casc-secret',
             secretKey: 'rhn_password'))
     }
