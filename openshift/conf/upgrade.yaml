@@ -68,8 +68,8 @@ UPGRADE:
   EXISTENCE_TEST:
     ENDPOINT:
     ALLOWED_ENDS:
-      - "API"
-      - "CLI"
+      - "api"
+      - "cli"
   # The docker host for container spawn
   DOCKER_VM: "10.8.104.58"
   # The upgrade VLAN vm_domain

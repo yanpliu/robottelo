@@ -57,7 +57,7 @@ def parallel_run_func(Map parameters = [:], Closure func) {
         for (int i = 0; i < parameters.satellite_inventory.size(); i++) {
             def satellite = parameters.satellite_inventory[i]
             def capsule = parameters.capsule_inventory[i]
-            def stepName = "${parameters.stepName}\n${i+1}"
+            def stepName = "${parameters.stepName}\n${i + 1}"
             stepsforparallel[stepName] = {
                 stage(stepName) {
                     func(
@@ -74,4 +74,27 @@ def parallel_run_func(Map parameters = [:], Closure func) {
         }
         parallel stepsforparallel
     }
+}
+
+def execute(Map parameters = [:]) {
+
+    // Default artifacts to collect for importance jobs
+    defaultArtifacts = ['*-results.xml']
+    def artifacts = parameters.get('artifacts', defaultArtifacts)
+
+    returnCode = sh (
+            returnStatus: true,
+            script: """
+                cd \${UPGRADE_DIR}
+                set +e
+                ${parameters.script}
+                pytest_rc=\$?
+                set -e
+                cp --parents ${artifacts.join(' ')} ${WORKSPACE}
+                exit \$pytest_rc
+            """
+    )
+    archiveArtifacts artifacts: artifacts.join(', ')
+
+    return returnCode
 }
