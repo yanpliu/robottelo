@@ -25,7 +25,7 @@ ROBOTTELO:
   # browser tells robottelo which browser to use when testing UI. Valid values
   BROWSER: remote
   # Zalenium command executor
-  COMMAND_EXECUTOR: http://zalenium.usersys.redhat.com:80/wd/hub
+  COMMAND_EXECUTOR: http://wharf.cfme.lab.eng.rdu2.redhat.com:80/wd/hub
   # Webdriver to use
   WEBDRIVER: chrome
   # Desired Capabilities of Web Driver
