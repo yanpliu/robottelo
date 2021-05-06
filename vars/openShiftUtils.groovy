@@ -87,7 +87,7 @@ def withNode(Map parameters = [:], Closure body) {
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_open_ldap__password',
             secretName:'satqe-casc-secret',
-            secretKey:'open_ldap_password'))
+            secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhsso__user_password',
@@ -132,7 +132,7 @@ def withNode(Map parameters = [:], Closure body) {
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhev__password',
             secretName:'satqe-casc-secret',
-            secretKey:'rhev_password'))
+            secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhev__image_password',
