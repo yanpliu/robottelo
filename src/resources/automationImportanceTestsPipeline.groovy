@@ -183,7 +183,7 @@ withCredentials([
                     ibutsu_options = pipelineVars.ibutsuBaseOptions
                 } else { ibutsu_options = " "}
                 return_code = robotteloUtils.execute(script: """
-                    py.test -v -rEfs --tb=line \
+                    py.test -v -rEfs --tb=short \
                     --durations=20 --durations-min=600.0 \
                     --importance ${params.importance} \
                     -n ${params.appliance_count} \
