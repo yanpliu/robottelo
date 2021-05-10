@@ -1,0 +1,12 @@
+GCE:
+  # Google Provider as Compute Resource
+  # Project name in Google provider
+  # PROJECT_ID:
+  # Service Account email id which has compute admin permission
+  # CLIENT_EMAIL:
+  # ZONE
+  ZONE: us-east1-b
+  # client json Certificate path which is local path on satellite
+  CERT_PATH: /usr/share/foreman/sat6qetester_key.json
+  # client certificate URL
+  CERT_URL: http://sesame.lab.eng.rdu2.redhat.com/pub/sat6gce_cert.json
