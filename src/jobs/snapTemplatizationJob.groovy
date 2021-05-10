@@ -32,14 +32,12 @@ pipelineJob('snap-templatization') {
                       overrides {
                         topic(consumerTopic)
                       }
-                      // Message Checks
-                      // Keeping this for an example if we need to be more specific
-//                       checks {
-//                        msgCheck {
-//                          field('$..satellite_version')
-//                          expectedValue('6.9.0')
-//                        }
-//                      }
+                      checks {
+                       msgCheck {
+                         field('$..satellite_version')
+                         expectedValue('^\\d+\\.\\d+\\.\\d+')
+                       }
+                     }
                     }
                   }
                 }
