@@ -12,8 +12,7 @@ ENV VIRTUAL_ENV="/opt/app-root" \
 
 # need root for yum installs
 USER 0
-RUN yum -y install https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/c/crudini-0.9.3-1.el8.noarch.rpm && \
-    yum -y clean all && \
+RUN yum -y clean all && \
     curl https://password.corp.redhat.com/RH-IT-Root-CA.crt -o /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt && \
     update-ca-trust
 
@@ -26,11 +25,8 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     pip install -qr requirements.txt && \
     pip freeze | tee robottelo-pip-freeze.log && \
     git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git jenkins_configs && \
-    cp jenkins_configs/robottelo.properties robottelo.properties && \
     cp jenkins_configs/virtwho.properties virtwho.properties && \
-    cp jenkins_configs/robottelo.yaml robottelo.yaml && \
-    crudini --del robottelo.properties server ssh_key && \
-    crudini --del robottelo.properties server hostname
+    cp jenkins_configs/robottelo.yaml robottelo.yaml
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml
