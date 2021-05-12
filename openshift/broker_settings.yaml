@@ -33,3 +33,6 @@ nicks:
     cap69:
         workflow: "deploy-sat-capsule"
         deploy_sat_version: "6.9"
+    rhel6:
+        workflow: "deploy-base-rhel"
+        rhel_version: "6.10"
