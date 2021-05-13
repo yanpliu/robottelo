@@ -20,6 +20,7 @@ def withNode(Map parameters = [:], Closure body) {
     def buildingContainer = parameters.get('buildingContainer', "builder")
     def yaml = parameters.get('yaml')
     def envVars = parameters.get('envVars', []).collect()
+    def secretName = parameters.get('secretName', pipelineVars.defaultSecretName)
     def extraContainers = parameters.get('extraContainers', [])
 
     def label = "node-${UUID.randomUUID().toString()}"
@@ -42,138 +43,138 @@ def withNode(Map parameters = [:], Closure body) {
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_server__ssh_key_string',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satlab_automation_rsa'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_azurerm__client_secret',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'azure_client_secret'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_azurerm__ssh_pub_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'azure_pub_ssh_key'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_azurerm__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'azure_admin_passwd'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_docker__private_registry_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_http_proxy__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ipa__password_ipa',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'ipa_password'))
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ipa__time_based_secret',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'totp_ipa_secret'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ldap__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'ad_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_open_ldap__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhsso__user_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhsso__totp_secret',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'totp_rhsso_secret'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_bugzilla__api_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'bz-api-key'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_report_portal__api_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'reportportal-robottelo-token'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_osp__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'osp_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_osp__project_domain_id',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'osp_project_domain_id'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ec2__access_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'ec2_access_key'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_ec2__secret_key',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'ec2_secret_key'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhev__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_rhev__image_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_vmware__username',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'vmware_username'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_vmware__password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'vmware_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_vmware__image_password',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'satqe_shared_password'))
 
         // polarion script use through robottelo-container
         envVars.add(secretEnvVar(
             key: 'POLARION_PASSWORD',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'polarion-password'))
 
         // needs for subscribing the satellite with cdn
         envVars.add(secretEnvVar(
             key: 'ROBOTTELO_subscription__rhn_password',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'rhn_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_gce__project_id',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'gce_project_id'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_gce__client_email',
-            secretName:'satqe-casc-secret',
+            secretName: secretName,
             secretKey:'gce_client_email'))
     }
 
@@ -181,11 +182,11 @@ def withNode(Map parameters = [:], Closure body) {
         // secrets that both robottelo-container and broker-container need
         envVars.add(secretEnvVar(
             key: 'BROKER_host_password',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'satqe_shared_password'))
         envVars.add(secretEnvVar(
             key: 'BROKER_AnsibleTower__password',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'tower-password'))
     }
 
@@ -193,11 +194,11 @@ def withNode(Map parameters = [:], Closure body) {
     if (image.contains('cloud-cleanup-container')) {
         envVars.add(secretEnvVar(
             key: 'CLEANUP_GCE__SERVICE_ACCOUNT',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'sat6gce_service_account'))
         envVars.add(secretEnvVar(
             key: 'CLEANUP_AZURE__PASSWORD',
-            secretName: 'satqe-casc-secret',
+            secretName: secretName,
             secretKey: 'azure_client_secret'))
     }
 

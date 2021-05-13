@@ -12,6 +12,7 @@ class pipelineVars implements Serializable {
 
     String defaultCloud = 'upshift'
     String upshiftNameSpace = 'jenkins-csb-satellite-qe'
+    String defaultSecretName = 'satqe-casc-secret'
 
     String ibutsuBaseOptions = '--ibutsu https://ibutsu-api.apps.ocp4.prod.psi.redhat.com/ --ibutsu-project satellite-qe '
 
