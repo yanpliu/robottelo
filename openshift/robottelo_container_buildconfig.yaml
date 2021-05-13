@@ -59,11 +59,6 @@ items:
               secretKeyRef:
                 key: config-files-token
                 name: satqe-casc-secret
-          - name: BUGZILLA_API_KEY
-            valueFrom:
-              secretKeyRef:
-                key: bz-api-key
-                name: satqe-casc-secret
       type: Docker
     triggers:
       - type: ImageChange
