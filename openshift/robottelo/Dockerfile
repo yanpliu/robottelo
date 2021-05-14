@@ -25,8 +25,7 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     pip install -qr requirements.txt && \
     pip freeze | tee robottelo-pip-freeze.log && \
     git clone --depth 1 https://gitlab-ci-token:${CONFIG_FILES_TOKEN}@gitlab.sat.engineering.redhat.com/satelliteqe/jenkins-configs.git jenkins_configs && \
-    cp jenkins_configs/virtwho.properties virtwho.properties && \
-    cp jenkins_configs/robottelo.yaml robottelo.yaml
+    cp jenkins_configs/virtwho.properties virtwho.properties
 
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml

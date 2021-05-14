@@ -176,6 +176,18 @@ def withNode(Map parameters = [:], Closure body) {
             key:'ROBOTTELO_gce__client_email',
             secretName: secretName,
             secretKey:'gce_client_email'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_container_repo__registries__redhat__password',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'container_repo_rh_registry_token'
+        )
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_container_repo__registries__quay__password',
+            secretName: 'satqe-casc-secret',
+            secretKey: 'container_repo_quay_robot_token'
+        )
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container')) {
