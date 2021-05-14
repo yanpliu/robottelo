@@ -23,7 +23,7 @@ SERVER:
   # then broker will attempt to find hosts matching the filter defined
   # before checking out a new host
   # Filter format follows Broker's specification: "hostname<sat"
-  INVENTORY-FILTER: "name<sat"
+  INVENTORY_FILTER: "name<sat"
   # The Ansible Tower workflow used to deploy a satellite
   DEPLOY_WORKFLOW: "deploy-sat-jenkins"
   # Path to private ssh key to be used when connecting via SSH.
