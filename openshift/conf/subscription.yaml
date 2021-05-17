@@ -1,4 +1,9 @@
 SUBSCRIPTION:
   RHN_USERNAME: "rhsatqe"
-  # RHN_PASSWORD: 
+  # RHN_PASSWORD: replace with rhn_password
   RHN_POOLID: "8a85f9a1787e66f70178a2c2354d7646"
+  FM_RHN_POOLID: "8a85f9a1787e66f70178a2c2354d7646 8a85f99f787e670a0178a5c8b3aa3aaa"
+  DOGFOOD_URL: "@format {{this.repos.dogfood_repo_host}}"
+  DOGFOOD_ORG: "Sat6-CI"
+  DOGFOOD_ACTIVATIONKEY: "@format satellite-{this.robottelo.satellite_version}-qa-rhel7"
+  CAPSULE_DOGFOOD_ACTIVATIONKEY: "@format capsule-{this.robottelo.satellite_version}-qa-rhel7"

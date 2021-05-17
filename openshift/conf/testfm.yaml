@@ -1,0 +1,3 @@
+TESTFM:
+  SERVER_HOSTNAME: <SERVER_HOSTNAME>
+  HOTFIX_URL: http://file.pnq.redhat.com/jpathan/repos/
