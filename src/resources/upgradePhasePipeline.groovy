@@ -86,38 +86,34 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_${from_version}_to_${params.sat_version} ${params.build_label}"
         }
         stage("Setup products for upgrade"){
-            dir('${UPGRADE_DIR}'){
-                sh """
-                     echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
-                     echo \"eval \\\$(ssh-agent -s) &> /dev/null ; ssh-add - <<< \\\$SATLAB_PRIVATE_KEY &> /dev/null\" >> ~/.bashrc
-                     source ~/.bashrc
-                     fab -u root product_setup_for_upgrade_on_brokers_machine:"${params.upgrade_type}","${params.os}",'${satellite_hostname}',"${capsule_hostnames}"
-                """
-            }
+            sh """
+                cd \${UPGRADE_DIR}
+                echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
+                echo \"eval \\\$(ssh-agent -s) &> /dev/null ; ssh-add - <<< \\\$SATLAB_PRIVATE_KEY &> /dev/null\" >> ~/.bashrc
+                source ~/.bashrc
+                fab -u root product_setup_for_upgrade_on_brokers_machine:"${params.upgrade_type}","${params.os}",'${satellite_hostname}',"${capsule_hostnames}"
+            """
         }
         stage("Satellite upgrade"){
-         dir('${UPGRADE_DIR}'){
-                sh """
-                    source ~/.bashrc
-                    fab -u root product_upgrade:"${params.upgrade_type}",'satellite'
-                """
-            }
+            sh """
+                cd \${UPGRADE_DIR}
+                source ~/.bashrc
+                fab -u root product_upgrade:"${params.upgrade_type}",'satellite'
+            """
         }
         stage("Capsule upgrade"){
-            dir('${UPGRADE_DIR}'){
-                sh """
-                    source ~/.bashrc
-                    fab -u root product_upgrade:"${params.upgrade_type}",'capsule'
-                """
-            }
+            sh """
+                cd \${UPGRADE_DIR}
+                source ~/.bashrc
+                fab -u root product_upgrade:"${params.upgrade_type}",'capsule'
+            """
         }
         stage("Content host upgrade"){
-            dir('${UPGRADE_DIR}'){
-                sh """
-                     source ~/.bashrc
-                     fab -u root product_upgrade:"${params.upgrade_type}",'client'
-                """
-            }
+            sh """
+                cd \${UPGRADE_DIR}
+                source ~/.bashrc
+                fab -u root product_upgrade:"${params.upgrade_type}",'client'
+            """
         }
         currentBuild.result = 'SUCCESS'
         sh '''
@@ -128,7 +124,6 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
            '''
     }
     catch (exc){
-        err = exc
         echo "Catch Error: \n${exc}"
         currentBuild.result = 'FAILURE'
     }
