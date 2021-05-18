@@ -1,6 +1,8 @@
-def execute(Map params = [:]) {
+def execute(Map parameters = [:]) {
 
-    artifacts = ['robottelo*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
+    // Default artifacts to collect for importance jobs
+    defaultArtifacts = ['robottelo*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
+    def artifacts = parameters.get('artifacts', defaultArtifacts)
 
     returnCode = sh (
             returnStatus: true,
@@ -8,7 +10,7 @@ def execute(Map params = [:]) {
                 cd \${ROBOTTELO_DIR}
                 git log -1
                 set +e
-                ${params.script}
+                ${parameters.script}
                 pytest_rc=\$?
                 tar -czf screenshots.tar.gz screenshots
                 set -e
