@@ -34,8 +34,8 @@ pipelineJob('snap-templatization') {
                       }
                       checks {
                        msgCheck {
-                         field('$..satellite_version')
-                         expectedValue('^\\d+\\.\\d+\\.\\d+')
+                         field('$.satellite_version')
+                         expectedValue('\\d+\\.\\d+\\.\\d+')
                        }
                      }
                     }
