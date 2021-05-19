@@ -39,7 +39,7 @@ nicks:
         target_memory: "1536MiB"
         target_cores: "1"
     sat69:
-        workflow: "deploy-sat-lite"
+        workflow: "deploy-sat-jenkins"
         deploy_sat_version: "6.9"
     cap69:
         workflow: "deploy-sat-capsule"
