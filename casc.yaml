@@ -118,6 +118,8 @@ security:
     useScriptSecurity: false
   scriptApproval:
     approvedSignatures:
+      - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+      - "method hudson.model.Run getLog int"
       - "method java.io.OutputStream write byte[]"
       - "method java.lang.String getBytes java.lang.String"
       - "method java.net.HttpURLConnection setRequestMethod java.lang.String"
@@ -127,11 +129,12 @@ security:
       - "method java.net.URLConnection setRequestProperty java.lang.String java.lang.String"
       - "method java.net.URLConnection getInputStream"
       - "method java.net.URLConnection getOutputStream"
-      - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
+      - "method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild"
       - "new groovy.json.JsonSlurperClassic"
       - "staticMethod groovy.json.JsonOutput toJson java.lang.Object"
       - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream"
       - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toInteger java.lang.Number"
+      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods find java.lang.Object groovy.lang.Closure"
 
 unclassified:
   shell:

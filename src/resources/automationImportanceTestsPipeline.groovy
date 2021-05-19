@@ -201,7 +201,20 @@ withCredentials([
                 """)
 
                 junit "sat-${params.importance}-results.xml"
+
+                 // Add a sidebar link with the ibutsu URL
+            log_lines = currentBuild.getRawBuild().getLog(50)
+            ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
+            if (ibutsu_line){
+                ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
+                properties([
+                    sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
+                ])
+            } else {
+                println('No ibutsu run link found, no sidebar link to add')
+
             }
+
 
             stage('Trigger Polarion Test Run Upload') {
                 println("Pytest Exit code is ${return_code}")
