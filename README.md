@@ -36,6 +36,15 @@ This repo makes use of the [Job DSL Plugin](https://github.com/jenkinsci/job-dsl
 Examples will be in the `src/jobs/` folder with comments inline.  Each example will try to focus on one topic for easy consumption, but you are encouraged to combine concepts to reduce code and have more reusability.
 
 
+## Plugins
+
+Plugins are added to Jenkins at container build time, via plugins.txt.
+
+CCI-JD provides a script that will reconsile plugins that we have defined locally and the list of default CSB plugins. It should be used to generate a pinned plugins.txt file, from the Jenkins-csb branch that matches the version of Jenkins we're running. (example: 2-277-2)
+
+https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-277-2/cci-jd/docs/plugins.md#reproducible-jenkins-deployment
+
+
 ## Testing
 
 `./gradlew test` runs the spec tests.
