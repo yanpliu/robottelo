@@ -70,7 +70,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                                     --rhn_username ${rhn_username} \
                                     --rhn_password \${UPGRADE_subscription__rhn_password} \
                                     --rhn_pool ${rhn_pool} \
-                                    --distribution "cdn"
+                                    --distribution ${params.distribution}
                                 """
                             )
                         cap_hosts = cap_hosts + " ${cap.hostname}"
