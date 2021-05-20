@@ -3,7 +3,7 @@
 import groovy.json.*
 
 def repo_sat_version = "${params.sat_version.replace('.','_')}"
-def from_version = params['zstream_upgrade']?params.sat_version:((sat_version).toFloat() - 0.1).round(1)
+def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
 def to_version = params.sat_version
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 def at_vars = [
