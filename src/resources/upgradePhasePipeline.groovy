@@ -2,16 +2,15 @@
 
 import groovy.json.*
 
-def repo_sat_version = "${params.sat_version.replace('.','_')}"
-def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
-def to_version = params.sat_version
+def sat_version = to_version = params.sat_version
+def from_version = params['zstream_upgrade']? sat_version : upgradeUtils.previous_version(sat_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "${from_version}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "${to_version}"),
+        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${sat_version}'"),
+        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${sat_version}'"),
+        containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
+        containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
         containerEnvVar(key: 'UPGRADE_UPGRADE__ANSIBLE_REPO_VERSION', value: params.ansible_repo_version),
         containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: params.distribution),
@@ -67,7 +66,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                                     --capsule_rename "true" \
                                     --satellite_hostname ${satellite_hostname} \
                                     --satellite_name ${satellite_name} \
-                                    --sat_cap_version ${params.sat_version} \
+                                    --sat_cap_version ${sat_version} \
                                     --rhn_username ${rhn_username} \
                                     --rhn_password \${UPGRADE_subscription__rhn_password} \
                                     --rhn_pool ${rhn_pool} \
@@ -84,7 +83,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 env.satellite_hostname = params.external_satellite_hostname
                 env.capsule_hostnames = params.external_capsule_hostnames
             }
-            currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_${from_version}_to_${params.sat_version} ${params.build_label}"
+            currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_${from_version}_to_${sat_version} ${params.build_label}"
         }
         stage("Setup products for upgrade"){
             sh """
@@ -136,7 +135,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             }
         emailext(
             to: "sat-qe-jenkins@redhat.com",
-            subject: "Upgrade Status ${from_version} to ${params.sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
+            subject: "Upgrade Status ${from_version} to ${sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
             body: '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             attachmentsPattern: 'full_upgrade'
         )
