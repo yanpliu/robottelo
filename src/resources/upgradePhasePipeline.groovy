@@ -2,13 +2,13 @@
 
 import groovy.json.*
 
-def sat_version = to_version = params.sat_version
-def from_version = params['zstream_upgrade']? sat_version : upgradeUtils.previous_version(sat_version)
+def to_version = params.sat_version
+def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${sat_version}'"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${sat_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
+        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
