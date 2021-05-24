@@ -6,7 +6,7 @@ class prTesterDefaults {
 static List userWhitelist = ['omkarkhatavkar', 'jyejare', 'rplevka', 'jameerpathan111', 'swadeley',
 'mshriver', 'jacobcallahan', 'latran', 'rdrazny', 'tstrych', 'lvrtelov', 'mccun934', 'ehelms', 'tpapaioa',
  'lhellebr', 'lpramuk', 'eko999', 'pondrejk', 'mirekdlugosz', 'devendra104', 'ogajduse', 'Gauravtalreja1',
- 'ColeHiggins2', 'jawatts', 'akhil-jha', 'bherrin3', 'hkx303', 'vsedmik']
+ 'ColeHiggins2', 'jawatts', 'akhil-jha', 'bherrin3', 'hkx303', 'vsedmik', 'synkd']
 
 // for reference https://github.com/orgs/SatelliteQE/teams/repository-admins/members
 static List admins = ['lpramuk', 'mshriver', 'jacobcallahan', 'jyejare', 'bherrin3', 'vijay8451',
