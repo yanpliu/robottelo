@@ -68,7 +68,8 @@ def utilJobs = ['Master-Seed',
                 'vm-sla-enforcement',
                 'polarion-testrun-upload',
                 'polarion-testcase-upload',
-                'cloud-resources-cleanup'
+                'cloud-resources-cleanup',
+                'robottelo-pr-testing'
 ]
 
 listView("Utility") {
@@ -81,12 +82,11 @@ listView("Utility") {
 
     columns {
       status()
-      weather()
       name()
+      lastBuildConsole()
       lastSuccess()
-      lastFailure()
       lastDuration()
-      progressBar()
+      cronTrigger()
     }
 }
 
@@ -101,7 +101,6 @@ listView("Templatization") {
 
     columns {
       status()
-      weather()
       name()
       lastSuccess()
       lastFailure()

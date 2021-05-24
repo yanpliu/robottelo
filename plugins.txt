@@ -23,6 +23,7 @@ configuration-as-code:1.47
 copyartifact:1.46
 credentials-binding:1.24
 credentials:2.3.17
+cron_column:1.4
 cvs:2.18
 dashboard-view:2.15
 display-url-api:2.3.4
