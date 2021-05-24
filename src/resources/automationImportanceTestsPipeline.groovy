@@ -16,8 +16,11 @@ withCredentials([
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
             containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
             containerEnvVar(
-                    key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
-                    value: "[automation-${params.sat_version}-${params.importance}-rhel7]"
+                key: 'ROBOTTELO_robottelo__satellite_version',
+                value: "'${params.sat_version.tokenize('.').take(2).join('.')}'"),
+            containerEnvVar(
+                key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
+                value: "[automation-${params.sat_version}-${params.importance}-rhel7]"
             )
     ]
     def sat_version = params.sat_version

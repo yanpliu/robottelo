@@ -3,10 +3,10 @@ def call(Map parameters = [:]) {
 
     def sat_version = parameters.get('sat_version')
     def snap_version = parameters.get('snap_version')
-    def at_vars = parameters.get('at_vars')
+    def node_vars = parameters.get('node_vars')
     def errorCaught = false
 
-    openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: at_vars) {
+    openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: node_vars) {
         try {
             stage('Check Out Satellite Instances') {
                 brokerUtils.checkout(

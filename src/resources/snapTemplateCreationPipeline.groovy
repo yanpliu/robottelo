@@ -8,11 +8,11 @@ node('master') {
     snapTemplateSanityCheck = load("${WORKSPACE}@script/src/resources/snapTemplateSanityCheck.groovy")
 }
 
-def at_vars = [
+def broker_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
 ]
 try {
-    openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
+    openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: broker_vars) {
 
         stage('Parse UMB Message') {
             println("CI Event Received, parsing message")
@@ -119,10 +119,16 @@ try {
 
         }
 
+        robottelo_vars = broker_vars + [
+            containerEnvVar(
+                key: 'ROBOTTELO_robottelo__satellite_version',
+                value: "'${sat_version.tokenize('.').take(2).join('.')}'"
+            )
+        ]
         sanityPassed = snapTemplateSanityCheck(
                 'sat_version': sat_version,
                 'snap_version': snap_version,
-                'at_vars': at_vars,
+                'node_vars': robottelo_vars,
         )
 
         stage('Archive Artifacts') {

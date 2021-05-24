@@ -12,7 +12,7 @@ def execute(Map parameters = [:]) {
                 set +e
                 ${parameters.script}
                 pytest_rc=\$?
-                tar -czf screenshots.tar.gz screenshots
+                tar --ignore-failed-read -czf screenshots.tar.gz screenshots
                 set -e
                 cp ${artifacts.join(' ')} ${WORKSPACE}
                 exit \$pytest_rc
