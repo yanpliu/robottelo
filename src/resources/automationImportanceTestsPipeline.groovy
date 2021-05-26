@@ -69,8 +69,7 @@ withCredentials([
                     def filter_params =
                         "?page.page=1&page.size=1&page.sort=name%2Cnumber%2CDESC&" +
                         "filter.ne.status=IN_PROGRESS&filter.has.attributeValue=" +
-                        "${sat_version}-${snap_version}&filter.has.attributeValue=" +
-                        "${params.importance}&filter.eq.name=${rp_launch}"
+                        "${sat_version}-${snap_version},${params.importance}&filter.eq.name=${rp_launch}"
 
                     if(!rerun_of){
                         def parent_req = new URL("${rp_url}/api/v1/${rp_project}/launch${filter_params}").openConnection()
