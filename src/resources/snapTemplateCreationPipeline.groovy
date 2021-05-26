@@ -162,6 +162,7 @@ try {
                                 [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
                         ],
                         wait: false
+                build job: "manifest-downloader", wait: false
             } else {
                 println("Template creation failed, skipping triggering automation job")
             }
