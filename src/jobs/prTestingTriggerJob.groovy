@@ -16,10 +16,6 @@ pipelineJob("robottelo-pr-testing") {
         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
     }
 
-    logRotator {
-        daysToKeep(15)
-    }
-
     properties {
         githubProjectUrl(prTesterDefaults.robotteloRepoUrl)
     }

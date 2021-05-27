@@ -69,10 +69,6 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                 )
             }
 
-            logRotator {
-                daysToKeep(42)
-            }
-
             properties {
                 disableConcurrentBuilds()
             }
