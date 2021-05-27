@@ -7,7 +7,65 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
     jobFilters {
       regex {
         matchType(MatchType.INCLUDE_MATCHED)
-        regex(".*${versionName}.*")
+        regex(".*${versionName}.*(critical|high|medium|low|trigger|maintain).*")
+      }
+    }
+
+    leftPortlets {
+        testTrendChart {
+            displayName("FAILED Test Trend")
+            displayStatus(DisplayStatus.FAILED)
+            dateRange(14)
+            graphHeight(300)
+            graphWidth(450)
+        }
+        testStatisticsChart {
+            displayName("Test Result Proportions")
+        }
+    }
+
+    rightPortlets {
+        testTrendChart {
+            displayName("SKIPPED Test Trend")
+            displayStatus(DisplayStatus.SKIPPED)
+            dateRange(14)
+            graphHeight(300)
+            graphWidth(450)
+        }
+        testStatisticsGrid {
+            displayName("Test Result Statistics")
+            useBackgroundColors(true)
+        }
+    }
+
+    bottomPortlets {
+        jenkinsJobsList {
+            displayName("Jobs Matching ${versionName}")
+        }
+    }
+
+    // tons of column options: https://jenkinsci.github.io/job-dsl-plugin/#path/listView-columns
+    columns {
+      status()
+      name()
+      buildDescriptionColumn {
+        // These are required for some reason
+        forceWidth(false)
+        columnWidth(80)
+      }
+      lastBuildConsole()
+      lastSuccess()
+      lastFailure()
+      lastDuration()
+    }
+  }
+  
+  // Upgrade Dashboard
+  dashboardView("${versionName} Upgrade") {
+    jobFilters {
+      regex {
+        matchType(MatchType.INCLUDE_MATCHED)
+        regex(".*${versionName}.*(Upgrade|upgrade).*")
       }
     }
 
