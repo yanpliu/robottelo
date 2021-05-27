@@ -3,6 +3,10 @@ job('Seed Job') {
   wrappers {
     preBuildCleanup()
   }
+  logRotator {
+    artifactDaysToKeep(2)
+    daysToKeep(5)
+  }
   scm {
     git {
       branch('master')

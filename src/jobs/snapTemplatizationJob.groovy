@@ -9,6 +9,10 @@ pipelineJob('snap-templatization') {
         blockLevel('GLOBAL')
         scanQueueFor('ALL')
     }
+    logRotator {
+        artifactDaysToKeep(10)
+        daysToKeep(35)
+    }
 
     def uuid = { UUID.randomUUID().toString() }
     def consumerID = { "Consumer.rh-jenkins-ci-plugin.${uuid()}" }

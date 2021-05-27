@@ -8,6 +8,10 @@ pipelineJob("robottelo-pr-testing") {
     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
     description("Robottelo PR Testing Pipeline")
+    logRotator {
+        artifactDaysToKeep(7)
+        daysToKeep(14)
+    }
     parameters {
         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
     }

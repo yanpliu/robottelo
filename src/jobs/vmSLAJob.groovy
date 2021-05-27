@@ -4,6 +4,11 @@ import jenkins.model.*
 pipelineJob("vm-sla-enforcement") {
     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
+    logRotator {
+        artifactDaysToKeep(3)
+        daysToKeep(7)
+    }
+
     parameters {
         stringParam{
             name("tower_url")
