@@ -58,8 +58,8 @@ withCredentials([
                 sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
                 snap_version = params.snap_version ?: first_host_name_parts[4]
                 currentBuild.description = sat_version + " snap: " + snap_version
-
             }
+
             stage('Create report portal launch and parent test') {
                 if(params.use_reportportal) {
                     /* figure out whether we're running a re-run searching for not-running launches with name
@@ -205,17 +205,18 @@ withCredentials([
 
                 junit "sat-${params.importance}-results.xml"
 
-                 // Add a sidebar link with the ibutsu URL
-            log_lines = currentBuild.getRawBuild().getLog(50)
-            ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
-            if (ibutsu_line){
-                ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
-                properties([
-                    sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
-                ])
-            } else {
-                println('No ibutsu run link found, no sidebar link to add')
+                // Add a sidebar link with the ibutsu URL
+                log_lines = currentBuild.getRawBuild().getLog(50)
+                ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
+                if (ibutsu_line){
+                    ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
+                    properties([
+                        sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
+                    ])
+                } else {
+                    println('No ibutsu run link found, no sidebar link to add')
 
+                }
             }
 
 
