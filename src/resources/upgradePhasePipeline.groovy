@@ -66,7 +66,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                                     --capsule_rename "true" \
                                     --satellite_hostname ${satellite_hostname} \
                                     --satellite_name ${satellite_name} \
-                                    --sat_cap_version ${sat_version} \
+                                    --sat_cap_version ${from_version} \
                                     --rhn_username ${rhn_username} \
                                     --rhn_password \${UPGRADE_subscription__rhn_password} \
                                     --rhn_pool ${rhn_pool} \

@@ -41,7 +41,7 @@ UPGRADE:
   # This statement will true until downstream release not become beta.
   DOWNSTREAM_FM_UPGRADE: false
   # Used to whitelist the mentioned params in the foreman-maintain upgrade.
-  WHITELIST_PARAM:
+  WHITELIST_PARAM: ""
   # Capsule upgrade via foreman-maintain, due to limited version support, we keep it as false.
   FOREMAN_MAINTAIN_CAPSULE_UPGRADE: false
   # User Defined clients, we use it for content host upgrade.
