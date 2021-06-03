@@ -85,11 +85,17 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             }
             currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_${from_version}_to_${sat_version} ${params.build_label}"
         }
+        stage("Setup ssh-agent"){
+            sh """
+                echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
+                echo \"\$(ssh-agent -s)\" >> ~/.bashrc
+                source ~/.bashrc
+                ssh-add - <<< \$SATLAB_PRIVATE_KEY
+            """
+        }
         stage("Setup products for upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
-                echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
-                echo \"eval \\\$(ssh-agent -s) &> /dev/null ; ssh-add - <<< \\\$SATLAB_PRIVATE_KEY &> /dev/null\" >> ~/.bashrc
                 source ~/.bashrc
                 fab -u root product_setup_for_upgrade_on_brokers_machine:"${params.upgrade_type}","${params.os}",'${satellite_hostname}',"${capsule_hostnames}"
             """
