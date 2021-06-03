@@ -40,12 +40,17 @@ withCredentials([
     openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo_vars) {
         try {
             stage('Check Out Satellite Instances') {
+                if(params.template_name != '') {
+                    template_name = ['deploy_template_name': params.template_name]
+                } else {
+                    temple_name = [:]  // empty map
+                }
                 inventory = brokerUtils.checkout(
                     'deploy-sat-jenkins': [
                         'sat_version': params.sat_version,
                         'snap_version': params.snap_version,
                         'count': params.appliance_count
-                    ],
+                    ] << template_name,
                 )
             }
 

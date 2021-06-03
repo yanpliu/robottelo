@@ -33,6 +33,11 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     "Satellite version to deployed, format is a.b.c"
                 )
                 stringParam(
+                    'template_name',
+                    "",
+                    "Specific template name to deploy, for emergency use"
+                )
+                stringParam(
                     'appliance_count',
                     "${config['num_appliances']}",
                     "Number of Satellite instances to checkout for each pytest session"
