@@ -39,7 +39,7 @@ def withNode(Map parameters = [:], Closure body) {
 
     // Inject private ssh key included in satlab-tower vms straight from openshift
     // TODO: attempted to inject this in the dockerfile ENV block, but paramiko didn't accept it
-    if (image.contains('robottelo-container')) {
+    if (image.contains('robottelo-container') || image.contains('sat-upgrades-robottelo-container')) {
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_server__ssh_password',
@@ -218,8 +218,8 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey: 'kubevirt_hypervisor_password'))
     }
 
-    if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container')) {
-        // secrets that both robottelo-container and broker-container need
+    if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container') || image.contains('sat-upgrades-robottelo-container')) {
+        // secrets that robottelo-container, broker-container and upgrade container need
         envVars.add(secretEnvVar(
             key: 'BROKER_host_password',
             secretName: secretName,
