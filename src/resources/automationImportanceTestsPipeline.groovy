@@ -41,9 +41,10 @@ withCredentials([
         try {
             stage('Check Out Satellite Instances') {
                 if(params.template_name != '') {
+                    println('Template name was passed in parameters, using it for broker')
                     template_name = ['deploy_template_name': params.template_name]
                 } else {
-                    temple_name = [:]  // empty map
+                    template_name = [:]  // empty map
                 }
                 inventory = brokerUtils.checkout(
                     'deploy-sat-jenkins': [
