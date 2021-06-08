@@ -69,24 +69,25 @@ openShiftUtils.withNode(image: pipelineVars.ciTestFmImage, envVars: testfm_vars)
             testfmUtils.execute(inventory: target_inventory, script: command)
             junit 'foreman-results.xml'
         }
-        email_body = "${env.JOB_NAME} Build ${BUILD_NUMBER} is completed, check results ${BUILD_URL}"
-        email_subject = "Foreman-Maintain Automation Report for ${currentBuild.description}"
     }
     catch (exc) {
-        echo "Catch Error: \n${exc}"
-        email_body = "Jenkins Console Log: ${BUILD_URL}. Error that was caught:<br><br> ${exc}"
+        print "Pipeline failed with ${exc}"
+        email_to = ['sat-qe-jenkins']
+        email_body = "Jenkins Console Log: ${BUILD_URL}. \nError that was caught:<br><br> ${exc}"
         email_subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
         currentBuild.result = 'FAILURE'
     }
     finally {
+        if (currentBuild.result == 'FAILURE') {
+            emailUtils.sendEmail(
+                'to_nicks': email_to,
+                'reply_nicks': email_to,
+                'subject': email_subject,
+                'body': email_body
+            )
+        }
         stage('Check In Satellite Instances') {
             brokerUtils.checkin_all()
         }
-        emailUtils.sendEmail(
-            'to_nicks': ['gtalreja'],
-            'reply_nicks': ['gtalreja'],
-            'subject': email_subject,
-            'body': email_body
-        )
     }
 }
