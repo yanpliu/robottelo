@@ -41,6 +41,11 @@ pipelineJob("polarion-testrun-upload"){
                 "Build number of the Job that results will be uploaded from"
         )
         stringParam(
+                'test_run_type',
+                "",
+                "To differentiate special runs (fips, upgrade)"
+        )
+        stringParam(
                 'polarion_url',
                 globalJenkinsDefaults.polarion_url,
                 "URL of Polarion instance you want to upload results to"
@@ -64,3 +69,4 @@ pipelineJob("polarion-testrun-upload"){
         }
     }
 }
+

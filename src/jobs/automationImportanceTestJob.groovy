@@ -3,15 +3,28 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
+def defaultConfig = [
+    'rp_launch': 'OCP-Jenkins-CI',
+    'workflow': 'deploy-sat-jenkins',
+    ]
+
 def jobCFG = [
         'critical':   ['num_appliances': '5',
-                       'importance': 'Critical',],
+                       'importance': 'Critical',
+                       'pytest_options': "-m 'not destructive' --importance Critical tests/foreman/",
+                       ] << defaultConfig,
         'high':       ['num_appliances': '10',
-                       'importance'  : 'High',],
+                       'importance'  : 'High',
+                       'pytest_options': "-m 'not destructive' --importance High tests/foreman/",
+                       ] << defaultConfig,
         'medium':     ['num_appliances': '5',
-                       'importance'  : 'Medium',],
+                       'importance'  : 'Medium',
+                       'pytest_options': "-m 'not destructive' --importance Medium tests/foreman/",
+                       ] << defaultConfig,
         'low':        ['num_appliances': '5',
-                       'importance': 'Low',],
+                       'importance': 'Low',
+                       'pytest_options': "-m 'not destructive' --importance Low tests/foreman/",
+                       ] << defaultConfig,
 ]
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
@@ -53,8 +66,18 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     "Importance mark for pytest session. Must be capitalized"
                 )
                 stringParam(
+                    'workflow',
+                    "${config['workflow']}",
+                    "SatLab workflow to be used"
+                )
+                stringParam(
+                    "rp_launch",
+                    "${config['rp_launch']}",
+                    "Report Portal launch name"
+                )
+                stringParam(
                     'pytest_options',
-                    "-m 'not destructive' tests/foreman/",
+                    "${config['pytest_options']}",
                     'Pytest options, other than those specified with unique string params.'
                 )
                 booleanParam(

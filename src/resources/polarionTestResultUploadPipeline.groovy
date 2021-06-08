@@ -7,7 +7,7 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage) {
     stage('Set Build Description') {
         currentBuild.description = "Trigger: " + params.job_name +
                 " Run: " + params.build_number +
-                " Build: " + params.sat_version + "-" + params.snap_version
+                " Build: " + params.sat_version + "-" + params.snap_version + (params.test_run_type ? " $params.test_run_type" : "")
 
     }
 
@@ -35,7 +35,7 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage) {
 
     stage('Test Result Upload') {
         // Set the ID for the polarion test run
-        test_run_id = "Satellite ${sat_version}-${snap_version} rhel${rhel_version}"
+        test_run_id = "Satellite ${sat_version}-${snap_version} rhel${rhel_version}" + (test_run_type ? " $test_run_type" : "")
         sh """
             cd \${ROBOTTELO_DIR}
             pip install Betelgeuse==1.8.0
@@ -48,3 +48,4 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage) {
         """
     }
 }
+

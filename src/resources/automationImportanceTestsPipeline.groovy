@@ -30,12 +30,17 @@ withCredentials([
     def rp_project = pipelineVars.reportPortalProject
     // use this format once robottelo rerun-failed plugin has this sorted
     // def rp_launch = "Importance_${params.importance}"
-    def rp_launch = "OCP-Jenkins-CI"
+    def rp_launch = params.rp_launch 
     def rp_pytest_options = "--reportportal -o rp_endpoint=${rp_url} -o rp_project=${rp_project} -o rp_hierarchy_dirs=false " +
         "-o  rp_log_batch_size=100 --rp-launch=${rp_launch}"
     def rerun_of = params.rerun_of
     def launch_uuid = ''
     def wrapper_test_uuid = ''
+    def workflow = params.workflow
+    def test_run_type = ''
+    if (params.importance == 'Fips') {
+        test_run_type = 'Fips'
+    }
 
     openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo_vars) {
         try {
@@ -47,7 +52,7 @@ withCredentials([
                     template_name = [:]  // empty map
                 }
                 inventory = brokerUtils.checkout(
-                    'deploy-sat-jenkins': [
+                    "${workflow}": [
                         'sat_version': params.sat_version,
                         'snap_version': params.snap_version,
                         'count': params.appliance_count
@@ -199,7 +204,6 @@ withCredentials([
                 return_code = robotteloUtils.execute(script: """
                     py.test -v -rEfs --tb=short \
                     --durations=20 --durations-min=600.0 \
-                    --importance ${params.importance} \
                     -n ${params.appliance_count} \
                     --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
@@ -235,6 +239,7 @@ withCredentials([
                                     [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
                                     [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
                                     [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                                    [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
                                     [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
                             ],
                             wait: false
