@@ -52,9 +52,9 @@ withCredentials([
                     template_name = [:]  // empty map
                 }
                 inventory = brokerUtils.checkout(
-                    "${workflow}": [
-                        'sat_version': params.sat_version,
-                        'snap_version': params.snap_version,
+                    (workflow): [
+                        'deploy_sat_version': params.sat_version,
+                        'deploy_snap_version': params.snap_version,
                         'count': params.appliance_count
                     ] << template_name,
                 )

@@ -11,8 +11,8 @@ openShiftUtils.withNode(image: pipelineVars.ciTestFmImage, envVars: testfm_vars)
         stage('Check out Satellite/Capsule') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-sat-jenkins': [
-                    'sat_version': params.sat_version,
-                    'snap_version': params.snap_version,
+                    'deploy_sat_version': params.sat_version,
+                    'deploy_snap_version': params.snap_version,
                     'count': 1
                 ],
             )
@@ -20,8 +20,8 @@ openShiftUtils.withNode(image: pipelineVars.ciTestFmImage, envVars: testfm_vars)
             if (params.component == 'Capsule') {
                 capsule_inventory = brokerUtils.checkout(
                     'deploy-sat-capsule': [
-                        'sat_version': params.sat_version,
-                        'snap_version': params.snap_version,
+                        'deploy_sat_version': params.sat_version,
+                        'deploy_snap_version': params.snap_version,
                         'count': 1
                     ],
                 )

@@ -10,7 +10,11 @@ def call(Map parameters = [:]) {
         try {
             stage('Check Out Satellite Instances') {
                 brokerUtils.checkout(
-                    'deploy-sat-jenkins':[ 'sat_version': sat_version, 'snap_version': snap_version, 'count': 1 ],
+                    'deploy-sat-jenkins': [
+                        'deploy_sat_version': sat_version,
+                        'deploy_snap_version': snap_version,
+                        'count': 1
+                    ],
                 )
             }
 
