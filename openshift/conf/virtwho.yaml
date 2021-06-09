@@ -1,0 +1,59 @@
+VIRTWHO:
+    SKU:
+        vdc_physical: RH00001
+        vdc_virtual: RH00049
+    ESX:
+        hypervisor_type: esx
+        hypervisor_server: 10.73.131.152
+        hypervisor_username: administrator@vsphere.local
+        hypervisor_password:
+        guest: 10.73.130.255
+        guest_port: 22
+        guest_username: root
+        guest_password: redhat
+    XEN:
+        hypervisor_type: xen
+        hypervisor_server: 10.73.131.176
+        hypervisor_username: root
+        hypervisor_password:
+        guest: 10.73.131.239
+        guest_port: 22
+        guest_username: root
+        guest_password: redhat
+    HYPERV:
+        hypervisor_type: hyperv
+        hypervisor_server: 10.73.131.206
+        hypervisor_username: administrator
+        hypervisor_password:
+        guest: 10.73.131.223
+        guest_port: 22
+        guest_username: root
+        guest_password: redhat
+    RHEVM:
+        hypervisor_type: rhevm
+        hypervisor_server: https://bootp-73-131-193.rhts.eng.pek2.redhat.com:443/ovirt-engine
+        hypervisor_username: admin@internal
+        hypervisor_password:
+        guest: 10.66.146.196
+        guest_port: 22
+        guest_username: root
+        guest_password: redhat
+    LIBVIRT:
+        hypervisor_type: libvirt
+        hypervisor_server: 10.73.131.217
+        hypervisor_username: root
+        hypervisor_password:
+        guest: 10.73.131.201
+        guest_port: 22
+        guest_username: root
+        guest_password: redhat
+    KUBEVIRT:
+        hypervisor_type: kubevirt
+        hypervisor_server: 10.66.144.7
+        hypervisor_username: root
+        hypervisor_password:
+        hypervisor_config_file: /root/kube.conf
+        guest: 10.66.144.7
+        guest_port: 31270
+        guest_username: root
+        guest_password: redhat

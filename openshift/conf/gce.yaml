@@ -1,9 +1,9 @@
 GCE:
   # Google Provider as Compute Resource
   # Project name in Google provider
-  # PROJECT_ID:
+  PROJECT_ID:
   # Service Account email id which has compute admin permission
-  # CLIENT_EMAIL:
+  CLIENT_EMAIL:
   # ZONE
   ZONE: us-east1-b
   # client json Certificate path which is local path on satellite

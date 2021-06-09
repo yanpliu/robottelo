@@ -6,7 +6,7 @@ SERVER:
   #  - replace-with-satellite-hostname
   VERSION:
     # The full release version (6.9.2)
-    # RELEASE: 6.9
+    RELEASE: 6.10
     # The snap version currently testing (if applicable)
     # SNAP: 10
     # The source of Satellite packages. Can be one of:
@@ -29,7 +29,7 @@ SERVER:
   # Path to private ssh key to be used when connecting via SSH.
   # Path to private ssh key to be used when connecting via SSH
   # A robottelo containers ssh key path
-  # SSH_KEY:
+  SSH_KEY:
   # HTTP scheme when building the server URL
   SCHEME: https
   # Server port
@@ -37,7 +37,7 @@ SERVER:
   # SSH username
   SSH_USERNAME: root
   # SSH password if not using a SSH key to connect
-  # SSH_PASSWORD:
+  SSH_PASSWORD:
   # Admin username when accessing API and UI
   ADMIN_USERNAME: admin
   # Admin password when accessing API and UI

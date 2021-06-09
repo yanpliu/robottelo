@@ -2,7 +2,7 @@ SHARED_FUNCTION:
   # The default storage handler to use
   STORAGE: file
   # Namespace scope by default used the md5 of kattelo certificate of the server
-  # SCOPE:
+  SCOPE:
   # enabled, by default enabled=false, the shared decorator will
   # immediately run the function and the function result data are not saved
   ENABLED: false

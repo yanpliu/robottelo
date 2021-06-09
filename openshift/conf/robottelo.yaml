@@ -28,6 +28,7 @@ ROBOTTELO:
   COMMAND_EXECUTOR: http://wharf.cfme.lab.eng.rdu2.redhat.com:80/wd/hub
   # Webdriver to use
   WEBDRIVER: chrome
+  WEBDRIVER_BINARY: /usr/bin/chromedriver
   # Desired Capabilities of Web Driver
   WEBDRIVER_DESIRED_CAPABILITIES:
     PLATFORM: any

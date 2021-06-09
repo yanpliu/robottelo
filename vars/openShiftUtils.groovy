@@ -91,7 +91,7 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
-            key:'ROBOTTELO_rhsso__user_password',
+            key:'ROBOTTELO_rhsso__rhsso_password',
             secretName: secretName,
             secretKey:'satqe_shared_password'))
 
@@ -186,6 +186,36 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'ROBOTTELO_container_repo__registries__quay__password',
             secretName: 'satqe-casc-secret',
             secretKey: 'container_repo_quay_robot_token'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__esx__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'esx_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__xen__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'xen_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__hyperv__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'hyperv_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__rhevm__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'rhevm_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__libvirt__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'libvirt_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_virtwho__kubevirt__hypervisor_password',
+            secretName: secretName,
+            secretKey: 'kubevirt_hypervisor_password'))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container')) {

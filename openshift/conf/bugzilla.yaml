@@ -1,4 +1,4 @@
 BUGZILLA:
   URL: https://bugzilla.redhat.com
   # Provide api_key to access Bugzilla REST API
-  # API_KEY: replace-with-bugzilla-api-key
+  API_KEY: replace-with-bugzilla-api-key
