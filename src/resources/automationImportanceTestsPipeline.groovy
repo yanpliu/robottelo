@@ -16,9 +16,6 @@ withCredentials([
             containerEnvVar(key: 'RP_UUID', value: "${rp_token}"),
             containerEnvVar(key: 'ALLURE_NO_ANALYTICS', value: "1"),
             containerEnvVar(
-                key: 'ROBOTTELO_robottelo__satellite_version',
-                value: "'${params.sat_version.tokenize('.').take(2).join('.')}'"),
-            containerEnvVar(
                 key: 'ROBOTTELO_Robottelo__webdriver_desired_capabilities__tags',
                 value: "[automation-${params.sat_version}-${params.importance}-rhel7]"
             )
@@ -60,7 +57,7 @@ withCredentials([
                 )
             }
 
-            stage('Set Build Description') {
+            stage('Set Build Description and Satellite Env Vars') {
                 // TODO: Add rhel version parsing too
                 // https://projects.engineering.redhat.com/browse/SATQE-12327
                 // uses the template name field from inventory, ex. template: tpl-sat-jenkins-6.9.2-1.0-rhel-7.9
@@ -69,6 +66,10 @@ withCredentials([
                 sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
                 snap_version = params.snap_version ?: first_host_name_parts[4]
                 currentBuild.description = sat_version + " snap: " + snap_version
+
+                env.ROBOTTELO_server__version__release = sat_version
+                env.ROBOTTELO_server__version__snap = snap_version
+                env.ROBOTTELO_robottelo__satellite_version = sat_version.tokenize('.').take(2).join('.')
             }
 
             stage('Create report portal launch and parent test') {
