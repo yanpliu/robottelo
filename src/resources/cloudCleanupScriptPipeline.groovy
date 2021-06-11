@@ -29,6 +29,18 @@ openShiftUtils.withNode(image: pipelineVars.ciCleanScriptImage) {
 
             archiveArtifacts artifacts: 'cleanup.log'
         }
+
+        stage('Cleanup Amazon EC2 Resources') {
+
+            sh """
+                cd \${CLEANER_DIR}
+                python cleanup.py -d amazon_ec2 --all
+                python cleanup.py amazon_ec2 --all
+                cp cleanup.log ${WORKSPACE}
+            """
+
+            archiveArtifacts artifacts: 'cleanup.log'
+        }
     }
 
     catch (exc) {

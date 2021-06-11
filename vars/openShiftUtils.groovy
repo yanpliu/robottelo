@@ -233,6 +233,10 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'CLEANUP_AZURE__PASSWORD',
             secretName: secretName,
             secretKey: 'azure_client_secret'))
+        envVars.add(secretEnvVar(
+            key: 'CLEANUP_EC2__PASSWORD',
+            secretName: secretName,
+            secretKey: 'ec2_secret_key'))
     }
 
     // Injecting ssh-key and password vars to container
