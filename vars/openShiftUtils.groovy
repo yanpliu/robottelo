@@ -42,9 +42,9 @@ def withNode(Map parameters = [:], Closure body) {
     if (image.contains('robottelo-container')) {
 
         envVars.add(secretEnvVar(
-            key:'ROBOTTELO_server__ssh_key_string',
+            key:'ROBOTTELO_server__ssh_password',
             secretName: secretName,
-            secretKey:'satlab_automation_rsa'))
+            secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
             key:'ROBOTTELO_azurerm__client_secret',
