@@ -228,13 +228,13 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'BROKER_AnsibleTower__password',
             secretName: secretName,
             secretKey: 'tower-password'))
-    }
-
-    if (image.contains('sat-upgrade-container')) {
         envVars.add(secretEnvVar(
             key:'SATLAB_PRIVATE_KEY',
             secretName:'satqe-casc-secret',
             secretKey:'satlab_automation_rsa'))
+    }
+
+    if (image.contains('sat-upgrade-container')) {
         envVars.add(secretEnvVar(
             key:'UPGRADE_subscription__rhn_password',
             secretName:'satqe-casc-secret',
@@ -271,10 +271,6 @@ def withNode(Map parameters = [:], Closure body) {
 
     // Injecting ssh-key and password vars to container
     if (image.contains('testfm-container')) {
-        envVars.add(secretEnvVar(
-            key:'SATLAB_PRIVATE_KEY',
-            secretName: secretName,
-            secretKey:'satlab_automation_rsa'))
        envVars.add(secretEnvVar(
             key:'TESTFM_SUBSCRIPTION__RHN_PASSWORD',
             secretName: secretName,

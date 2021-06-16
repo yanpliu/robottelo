@@ -13,7 +13,7 @@ try {
             sh """
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc
                 source ~/.bashrc
-                ssh-add - <<< \$ROBOTTELO_server__ssh_key_string
+                ssh-add - <<< \$SATLAB_PRIVATE_KEY
                 echo \"from automation_tools.manifest import relink_manifest\" > ~/at.py
             """
         }
