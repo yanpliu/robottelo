@@ -46,6 +46,11 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                             "This option, enable for Z-stream and disable for Y-stream upgrade"
                         )
                         booleanParam(
+                            'db_trigger',
+                             false,
+                             "This option use to trigger the customer db upgrade job after satellite upgrade"
+                        )
+                        booleanParam(
                             "foreman_maintain_satellite_upgrade",
                             true,
                             "This option allows to use foreman-maintain for satellite-upgrade."

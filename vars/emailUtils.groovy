@@ -18,6 +18,8 @@ def sendEmail(parameters = [:]) {
     def reply_nicks = parameters.get('reply_nicks', ['sat-qe-jenkins'])
     def subject = parameters.get('subject', '')
     def body = parameters.get('body', '')
+    def mime_type = parameters.get('mimeType','text/html')
+    def attachment_pattern = parameters.get('attachmentsPattern','')
 
     def email_addrs = ''
 
@@ -41,9 +43,9 @@ def sendEmail(parameters = [:]) {
     )
 
     if(email_addrs != null && !email_addrs.isEmpty()) {
-      emailext(body: body, mimeType: 'text/html',
+      emailext(body: body, mimeType: mime_type,
          replyTo: reply_emails, subject: subject,
-         to: email_addrs, attachLog: true )
+         to: email_addrs, attachLog: true, attachmentsPattern: attachment_pattern)
     } else {
         println("'To' email addresses were not provided, no email will be sent ")
     }

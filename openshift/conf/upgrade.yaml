@@ -74,3 +74,11 @@ UPGRADE:
   DOCKER_VM: "10.8.104.58"
   # The upgrade VLAN vm_domain
   VM_DOMAIN: "satqe.lab.eng.rdu2.redhat.com"
+  # upgrade the mongodb to wiredTiger after upgrade
+  MONGODB_UPGRADE: false
+  # satellite backup
+  SATELLITE_BACKUP: false
+  # satellite backup type
+  SATELLITE_BACKUP_TYPE:
+    - "online"
+    - "offline"

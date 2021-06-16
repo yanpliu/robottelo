@@ -14,8 +14,8 @@ def at_vars = [
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__ANSIBLE_REPO_VERSION', value: params.ansible_repo_version),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: params.distribution),
+        containerEnvVar(key: 'UPGRADE_UPGRADE__ANSIBLE_REPO_VERSION', value: "'${params.ansible_repo_version}'"),
+        containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: "${params.distribution}"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_SATELLITE_UPGRADE', value: "${params.foreman_maintain_satellite_upgrade}"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__DOWNSTREAM_FM_UPGRADE', value: "${params.downstream_fm_upgrade}"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_CAPSULE_UPGRADE', value: "${params.foreman_maintain_capsule_upgrade}"),
@@ -25,7 +25,7 @@ def at_vars = [
 
 openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
     try {
-        stage('Check Out Satellite and capsule upgrade Instances') {
+        stage('Check out satellite and capsule upgrade instances') {
             if (! params.external_satellite_hostname.trim()){
                 satellite_inventory = brokerUtils.checkout(
                     'deploy-satellite-upgrade': [
@@ -106,46 +106,70 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             sh """
                 cd \${UPGRADE_DIR}
                 source ~/.bashrc
-                fab -u root product_upgrade:"${params.upgrade_type}",'satellite'
+                fab -u root product_upgrade:"${params.upgrade_type}",'satellite','${satellite_hostname}'
             """
+        }
+        stage("Customer db upgrade trigger"){
+            if (params.db_trigger){
+                for (customer_name in pipelineVars.customer_databases) {
+                    build job: "sat-db-${to_version}-upgrade-for-${customer_name}",
+                    parameters: [
+                                [$class: 'StringParameterValue', name: 'sat_version', value: "${params.sat_version}"],
+                                [$class: 'StringParameterValue', name: 'tower_url', value: "${params.tower_url}"],
+                                [$class: 'StringParameterValue', name: 'os', value: "${params.os}"],
+                                [$class: 'StringParameterValue', name: 'ansible_repo_version', value: "${params.ansible_repo_version}"],
+                                [$class: 'StringParameterValue', name: 'customer_name', value: "${customer_name}"],
+                                [$class: 'BooleanParameterValue', name: 'foreman_maintain_satellite_upgrade', value: "${params.foreman_maintain_satellite_upgrade}"],
+                                [$class: 'BooleanParameterValue', name: 'downstream_fm_upgrade', value: "${params.downstream_fm_upgrade}"],
+                                [$class: 'BooleanParameterValue', name: 'satellite_capsule_setup_reboot', value: "${params.satellite_capsule_setup_reboot}"],
+
+                        ],
+                    wait: false
+                }
+            }
         }
         stage("Capsule upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
                 source ~/.bashrc
-                fab -u root product_upgrade:"${params.upgrade_type}",'capsule'
+                fab -u root product_upgrade:"${params.upgrade_type}",'capsule','${satellite_hostname}'
             """
         }
         stage("Content host upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
                 source ~/.bashrc
-                fab -u root product_upgrade:"${params.upgrade_type}",'client'
+                fab -u root product_upgrade:"${params.upgrade_type}",'client','${satellite_hostname}'
             """
         }
         currentBuild.result = 'SUCCESS'
-        sh '''
-            if [ -f "${UPGRADE_DIR}/upgrade_highlights" ]; then
-                cp "${UPGRADE_DIR}/upgrade_highlights" upgrade_highlights
-                cp "${UPGRADE_DIR}/full_upgrade" full_upgrade
-            fi
-           '''
     }
     catch (exc){
         echo "Catch Error: \n${exc}"
         currentBuild.result = 'FAILURE'
     }
     finally {
-        if((! params.setup_preserve) && (! params.external_satellite_hostname.trim())) {
-            stage('Check In Satellite Instances') {
-                    brokerUtils.checkin_all()
-                }
+        sh '''
+            if [ -f "${UPGRADE_DIR}/upgrade_highlights" ]; then
+                cp "${UPGRADE_DIR}/upgrade_highlights" upgrade_highlights
+                cp "${UPGRADE_DIR}/full_upgrade" full_upgrade
+            fi
+        '''
+
+
+         stage('Check In Satellite Instances') {
+            if ((! params.setup_preserve) && (! params.external_satellite_hostname.trim()) && (currentBuild.result == 'SUCCESS')) {
+                brokerUtils.checkin_all()
             }
-        emailext(
-            to: "sat-qe-jenkins@redhat.com",
-            subject: "Upgrade Status ${from_version} to ${sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
-            body: '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
-            attachmentsPattern: 'full_upgrade'
+         }
+
+        emailUtils.sendEmail(
+            'to_nicks': ["sat-qe-jenkins"],
+            'reply_nicks': ["sat-qe-jenkins"],
+            'subject': "Upgrade Status ${from_version} to ${sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
+            'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
+            'mimeType': 'text/plain',
+            'attachmentsPattern': 'full_upgrade'
         )
     }
 }
