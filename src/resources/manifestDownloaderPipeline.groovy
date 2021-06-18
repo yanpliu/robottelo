@@ -19,9 +19,8 @@ try {
         }
         stage('Manifest Download'){
             sh """
-                cd \${ROBOTTELO_DIR}
                 source ~/.bashrc
-                fab -f ~/at.py -D -u root -H \$MANIFEST_SERVER_HOSTNAME relink_manifest:url=\$SM_URL,consumer=\$CONSUMER,user=\$RHN_USERNAME,password=\$ROBOTTELO_subscription__rhn_password,exp_subs_file=jenkins_configs/robottelo-manifest-content.conf
+                fab -f ~/at.py -D -u root -H \$MANIFEST_SERVER_HOSTNAME relink_manifest:url=\$SM_URL,consumer=\$CONSUMER,user=\$RHN_USERNAME,password=\$ROBOTTELO_subscription__rhn_password,exp_subs_file=conf/robottelo-manifest-content.conf
             """
         }
     }

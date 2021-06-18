@@ -37,4 +37,9 @@ items:
         env:
           - name: GIT_SSL_NO_VERIFY
             value: 'true'
+          - name: CONFIG_FILES_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: config-files-token
+                name: satqe-casc-secret
       type: Docker
