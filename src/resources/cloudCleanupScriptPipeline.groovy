@@ -34,8 +34,8 @@ openShiftUtils.withNode(image: pipelineVars.ciCleanScriptImage) {
 
             sh """
                 cd \${CLEANER_DIR}
-                python cleanup.py -d amazon_ec2 --all
-                python cleanup.py amazon_ec2 --all
+                python cleanup.py -d ec2 --all
+                python cleanup.py ec2 --all
                 cp cleanup.log ${WORKSPACE}
             """
 
