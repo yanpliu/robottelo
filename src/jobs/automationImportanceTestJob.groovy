@@ -25,6 +25,12 @@ def jobCFG = [
                        'importance': 'Low',
                        'pytest_options': "-m 'not destructive' --importance Low tests/foreman/",
                        ] << defaultConfig,
+        'fips':        ['num_appliances': '5',
+                       'importance': 'Fips',
+                       'rp_launch': 'OCP-Jenkins-CI-FIPS',
+                       'workflow': 'install-sat-jenkins-fips',
+                       'pytest_options': "-m 'not destructive and upgrade' tests/foreman/",
+                       ],
 ]
 
 globalJenkinsDefaults.sat_versions.each { versionName ->

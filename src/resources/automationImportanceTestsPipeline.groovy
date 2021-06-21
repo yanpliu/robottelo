@@ -22,7 +22,6 @@ withCredentials([
     ]
     def sat_version = params.sat_version
     def snap_version = params.snap_version
-
     def rp_url = pipelineVars.reportPortalServer
     def rp_project = pipelineVars.reportPortalProject
     // use this format once robottelo rerun-failed plugin has this sorted
