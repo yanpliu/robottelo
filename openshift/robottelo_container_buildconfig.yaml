@@ -76,3 +76,44 @@ items:
   status:
     lastVersion: 0
 
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    creationTimestamp: null
+    labels:
+      name: robottelo-container-6.9.z
+    name: robottelo-container-6.9.z
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: robottelo-container:6.9.z
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
+        ref: "master"
+      type: Git
+      contextDir: openshift
+    strategy:
+      # TODO OCP Builder does not have the right CA to clone public gitlab.
+      # TODO Look into making satqe jenkins repo private and using deploy tokens
+      dockerStrategy:
+        dockerfilePath: robottelo/Dockerfile
+        env:
+          - name: GIT_SSL_NO_VERIFY
+            value: 'true'
+          - name: ROBOTTELO_BRANCH
+            value: '6.9.z'
+      type: Docker
+    triggers:
+      - type: ImageChange
+        imageChange:
+          automatic: true
+          from:
+            kind: ImageStreamTag
+            name: robottelo-upstream:6.9.z
+      - type: ConfigChange
+  status:
+    lastVersion: 0
