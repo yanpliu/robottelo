@@ -53,11 +53,11 @@ items:
               kind: ImageStreamTag
               name: robottelo-upstream:latest
         - type: ImageChange
-            imageChange:
-              automatic: true
-              from:
-                kind: ImageStreamTag
-                name: sat-upgrade-upstream:latest
+          imageChange:
+            automatic: true
+            from:
+              kind: ImageStreamTag
+              name: sat-upgrade-upstream:latest
         - type: ConfigChange
     status:
       lastVersion: 0
