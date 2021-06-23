@@ -37,7 +37,10 @@ withCredentials([
         test_run_type = 'Fips'
     }
 
-    openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo_vars) {
+    openShiftUtils.withNode(
+        image: "$pipelineVars.ciRobotteloImage:${pipelineVars.robotteloImageTags.find{sat_version.startsWith(it.key)}.value}",
+        envVars: robottelo_vars
+    ) {
         try {
             stage('Check Out Satellite Instances') {
                 if(params.template_name != '') {

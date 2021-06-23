@@ -13,6 +13,11 @@ class pipelineVars implements Serializable {
     String ciTestFmImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/testfm-container'
     String ciUpgradeRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/sat-upgrades-robottelo-container'
 
+    Map robotteloImageTags = [ // maps sat_version to robottelo container tag
+        '6.10': 'latest',
+        '6.9': '6.9.z',
+    ]
+
     String defaultCloud = 'upshift'
     String upshiftNameSpace = 'jenkins-csb-satellite-qe'
     String defaultSecretName = 'satqe-casc-secret'

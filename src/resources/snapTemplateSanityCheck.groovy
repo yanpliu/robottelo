@@ -6,7 +6,10 @@ def call(Map parameters = [:]) {
     def node_vars = parameters.get('node_vars')
     def errorCaught = false
 
-    openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: node_vars) {
+    openShiftUtils.withNode(
+        image: "$pipelineVars.ciRobotteloImage:${pipelineVars.robotteloImageTags.find{sat_version.startsWith(it.key)}.value}",
+        envVars: node_vars
+    ) {
         try {
             stage('Check Out Satellite Instances') {
                 brokerUtils.checkout(
