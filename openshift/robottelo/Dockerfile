@@ -21,6 +21,7 @@ USER 1001
 WORKDIR "${HOME}"
 RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cd robottelo && \
+    git checkout ${ROBOTTELO_BRANCH:-master} && \
     pip install -U pip && \
     pip install -qr requirements.txt && \
     pip freeze | tee robottelo-pip-freeze.log
