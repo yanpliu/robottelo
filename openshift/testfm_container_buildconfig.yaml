@@ -7,14 +7,14 @@ items:
     name: testfm-upstream
   spec:
     tags:
-      - name: latest
-        from:
-          kind: DockerImage
-          name: 'quay.io/satelliteqe/testfm:latest'
-        importPolicy:
-          scheduled: true
-        referencePolicy:
-          type: Source
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/satelliteqe/testfm:latest
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
 
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -27,7 +27,7 @@ items:
 - apiVersion: build.openshift.io/v1
   kind: BuildConfig
   metadata:
-    creationTimestamp: null
+    creationTimestamp:
     labels:
       name: testfm-container
     name: testfm-container
@@ -40,8 +40,8 @@ items:
     runPolicy: Serial
     source:
       git:
-        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "master"
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
       type: Git
       contextDir: openshift
     strategy:
@@ -50,16 +50,16 @@ items:
       dockerStrategy:
         dockerfilePath: TestFM/Dockerfile
         env:
-          - name: GIT_SSL_NO_VERIFY
-            value: 'true'
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
       type: Docker
     triggers:
-      - type: ImageChange
-        imageChange:
-          automatic: true
-          from:
-            kind: ImageStreamTag
-            name: testfm-upstream:latest
-      - type: ConfigChange
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: testfm-upstream:latest
+    - type: ConfigChange
   status:
     lastVersion: 0

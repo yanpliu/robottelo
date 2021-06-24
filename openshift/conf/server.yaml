@@ -11,21 +11,21 @@ SERVER:
     # SNAP: 10
     # The source of Satellite packages. Can be one of:
     # internal, ga, beta
-    SOURCE: "internal"
+    SOURCE: internal
   # run-on-one - All xdist runners default to one satellite
   # balance - xdist runners will be split between available satellites
   # on-demand - any xdist runner without a satellite will have a new one provisioned.
-  XDIST_BEHAVIOR: "on-demand"
+  XDIST_BEHAVIOR: on-demand
   # If one or more Satellites are provisioned,
   # this setting determines if it will be automatically checked in
-  AUTO_CHECKIN: True
+  AUTO_CHECKIN: true
   # If an inventory filter is set and the xdist-behavior is on-demand
   # then broker will attempt to find hosts matching the filter defined
   # before checking out a new host
   # Filter format follows Broker's specification: "hostname<sat"
-  INVENTORY_FILTER: "name<sat-jenkins"
+  INVENTORY_FILTER: name<sat-jenkins
   # The Ansible Tower workflow used to deploy a satellite
-  DEPLOY_WORKFLOW: "deploy-sat-jenkins"
+  DEPLOY_WORKFLOW: deploy-sat-jenkins
   # Path to private ssh key to be used when connecting via SSH.
   # Path to private ssh key to be used when connecting via SSH
   # A robottelo containers ssh key path

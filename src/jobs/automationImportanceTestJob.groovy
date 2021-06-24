@@ -127,4 +127,3 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
         }
     }
 }
-

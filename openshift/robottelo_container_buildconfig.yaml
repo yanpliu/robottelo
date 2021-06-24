@@ -7,22 +7,22 @@ items:
     name: robottelo-upstream
   spec:
     tags:
-      - name: latest
-        from:
-          kind: DockerImage
-          name: 'quay.io/satelliteqe/robottelo:latest'
-        importPolicy:
-          scheduled: true
-        referencePolicy:
-          type: Source
-      - name: 6.9.z
-        from:
-          kind: DockerImage
-          name: 'quay.io/satelliteqe/robottelo:6.9.z'
-        importPolicy:
-          scheduled: true
-        referencePolicy:
-          type: Source
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/satelliteqe/robottelo:latest
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+    - name: 6.9.z
+      from:
+        kind: DockerImage
+        name: quay.io/satelliteqe/robottelo:6.9.z
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
 
 - kind: ImageStream
   apiVersion: image.openshift.io/v1
@@ -37,7 +37,7 @@ items:
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    creationTimestamp: null
+    creationTimestamp:
     labels:
       name: robottelo-container
     name: robottelo-container
@@ -50,8 +50,8 @@ items:
     runPolicy: Serial
     source:
       git:
-        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "master"
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
       type: Git
       contextDir: openshift
     strategy:
@@ -60,26 +60,26 @@ items:
       dockerStrategy:
         dockerfilePath: robottelo/Dockerfile
         env:
-          - name: GIT_SSL_NO_VERIFY
-            value: 'true'
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
       type: Docker
     triggers:
-      - type: ImageChange
-        imageChange:
-          automatic: true
-          from:
-            kind: ImageStreamTag
-            name: robottelo-upstream:latest
-      - type: ConfigChange
-    postCommit: 
-      script: "curl -v https://satqe-jenkins-csb-satellite-qe.apps.ocp4.prod.psi.redhat.com/generic-webhook-trigger/invoke?token=polariontestcaseupload"
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: robottelo-upstream:latest
+    - type: ConfigChange
+    postCommit:
+      script: curl -v https://satqe-jenkins-csb-satellite-qe.apps.ocp4.prod.psi.redhat.com/generic-webhook-trigger/invoke?token=polariontestcaseupload
   status:
     lastVersion: 0
 
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    creationTimestamp: null
+    creationTimestamp:
     labels:
       name: robottelo-container-6.9.z
     name: robottelo-container-6.9.z
@@ -92,8 +92,8 @@ items:
     runPolicy: Serial
     source:
       git:
-        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "master"
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
       type: Git
       contextDir: openshift
     strategy:
@@ -102,18 +102,18 @@ items:
       dockerStrategy:
         dockerfilePath: robottelo/Dockerfile
         env:
-          - name: GIT_SSL_NO_VERIFY
-            value: 'true'
-          - name: ROBOTTELO_BRANCH
-            value: '6.9.z'
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+        - name: ROBOTTELO_BRANCH
+          value: 6.9.z
       type: Docker
     triggers:
-      - type: ImageChange
-        imageChange:
-          automatic: true
-          from:
-            kind: ImageStreamTag
-            name: robottelo-upstream:6.9.z
-      - type: ConfigChange
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: robottelo-upstream:6.9.z
+    - type: ConfigChange
   status:
     lastVersion: 0

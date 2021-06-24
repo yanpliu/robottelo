@@ -1,21 +1,21 @@
 image: jenkins/jenkins:lts
 
 stages:
-  - lint-check
-  - build
+- lint-check
+- build
 
 lint:
   stage: lint-check
   script:
-    - export GRADLE_USER_HOME=$CI_PROJECT_DIR
-    - ./gradlew test --info
+  - export GRADLE_USER_HOME=$CI_PROJECT_DIR
+  - ./gradlew test --info
   only:
   - merge_requests
 
 build:
   stage: build
   script:
-    - export GRADLE_USER_HOME=$CI_PROJECT_DIR
-    - ./gradlew build
+  - export GRADLE_USER_HOME=$CI_PROJECT_DIR
+  - ./gradlew build
   only:
   - merge_requests

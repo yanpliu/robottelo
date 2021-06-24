@@ -40,4 +40,3 @@ def execute(Map parameters = [:]) {
 
     return result
 }
-

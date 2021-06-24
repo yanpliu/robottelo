@@ -5,7 +5,7 @@ import jenkins.model.*
 
 pipelineJob('interop-os-templatization') {
     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
-    
+
     def uuid = { UUID.randomUUID().toString() }
     def consumerID = { "Consumer.rh-jenkins-ci-plugin.${uuid()}" }
     String consumerTopic = "${consumerID()}.VirtualTopic.qe.ci.product-scenario.build.complete."

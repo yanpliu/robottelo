@@ -10,8 +10,8 @@ IPA:
   TIME_BASED_SECRET:
   DISABLED_IPA_USER: disabled_user
   GROUP_USERS:
-    - satadmin_01
-    - satuser_01
+  - satadmin_01
+  - satuser_01
   GROUPS:
-    - satadmins
-    - satusers
+  - satadmins
+  - satusers

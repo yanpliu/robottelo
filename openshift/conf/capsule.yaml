@@ -9,6 +9,6 @@ CAPSULE:
     # SNAP:
     # The source of Capsule packages. Can be one of:
     # internal, ga, beta
-    SOURCE: "internal"
+    SOURCE: internal
   # The Ansible Tower workflow used to deploy a capsule
   DEPLOY_WORKFLOW: deploy-sat-capsule

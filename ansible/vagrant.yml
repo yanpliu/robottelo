@@ -1,143 +1,141 @@
----
 - hosts: all
   become: true
 
   pre_tasks:
-    - name: create jenkins group
-      group:
-        name: jenkins
-        state: present
-        gid: 1001
+  - name: create jenkins group
+    group:
+      name: jenkins
+      state: present
+      gid: 1001
 
-    - name: create jenkins user
-      user:
-        name: jenkins
-        state: present
-        uid: 1001
-        group: jenkins
-        home: /var/lib/jenkins
-        system: yes
+  - name: create jenkins user
+    user:
+      name: jenkins
+      state: present
+      uid: 1001
+      group: jenkins
+      home: /var/lib/jenkins
+      system: yes
 
-    - name: fix resolv.conf
-      lineinfile:
-        path: /etc/resolv.conf
-        state: absent
-        line: "search example.com"
+  - name: fix resolv.conf
+    lineinfile:
+      path: /etc/resolv.conf
+      state: absent
+      line: search example.com
 
   vars:
     # This should be the same version as your production Jenkins
     jenkins_version: 2.277.2
     # Have to set this since we're using a LTE release
-    jenkins_pkg_url: "https://pkg.jenkins.io/redhat-stable"
+    jenkins_pkg_url: https://pkg.jenkins.io/redhat-stable
     java_packages:
-      - java-1.8.0-openjdk
+    - java-1.8.0-openjdk
     # These are the jenkins pagckage names for your plugins.  This is a default set but you may need fewer or more.
     jenkins_plugins:
-      - ansible
-      - ansicolor
-      - build-timeout
-      - cachet-gating
-      - copyartifact
-      - configuration-as-code
-      - credentials-binding
-      - dashboard-view
-      - email-ext
-      - envinject
-      - extra-columns
-      - fail-the-build-plugin
-      - generic-webhook-trigger
-      - ghprb
-      - git
-      - github
-      - gradle
-      - groovy
-      - htmlpublisher
-      - ircbot
-      - jms-messaging
-      - job-dsl
-      - kubernetes
-      - kubernetes-client-api
-      - kubernetes-credentials
-      - kubernetes-credentials-provider
-      - lockable-resources
-      - mask-passwords
-      - openshift-client
-      - openshift-login
-      - openshift-pipeline
-      - openshift-sync
-      - ownership
-      - parameterized-trigger
-      - permissive-script-security
-      - pipeline-githubnotify-step
-      - progress-bar-column-plugin
-      - rebuild
-      - ssh-slaves
-      - test-results-analyzer
-      - throttle-concurrents
-      - timestamper
-      - uno-choice
-      - view-job-filters
-      - workflow-aggregator
-      - workflow-job
-      - ws-cleanup
-      - xvfb
+    - ansible
+    - ansicolor
+    - build-timeout
+    - cachet-gating
+    - copyartifact
+    - configuration-as-code
+    - credentials-binding
+    - dashboard-view
+    - email-ext
+    - envinject
+    - extra-columns
+    - fail-the-build-plugin
+    - generic-webhook-trigger
+    - ghprb
+    - git
+    - github
+    - gradle
+    - groovy
+    - htmlpublisher
+    - ircbot
+    - jms-messaging
+    - job-dsl
+    - kubernetes
+    - kubernetes-client-api
+    - kubernetes-credentials
+    - kubernetes-credentials-provider
+    - lockable-resources
+    - mask-passwords
+    - openshift-client
+    - openshift-login
+    - openshift-pipeline
+    - openshift-sync
+    - ownership
+    - parameterized-trigger
+    - permissive-script-security
+    - pipeline-githubnotify-step
+    - progress-bar-column-plugin
+    - rebuild
+    - ssh-slaves
+    - test-results-analyzer
+    - throttle-concurrents
+    - timestamper
+    - uno-choice
+    - view-job-filters
+    - workflow-aggregator
+    - workflow-job
+    - ws-cleanup
+    - xvfb
 
   roles:
-    - geerlingguy.java
-    - geerlingguy.jenkins
+  - geerlingguy.java
+  - geerlingguy.jenkins
 
   tasks:
-    - name: copy vendored plugins
-      synchronize:
-        src: "jenkins-plugins/"
-        dest: "/var/lib/jenkins/plugins/"
+  - name: copy vendored plugins
+    synchronize:
+      src: jenkins-plugins/
+      dest: /var/lib/jenkins/plugins/
 
-    - name: set perms on vendored plugins
-      file:
-        dest: /var/lib/jenkins/plugins
-        owner: jenkins
-        group: jenkins
-        mode: 0755
-        recurse: yes
+  - name: set perms on vendored plugins
+    file:
+      dest: /var/lib/jenkins/plugins
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+      recurse: yes
 
-    - name: copy init.groovy
-      copy:
-        src: init.groovy
-        dest: /var/lib/jenkins/
-        owner: jenkins
-        group: jenkins
-        mode: 0755
-      tags:
-        - init.groovy
+  - name: copy init.groovy
+    copy:
+      src: init.groovy
+      dest: /var/lib/jenkins/
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+    tags:
+    - init.groovy
 
-    - name: disable mail relay
-      lineinfile: dest=/etc/postfix/main.cf line="default_transport = local:$myhostname"
-      notify: reload postfix config
+  - name: disable mail relay
+    lineinfile: dest=/etc/postfix/main.cf line="default_transport = local:$myhostname"
+    notify: reload postfix config
 
-    - name: template development seed job
-      template: src=templates/seed.groovy.j2 dest=/vagrant/ansible/seed.groovy
+  - name: template development seed job
+    template: src=templates/seed.groovy.j2 dest=/vagrant/ansible/seed.groovy
 
-    - name: (re)generate development seed job
-      command: ./gradlew rest -Dpattern=ansible/seed.groovy -DbaseUrl=http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/ -Dusername={{ jenkins_admin_username }} -Dpassword={{ jenkins_admin_password }} chdir=/vagrant
-      tags:
-        - skip_ansible_lint
+  - name: (re)generate development seed job
+    command: ./gradlew rest -Dpattern=ansible/seed.groovy -DbaseUrl=http://{{ jenkins_hostname }}:{{ jenkins_http_port }}/ -Dusername={{ jenkins_admin_username }} -Dpassword={{ jenkins_admin_password }} chdir=/vagrant
+    tags:
+    - skip_ansible_lint
 
   handlers:
-    - name: reload postfix config
-      service: name=postfix state=reloaded
+  - name: reload postfix config
+    service: name=postfix state=reloaded
 
 - hosts: all
   become: true
   vars:
     jenkins_dummy_configs:
-      - "Inventory"
+    - Inventory
 
   tasks:
-    - name: Wait for Jenkins to start up before proceeding.
-      shell: "curl -D - --silent --max-time 5 http://localhost:8080/cli/"
-      register: result
-      until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
-      retries: "60"
-      delay: "5"
-      changed_when: false
-
+  - name: Wait for Jenkins to start up before proceeding.
+    shell: curl -D - --silent --max-time 5 http://localhost:8080/cli/
+    register: result
+    until: (result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)
+    retries: '60'
+    delay: '5'
+    changed_when: false

@@ -2,21 +2,20 @@ apiVersion: v1
 kind: List
 items:
 # Stage
-- kind: ConfigMap 
+- kind: ConfigMap
   apiVersion: v1
   metadata:
     name: satqe-stage-jenkins-casc-vars
     namespace: jenkins-csb-satellite-qe
   data:
     CASC_KUBE_SERVICE: satqe-stage-jenkins
-    CASC_JNLP_PORT: "31402"
+    CASC_JNLP_PORT: '31402'
 # Production
-- kind: ConfigMap 
+- kind: ConfigMap
   apiVersion: v1
   metadata:
     name: satqe-jenkins-casc-vars
     namespace: jenkins-csb-satellite-qe
   data:
     CASC_KUBE_SERVICE: satqe-jenkins
-    CASC_JNLP_PORT: "31145"
-
+    CASC_JNLP_PORT: '31145'

@@ -1,26 +1,26 @@
 credentials:
   system:
     domainCredentials:
-      - credentials:
-          - usernamePassword:
-              scope: GLOBAL
-              id: gitlab-jenkins-user
-              username: "satqe_gitlab_jenkins_token"
-              password: ${casc-secret/jenkins-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
-              description: "Username/Password Credentials for gitlab"
-          - usernamePassword:
-              scope: GLOBAL
-              id: pr-tester-gh-token
-              username: "omkarkhatavkar"
-              password: ${casc-secret/pr-tester-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
-              description: "Username/Password Credentials for github"
-          - string:
-              scope: GLOBAL
-              id: reportportal-robottelo-token
-              secret: ${casc-secret/reportportal-robottelo-token} # This is stored in and loaded from OpenShift env as a Secrets obj.
-              description: "ReportPortal API token of system robottelo user"
+    - credentials:
+      - usernamePassword:
+          scope: GLOBAL
+          id: gitlab-jenkins-user
+          username: satqe_gitlab_jenkins_token
+          password: ${casc-secret/jenkins-token}     # This is stored in and loaded from OpenShift env as a Secrets obj.
+          description: Username/Password Credentials for gitlab
+      - usernamePassword:
+          scope: GLOBAL
+          id: pr-tester-gh-token
+          username: omkarkhatavkar
+          password: ${casc-secret/pr-tester-token}     # This is stored in and loaded from OpenShift env as a Secrets obj.
+          description: Username/Password Credentials for github
+      - string:
+          scope: GLOBAL
+          id: reportportal-robottelo-token
+          secret: ${casc-secret/reportportal-robottelo-token}     # This is stored in and loaded from OpenShift env as a Secrets obj.
+          description: ReportPortal API token of system robottelo user
 jenkins:
-  systemMessage: "Satellite QE Jenkins, deployed with JCASC from ${CASC_DECLARATION_PROPERTIES}"
+  systemMessage: Satellite QE Jenkins, deployed with JCASC from ${CASC_DECLARATION_PROPERTIES}
   numExecutors: 1
   quietPeriod: 0
 
@@ -31,11 +31,11 @@ jenkins:
         size: 100
         ttl: 10
       configurations:
-        - server: ldaps://ldap.corp.redhat.com
-          rootDN: dc=redhat,dc=com
-          inhibitInferRootDN: false
-          userSearch: uid={0}
-          groupSearchFilter: (& (cn={0}) (objectclass=GroupOfUniqueNames))
+      - server: ldaps://ldap.corp.redhat.com
+        rootDN: dc=redhat,dc=com
+        inhibitInferRootDN: false
+        userSearch: uid={0}
+        groupSearchFilter: (& (cn={0}) (objectclass=GroupOfUniqueNames))
       userIdStrategy: CaseInsensitive
       groupIdStrategy: CaseInsensitive
 
@@ -43,52 +43,52 @@ jenkins:
     roleBased:
       roles:
         global:
-          - name: "admin"
-            description: "Jenkins administrators"
-            permissions:
-              - "Overall/Administer"
-            assignments:
-              - "cci-octopus" # Instance telemetry collection
-              - "ci-support" # Access for the support team
-              - "sysops" # Access for the support team
-              - "ccit-test" # OpenShift automation account
-              - "ccit" # CCIT team
-              - "sat-qe-jenkins"
-          - name: "anonymous"
-            description: "Anonymous users"
-            permissions:
-              - "Overall/Read"
-              - "Job/Read"
-            assignments:
-              - "anonymous"
-          - name: "readonly"
-            description: "Read-only users"
-            permissions:
-              - "Overall/Read"
-              - "Job/Read"
-              - "Job/ExtendedRead"
-              - "View/Read"
-            assignments:
-              - "authenticated"
+        - name: admin
+          description: Jenkins administrators
+          permissions:
+          - Overall/Administer
+          assignments:
+          - cci-octopus       # Instance telemetry collection
+          - ci-support       # Access for the support team
+          - sysops       # Access for the support team
+          - ccit-test       # OpenShift automation account
+          - ccit       # CCIT team
+          - sat-qe-jenkins
+        - name: anonymous
+          description: Anonymous users
+          permissions:
+          - Overall/Read
+          - Job/Read
+          assignments:
+          - anonymous
+        - name: readonly
+          description: Read-only users
+          permissions:
+          - Overall/Read
+          - Job/Read
+          - Job/ExtendedRead
+          - View/Read
+          assignments:
+          - authenticated
   clouds:
-    - kubernetes:
-        addMasterProxyEnvVars: true
-        containerCapStr: "100"
-        credentialsId: ""
-        jenkinsTunnel: "${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:${CASC_JNLP_PORT}"
-        jenkinsUrl: "http://${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:80"
-        maxRequestsPerHostStr: "32"
-        name: "upshift"
-        namespace: "jenkins-csb-satellite-qe"
-        serverCertificate: ${casc-secret/ocpv4-server-cert}
-        serverUrl: "https://kubernetes.default.svc.cluster.local:443"
+  - kubernetes:
+      addMasterProxyEnvVars: true
+      containerCapStr: '100'
+      credentialsId: ''
+      jenkinsTunnel: ${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:${CASC_JNLP_PORT}
+      jenkinsUrl: http://${CASC_KUBE_SERVICE}.jenkins-csb-satellite-qe.svc:80
+      maxRequestsPerHostStr: '32'
+      name: upshift
+      namespace: jenkins-csb-satellite-qe
+      serverCertificate: ${casc-secret/ocpv4-server-cert}
+      serverUrl: https://kubernetes.default.svc.cluster.local:443
   globalNodeProperties:
-    - envVars:
-        env:
-        - key: "satlab_tower_credentials_id"
-          value: "ansible-tower-jenkins-user"
-        - key: "satlab_tower_server"
-          value: "Infra-Ansible-Tower-01"
+  - envVars:
+      env:
+      - key: satlab_tower_credentials_id
+        value: ansible-tower-jenkins-user
+      - key: satlab_tower_server
+        value: Infra-Ansible-Tower-01
 
 
   crumbIssuer:
@@ -97,15 +97,15 @@ jenkins:
   markupFormatter:
     rawHtml:
       disableSyntaxHighlighting: false
-  slaveAgentPort: "${CASC_JNLP_PORT}"
+  slaveAgentPort: ${CASC_JNLP_PORT}
   agentProtocols:
-  - "JNLP4-connect"
-  - "Ping"
+  - JNLP4-connect
+  - Ping
 
   updateCenter:
     sites:
-    - id: "default"
-      url: "http://do.not.install.plugins.manually.use.plugins.txt"
+    - id: default
+      url: http://do.not.install.plugins.manually.use.plugins.txt
 
 security:
   sSHD:
@@ -118,109 +118,109 @@ security:
     useScriptSecurity: false
   scriptApproval:
     approvedSignatures:
-      - "method groovy.json.JsonSlurperClassic parseText java.lang.String"
-      - "method hudson.model.Run getLog int"
-      - "method java.io.OutputStream write byte[]"
-      - "method java.lang.String getBytes java.lang.String"
-      - "method java.net.HttpURLConnection setRequestMethod java.lang.String"
-      - "method java.net.HttpURLConnection getResponseCode"
-      - "method java.net.URL openConnection"
-      - "method java.net.URLConnection setDoOutput boolean"
-      - "method java.net.URLConnection setRequestProperty java.lang.String java.lang.String"
-      - "method java.net.URLConnection getInputStream"
-      - "method java.net.URLConnection getOutputStream"
-      - "method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild"
-      - "new groovy.json.JsonSlurperClassic"
-      - "staticMethod groovy.json.JsonOutput toJson java.lang.Object"
-      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream"
-      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toInteger java.lang.Number"
-      - "staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods find java.lang.Object groovy.lang.Closure"
+    - method groovy.json.JsonSlurperClassic parseText java.lang.String
+    - method hudson.model.Run getLog int
+    - method java.io.OutputStream write byte[]
+    - method java.lang.String getBytes java.lang.String
+    - method java.net.HttpURLConnection setRequestMethod java.lang.String
+    - method java.net.HttpURLConnection getResponseCode
+    - method java.net.URL openConnection
+    - method java.net.URLConnection setDoOutput boolean
+    - method java.net.URLConnection setRequestProperty java.lang.String java.lang.String
+    - method java.net.URLConnection getInputStream
+    - method java.net.URLConnection getOutputStream
+    - method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild
+    - new groovy.json.JsonSlurperClassic
+    - staticMethod groovy.json.JsonOutput toJson java.lang.Object
+    - staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods getText java.io.InputStream
+    - staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods toInteger java.lang.Number
+    - staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods find java.lang.Object groovy.lang.Closure
 
 unclassified:
   shell:
-    shell: "bash"
+    shell: bash
   ansibleTowerGlobalConfig:
     towerInstallation:
-      - enableDebugging: true
-        towerCredentialsId: ansible-tower-jenkins-user  # create these by hand in jenkins
-        towerDisplayName: Infra-Ansible-Tower-01
-        towerTrustCert: true
-        towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
+    - enableDebugging: true
+      towerCredentialsId: ansible-tower-jenkins-user    # create these by hand in jenkins
+      towerDisplayName: Infra-Ansible-Tower-01
+      towerTrustCert: true
+      towerURL: https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com
   email-ext:
     adminRequiredForTemplateTesting: false
     allowUnregisteredEnabled: false
-    charset: "UTF-8"
+    charset: UTF-8
     debugMode: false
     defaultBody: |
       $PROJECT_NAME - Build #$BUILD_NUMBER: $BUILD_STATUS
       Check console output at $BUILD_URL to view the results.
-    defaultContentType: "text/plain"
-    defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
-    defaultSuffix: "@redhat.com"
+    defaultContentType: text/plain
+    defaultSubject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!'
+    defaultSuffix: '@redhat.com'
     maxAttachmentSizeMb: 10
     precedenceBulk: false
     mailAccount:
-      smtpHost: "smtp.corp.redhat.com"
+      smtpHost: smtp.corp.redhat.com
       useSsl: false
     watchingEnabled: false
   ghprbTrigger:
     extensions:
     - ghprbSimpleStatus:
         addTestResults: false
-        commitStatusContext: "Robottelo-Runner"
+        commitStatusContext: Robottelo-Runner
         showMatrixStatus: false
   timestamper:
-    allPipelines: True
+    allPipelines: true
   globalLibraries:
     libraries:
-      - defaultVersion: "master"
-        name: "satqe_pipeline_lib"
-        retriever:
-          modernSCM:
-            scm:
-              git:
-                remote: 'https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git'
-                traits:
-                  - "gitBranchDiscovery"
+    - defaultVersion: master
+      name: satqe_pipeline_lib
+      retriever:
+        modernSCM:
+          scm:
+            git:
+              remote: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+              traits:
+              - gitBranchDiscovery
   location:
-    adminAddress: "SAT QE Jenkins Notifier <sat-qe-jenkins-notifier@redhat.com>"
+    adminAddress: SAT QE Jenkins Notifier <sat-qe-jenkins-notifier@redhat.com>
   lockableResourcesManager:
     declaredResources:
-      - name: "1001"
-        description: "Subnet: 10.1.4.16/28, VLAN_ID:1001"
-        labels: "vlan_pool"
-      - name: "1002"
-        description: "Subnet: 10.1.4.32/28, VLAN_ID:1002"
-        labels: "vlan_pool"
-      - name: "1015"
-        description: "Subnet: 10.1.5.0/29, VLAN_ID:1015"
-        labels: "vlan_pool"
-      - name: "1016"
-        description: "Subnet: 10.1.5.8/29, VLAN_ID:1016"
-        labels: "vlan_pool"
-      - name: "1017"
-        description: "Subnet: 10.1.5.16/29, VLAN_ID:1017"
-        labels: "vlan_pool"
-      - name: "1018"
-        description: "Subnet: 10.1.5.24/29, VLAN_ID:1018"
-        labels: "vlan_pool"
-      - name: "1019"
-        description: "Subnet: 10.1.5.32/29, VLAN_ID:1019"
-        labels: "vlan_pool"
-      - name: "1020"
-        description: "Subnet: 10.1.5.40/29, VLAN_ID:1020"
-        labels: "vlan_pool"
+    - name: '1001'
+      description: 'Subnet: 10.1.4.16/28, VLAN_ID:1001'
+      labels: vlan_pool
+    - name: '1002'
+      description: 'Subnet: 10.1.4.32/28, VLAN_ID:1002'
+      labels: vlan_pool
+    - name: '1015'
+      description: 'Subnet: 10.1.5.0/29, VLAN_ID:1015'
+      labels: vlan_pool
+    - name: '1016'
+      description: 'Subnet: 10.1.5.8/29, VLAN_ID:1016'
+      labels: vlan_pool
+    - name: '1017'
+      description: 'Subnet: 10.1.5.16/29, VLAN_ID:1017'
+      labels: vlan_pool
+    - name: '1018'
+      description: 'Subnet: 10.1.5.24/29, VLAN_ID:1018'
+      labels: vlan_pool
+    - name: '1019'
+      description: 'Subnet: 10.1.5.32/29, VLAN_ID:1019'
+      labels: vlan_pool
+    - name: '1020'
+      description: 'Subnet: 10.1.5.40/29, VLAN_ID:1020'
+      labels: vlan_pool
   throttleJobProperty:
     categories:
-    - categoryName: "pr-tester"
+    - categoryName: pr-tester
       maxConcurrentPerNode: 1
       maxConcurrentTotal: 10
   globalCachetConfiguration:
-    cachetUrl: "https://internal.status.redhat.com/api/v1/"
+    cachetUrl: https://internal.status.redhat.com/api/v1/
     ignoreSSL: true
 configuration-as-code:
   deprecated: warn
 
 jobs:
   # TODO separate repo URL for specific raw paths
-  - url: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/raw/master/src/jobs/masterSeed.groovy
+- url: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/raw/master/src/jobs/masterSeed.groovy

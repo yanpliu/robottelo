@@ -1,6 +1,6 @@
 BROKER:
     # The path where your broker settings and inventory are located
-    BROKER_DIRECTORY: "@format {env[ROBOTTELO_DIR]}"
-    HOST_WORKFLOWS:
-        POWER_CONTROL: vm-power-operation
-        EXTEND: extend-vm
+  BROKER_DIRECTORY: '@format {env[ROBOTTELO_DIR]}'
+  HOST_WORKFLOWS:
+    POWER_CONTROL: vm-power-operation
+    EXTEND: extend-vm

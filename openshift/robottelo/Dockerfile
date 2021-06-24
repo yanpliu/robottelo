@@ -36,7 +36,7 @@ COPY conf ${ROBOTTELO_DIR}/conf
 # file ownership to root:root and cause `chown` and `fix-permissions` to fail
 # This only happens on older versions OpenShift, latest Podman handles it well
 
-# arbitrary UID handling starting from virtualenv directory for pip permissions 
+# arbitrary UID handling starting from virtualenv directory for pip permissions
 USER 0
 RUN chgrp -R 0 ${VIRTUAL_ENV} && \
     chmod -R g+rwX ${VIRTUAL_ENV} && \

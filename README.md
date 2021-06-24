@@ -198,7 +198,7 @@ Decrypt: git crypt unlock
 
 ## To use the credential in your Jenkins, you need to use following steps
 
-* Clone following repo: https://gitlab.cee.redhat.com/ccit/jenkins-csb/ 
+* Clone following repo: https://gitlab.cee.redhat.com/ccit/jenkins-csb/
 * Next two are only needed for `push-credentials.sh` nothing else. You do not need to commit these changes to repo.
 * Please see [CCIT Tools README](https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/tree/2-190-3/cci-jd) for more details on the tooling.
 - Make sure properties.yaml correctly declare `OS_PROJECT_NAME` and `OS_TENANT_NAME`, as that is where the credentials will be uploaded.

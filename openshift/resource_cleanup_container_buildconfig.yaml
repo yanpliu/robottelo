@@ -14,7 +14,7 @@ items:
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    creationTimestamp: null
+    creationTimestamp:
     labels:
       name: cloud-cleanup-container
     name: cloud-cleanup-container
@@ -22,24 +22,24 @@ items:
     output:
       to:
         kind: ImageStreamTag
-        name: 'cloud-cleanup-container:latest'
+        name: cloud-cleanup-container:latest
     resources: {}
     runPolicy: Serial
     source:
       git:
-        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "master"
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
       type: Git
       contextDir: openshift
     strategy:
       dockerStrategy:
         dockerfilePath: cloud_cleanup/Dockerfile
         env:
-          - name: GIT_SSL_NO_VERIFY
-            value: 'true'
-          - name: CONFIG_FILES_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: config-files-token
-                name: satqe-casc-secret
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+        - name: CONFIG_FILES_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: config-files-token
+              name: satqe-casc-secret
       type: Docker

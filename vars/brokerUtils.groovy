@@ -12,7 +12,7 @@ def checkout(Map parameters = [:]) {
                          'any-other-wf-name':['param1':'val1', 'param2':'val2'])
 
     Based on the input map `parameters` where each key is a name of AnsibleTower Workflow,
-    and value is a map of `key/value` pairs that are parsed and provided as an input to 
+    and value is a map of `key/value` pairs that are parsed and provided as an input to
     `broker checkout` as `--key value` pairs.
 
     Returns:

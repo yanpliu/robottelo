@@ -100,7 +100,7 @@ def create_launch(Map parameters = [:]) {
             "{launch_rc} with a message: ${launch_req.getInputStream().getText()}"
             )
         }
-    
+
         // create a parent test item as a workaround of https://github.com/reportportal/reportportal/issues/1249
         def test_req = new URL("${pipelineVars.reportPortalServer}/api/v2/${pipelineVars.reportPortalProject}/item").openConnection()
         test_req.setRequestMethod('POST')
@@ -123,7 +123,7 @@ def create_launch(Map parameters = [:]) {
             def test_response = jsonSlurper.parseText(test_req.getInputStream().getText())
             wrapper_test_uuid = test_response['id']
             println("New wrapper test started: ${wrapper_test_uuid}")
-    
+
         }
         else{
             error(

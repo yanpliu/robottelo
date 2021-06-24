@@ -7,14 +7,14 @@ items:
     name: sat-upgrade-upstream
   spec:
     tags:
-      - name: latest
-        from:
-          kind: DockerImage
-          name: 'quay.io/satelliteqe/upgrade:latest'
-        importPolicy:
-          scheduled: true
-        referencePolicy:
-          type: Source
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/satelliteqe/upgrade:latest
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
 
 - kind: ImageStream
   apiVersion: image.openshift.io/v1
@@ -29,7 +29,7 @@ items:
 - kind: BuildConfig
   apiVersion: build.openshift.io/v1
   metadata:
-    creationTimestamp: null
+    creationTimestamp:
     labels:
       name: sat-upgrade-container
     name: sat-upgrade-container
@@ -42,8 +42,8 @@ items:
     runPolicy: Serial
     source:
       git:
-        uri: "https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git"
-        ref: "master"
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
       type: Git
       contextDir: openshift
     strategy:
@@ -52,16 +52,16 @@ items:
       dockerStrategy:
         dockerfilePath: upgrade/Dockerfile
         env:
-          - name: GIT_SSL_NO_VERIFY
-            value: 'true'
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
       type: Docker
     triggers:
-      - type: ImageChange
-        imageChange:
-          automatic: true
-          from:
-            kind: ImageStreamTag
-            name: sat-upgrade-upstream:latest
-      - type: ConfigChange
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: sat-upgrade-upstream:latest
+    - type: ConfigChange
   status:
     lastVersion: 0

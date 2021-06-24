@@ -5,7 +5,7 @@ RHEV:
   # username: Login for RHEVM
   USERNAME: admin@internal
   # password: Password for RHEVM
-  # PASSWORD: 
+  # PASSWORD:
   # datacenter: RHEVM datacenter, for example: Default
   DATACENTER: Satellite-Engineering
   # vm_name: Name of VM to power On/Off & delete
@@ -22,7 +22,7 @@ RHEV:
   # image_username: Login to the image
   IMAGE_USERNAME: root
   # image_password: Password to the image
-  # IMAGE_PASSWORD: 
+  # IMAGE_PASSWORD:
   # image_name: Image name on the external provider
   IMAGE_NAME: robottelo-automation-rhel74
   # image_uuid: Unique image id

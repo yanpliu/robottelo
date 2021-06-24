@@ -35,7 +35,7 @@ def sendEmail(parameters = [:]) {
     }
 
     println("""
-        Composing email with: 
+        Composing email with:
         to: $email_addrs
         reply to: $reply_emails
         body: $body

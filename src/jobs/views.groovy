@@ -59,7 +59,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
       lastDuration()
     }
   }
-  
+
   // Upgrade Dashboard
   dashboardView("${versionName} Upgrade") {
     jobFilters {

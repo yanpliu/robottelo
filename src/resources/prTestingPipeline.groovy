@@ -110,4 +110,3 @@ throttle(['pr-tester']) {
         }
     }
 }
-

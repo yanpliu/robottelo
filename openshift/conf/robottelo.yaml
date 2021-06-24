@@ -1,25 +1,25 @@
 ROBOTTELO:
   # The directory where screenshots will be saved,
   # DynaConf env var should set it as per robottelo container
-  SCREENSHOTS_PATH: "@format {env[ROBOTTELO_DIR]}/screenshots/"
+  SCREENSHOTS_PATH: '@format {env[ROBOTTELO_DIR]}/screenshots/'
   LOCALE: en_US.UTF-8
   # Update upstream=false for downstream run
   UPSTREAM: false
   # Logging verbosity, one of debug, info, warning, error, critical
   VERBOSITY: debug
   # Directory for temporary files
-  TMP_DIR: "@format {env[ROBOTTELO_DIR]}/tmp"
+  TMP_DIR: '@format {env[ROBOTTELO_DIR]}/tmp'
   # Web Server to provide various test artifacts
   ARTIFACTS_SERVER: sesame.lab.eng.rdu2.redhat.com
   # Webdriver logging options
   LOG_DRIVER_COMMANDS:
-    - newSession
-    - windowMaximize
-    - get
-    - findElement
-    - sendKeysToElement
-    - clickElement
-    - mouseMoveTo
+  - newSession
+  - windowMaximize
+  - get
+  - findElement
+  - sendKeysToElement
+  - clickElement
+  - mouseMoveTo
   # - The URL of container hosting repos on SatLab
   REPOS_HOSTING_URL: http://infra-robottelo-fixtures.infra.sat.rdu2.redhat.com:50123
   # browser tells robottelo which browser to use when testing UI. Valid values
@@ -43,4 +43,4 @@ ROBOTTELO:
   RUN_ONE_DATAPOINT: false
   # Satellite version supported by this branch
   # Set this via envvar when building robottelo-container for z-stream branches
-  SATELLITE_VERSION: "6.9"
+  SATELLITE_VERSION: '6.9'

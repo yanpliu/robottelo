@@ -2,5 +2,5 @@
 .gradle/
 build/
 
-# here ansible galaxy roles get deployed 
+# here ansible galaxy roles get deployed
 ansible/roles/

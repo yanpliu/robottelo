@@ -1,9 +1,9 @@
 EC2:
   # AWS EC2 to be added as a compute resource.
   # Access key ID of the IAM user
-  # ACCESS_KEY: 
+  # ACCESS_KEY:
   # Secret access key of the IAM user
-  # SECRET_KEY: 
+  # SECRET_KEY:
   # The default AWS region for the compute resources, by default US West (Oregon)
   REGION: us-west-2
   # The default compute resource profile image
@@ -11,7 +11,7 @@ EC2:
   # The default compute resource profile availability zone, set it empty if no preferences
   AVAILABILITY_ZONE: us-west-2a
   # The default compute resource profile subnet, set it empty if no preferences
-  SUBNET: 
+  SUBNET:
   # The default compute resource profile security groups list, default value is [default]
   SECURITY_GROUPS: default - subnet-58def83e
   # The default compute resource profile security managed ip, available values Private, Public, default value is Private

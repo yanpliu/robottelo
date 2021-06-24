@@ -48,4 +48,3 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage) {
         """
     }
 }
-

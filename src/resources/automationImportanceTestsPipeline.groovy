@@ -25,7 +25,7 @@ withCredentials([
 
     // use this format once robottelo rerun-failed plugin has this sorted
     // def rp_launch = "Importance_${params.importance}"
-    def rp_launch = params.rp_launch 
+    def rp_launch = params.rp_launch
     def rerun_of = params.rerun_of
     def rp_pytest_options = ""
     def launch_uuid = ''
@@ -160,7 +160,7 @@ withCredentials([
                      currentBuild.result = 'ABORTED'
                 }
             }
-        } 
+        }
         catch (exc) {
             print "Pipeline failed with ${exc}"
             email_to = ['sat-qe-jenkins', 'satellite-lab-list']

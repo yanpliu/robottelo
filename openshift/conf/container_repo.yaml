@@ -6,13 +6,13 @@ CONTAINER_REPO:
       username: 5894300|satqe-tokenauth
       password:
       repos_to_sync:
-        - rhscl/mysql-57-rhel7
-        - rhscl/ruby-24-rhel7
-      long_pass: True
+      - rhscl/mysql-57-rhel7
+      - rhscl/ruby-24-rhel7
+      long_pass: true
     quay:
       url: https://quay.io
       username: satelliteqe+container_repo_testing
       password:
       # I N C E P T I O N
       repos_to_sync:
-        - satelliteqe/robottelo
+      - satelliteqe/robottelo

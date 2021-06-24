@@ -155,4 +155,3 @@ task rest(dependsOn: 'classes', type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   systemProperties System.getProperties()
 }
-

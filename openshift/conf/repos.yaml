@@ -38,6 +38,6 @@ REPOS:
   # Satellite 6 repository
   SATELLITE6_REPO: '@format {this[repos].dogfood_qa}/Satellite_{this[repos].satellite_version_undr}_with_RHEL7_Server/custom/Satellite_{this[repos].satellite_version_undr}_Composes/Satellite_{this[repos].satellite_version_undr}_RHEL7/'
   # Puppet repos
-  PUPPET4_REPO: ""
+  PUPPET4_REPO: ''
   # Fake repos
-  FAKE_REPO_ZOO3: "http://inecas.fedorapeople.org/fakerepos/zoo3/"
+  FAKE_REPO_ZOO3: http://inecas.fedorapeople.org/fakerepos/zoo3/
