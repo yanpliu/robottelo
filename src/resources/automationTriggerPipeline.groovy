@@ -12,7 +12,7 @@ pipeline {
         stage('Trigger Importance Automation Tests') {
             steps {
                 script {
-                    ['critical', 'high', 'medium', 'low'].each {
+                    ['critical', 'high', 'medium', 'low', 'fips'].each {
                         build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-${it}-tests",
                         parameters: [
                             [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],
