@@ -8,6 +8,7 @@ def previous_version(String sat_version) {
 }
 
 def integrate_satellite_capsule(Map parameters = [:]) {
+    println("Integrating Satellites with Capsules")
     sh """
         cd \${ROBOTTELO_DIR}
         broker execute --workflow 'satellite-capsule-integration' \

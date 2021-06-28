@@ -9,23 +9,23 @@ def defaultConfig = [
     ]
 
 def jobCFG = [
-        'critical':   ['num_appliances': '5',
+        'critical':   ['xdist_workers': '5',
                        'importance': 'Critical',
                        'pytest_options': "-m 'not destructive' --importance Critical tests/foreman/",
                        ] << defaultConfig,
-        'high':       ['num_appliances': '10',
+        'high':       ['xdist_workers': '10',
                        'importance'  : 'High',
                        'pytest_options': "-m 'not destructive' --importance High tests/foreman/",
                        ] << defaultConfig,
-        'medium':     ['num_appliances': '5',
+        'medium':     ['xdist_workers': '5',
                        'importance'  : 'Medium',
                        'pytest_options': "-m 'not destructive' --importance Medium tests/foreman/",
                        ] << defaultConfig,
-        'low':        ['num_appliances': '5',
+        'low':        ['xdist_workers': '5',
                        'importance': 'Low',
                        'pytest_options': "-m 'not destructive' --importance Low tests/foreman/",
                        ] << defaultConfig,
-        'fips':        ['num_appliances': '5',
+        'fips':        ['xdist_workers': '5',
                        'importance': 'Fips',
                        'rp_launch': 'OCP-Jenkins-CI-FIPS',
                        'workflow': 'install-sat-jenkins-fips',
@@ -57,8 +57,8 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     "Specific template name to deploy, for emergency use"
                 )
                 stringParam(
-                    'appliance_count',
-                    "${config['num_appliances']}",
+                    'xdist_workers',
+                    "${config['xdist_workers']}",
                     "Number of Satellite instances to checkout for each pytest session"
                 )
                 stringParam(

@@ -35,7 +35,7 @@ RUN git clone https://github.com/SatelliteQE/robottelo.git && \
 # TODO: When we move to latest OCP 4.x, add --chown=1001:0 flag
 COPY broker_settings.yaml ${ROBOTTELO_DIR}/broker_settings.yaml
 COPY conf ${ROBOTTELO_DIR}/conf
-COPY conf ${UPGRADE_DIR}/conf
+RUN ln -s ${ROBOTTELO_DIR}/conf ${UPGRADE_DIR}/conf
 
 # TODO: Remove the USER root directive when on latest OCP 4.x, although no harm keeping it.
 # Switch to user root in order to perform `chown` and `fix-permissions`

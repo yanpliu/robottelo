@@ -15,8 +15,8 @@ pipelineJob("sat-DynaConf-testing") {
             "Satellite version to deployed, format is a.b.c"
         )
         stringParam(
-            'appliance_count',
-            "${config['num_appliances']}",
+            'xdist_workers',
+            "${config['xdist_workers']}",
             "Number of Satellite instances to checkout for each pytest session"
         )
         stringParam(

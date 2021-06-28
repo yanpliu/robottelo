@@ -9,8 +9,10 @@ class globalJenkinsDefaults {
     static String tower_prod = "Infra-Ansible-Tower-01"
     static String tower_url = "https://infra-ansible-tower-01.infra.sat.rdu2.redhat.com"
 
+    static List sat_os = ['rhel7']
     static List sat_versions = ["6.9", "6.10"]
     static List upgrade_versions = ["6.9", "6.10"]
+    static List streams = ['y_stream', 'z_stream']
     // The template SLA currently ignores the last version passed to it
     // With pre-snaps for the future y-stream, this would remove snaps for the active y-stream
     // When the workflow has been updated and GA templates are available, we can pass sat_versions

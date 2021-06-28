@@ -10,8 +10,8 @@ def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
         containerEnvVar(key: 'ROBOTTELO_SERVER__XDIST_BEHAVIOR', value: 'balance'),
         containerEnvVar(key: 'ROBOTTELO_SERVER__INVENTORY_FILTER', value: 'name<satellite-upgrade'),
-        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${params.sat_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: os_ver),
@@ -25,65 +25,70 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at
 
     try {
 
-        stage('__SETUP__\nSatellite and Capsule GA version') {
+        stage('Setup - Satellite and Capsule of GA version') {
 
             satellite_inventory = brokerUtils.checkout(
-                    'deploy-satellite-upgrade': [
-                            'deploy_sat_version' : from_version,
-                            'deploy_scenario'    : 'satellite-upgrade',
-                            'deploy_rhel_version': os_ver[-1],
-                            'count'              : params.xdist_workers,
-                    ],
+                'deploy-satellite-upgrade': [
+                    'deploy_sat_version' : from_version,
+                    'deploy_scenario'    : 'satellite-upgrade',
+                    'deploy_rhel_version': os_ver[-1],
+                    'count'              : params.xdist_workers,
+                ],
             )
             all_inventory = brokerUtils.checkout(
-                    'deploy-capsule-upgrade': [
-                            'deploy_sat_version' : from_version,
-                            'deploy_scenario'    : 'capsule-upgrade',
-                            'deploy_rhel_version': os_ver[-1],
-                            'count'              : params.xdist_workers,
-                    ],
+                'deploy-capsule-upgrade': [
+                    'deploy_sat_version' : from_version,
+                    'deploy_scenario'    : 'capsule-upgrade',
+                    'deploy_rhel_version': os_ver[-1],
+                    'count'              : params.xdist_workers,
+                ],
             )
             // Filter Capsule inventory from all inventory
             capsule_inventory = []
             all_inventory.each {
                 if (it._broker_args.host_type == 'capsule') capsule_inventory.add(it)
             }
+
+            // Subscriptions
+            sh 'cp ${ROBOTTELO_DIR}/conf/subscription.yaml ${WORKSPACE}/subscription.yaml'
+            subscriptions = readYaml file: "${WORKSPACE}/subscription.yaml"
+
+            // Integrate satellite and capsule
+            upgradeUtils.parallel_run_func(
+                upgradeUtils.&integrate_satellite_capsule,
+                stepName: "Satellite and Capsule",
+                satellite_inventory: satellite_inventory,
+                capsule_inventory: capsule_inventory,
+                version: from_version, subscriptions: subscriptions
+            )
         }
 
-        stage('__ENV-SETUP__\nSet BuildName, Subscriptions var, passwd and bashrc')  {
-            currentBuild.displayName = "# ${env.BUILD_NUMBER} Upgrade_Scenarios_from_${from_version}_to_${to_version} ${params.build_label}"
+        stage('Set BuildName and ssh-agent')  {
+            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
+            env.ROBOTTELO_robottelo__satellite_version = xy_sat_version
+            env.UPGRADE_robottelo__satellite_version = xy_sat_version
             sh '''
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc
                 source ~/.bashrc
                 ssh-add - <<< \$SATLAB_PRIVATE_KEY
-                cp ${ROBOTTELO_DIR}/conf/subscription.yaml ${WORKSPACE}/subscription.yaml
             '''
-            subscriptions = readYaml file: 'subscription.yaml'
         }
 
-        stage('__SETUP__\nIntegrate Satellite and Capsule') {
+        stage("Readying Satellite and Capsule for upgrade") {
             upgradeUtils.parallel_run_func(
-                    upgradeUtils.&integrate_satellite_capsule,
-                    stepName: "Satellite and Capsule",
-                    satellite_inventory: satellite_inventory,
-                    capsule_inventory: capsule_inventory,
-                    version: from_version, subscriptions: subscriptions
+                upgradeUtils.&setup_products,
+                stepName: "Satellite and Capsule",
+                product: 'capsule',
+                os_ver: os_ver,
+                satellite_inventory: satellite_inventory,
+                capsule_inventory: capsule_inventory
             )
         }
 
-        stage("__SETUP__\nReady Satellite and Capsule for upgrade") {
-            upgradeUtils.parallel_run_func(
-                    upgradeUtils.&setup_products,
-                    stepName: "Satellite and Capsule",
-                    product: 'capsule',
-                    os_ver: os_ver,
-                    satellite_inventory: satellite_inventory,
-                    capsule_inventory: capsule_inventory
-            )
-        }
-
-        stage("__TEST__\nPre-Upgrade Scenarios") {
+        stage("Run Pre-Upgrade Scenarios") {
             if (params.stream == 'y-stream') {
                 sh """
                     source ~/.bashrc
@@ -109,29 +114,29 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at
             junit "test_scenarios-pre-results.xml"
         }
 
-        stage("__UPGRADE__\nProduct - Satellite") {
+        stage("Satellite Upgrade") {
             upgradeUtils.parallel_run_func(
-                    upgradeUtils.&upgrade_products,
-                    stepName: "Satellite",
-                    upgrade_type: 'capsule',
-                    product: 'satellite',
-                    satellite_inventory: satellite_inventory,
-                    capsule_inventory: capsule_inventory
+                upgradeUtils.&upgrade_products,
+                stepName: "Satellite",
+                upgrade_type: 'capsule',
+                product: 'satellite',
+                satellite_inventory: satellite_inventory,
+                capsule_inventory: capsule_inventory
             )
         }
 
-        stage("__UPGRADE__\nProduct - Capsule") {
+        stage("Capsule Upgrade") {
             upgradeUtils.parallel_run_func(
-                    upgradeUtils.&upgrade_products,
-                    stepName: "Capsule",
-                    upgrade_type: 'capsule',
-                    product: 'capsule',
-                    satellite_inventory: satellite_inventory,
-                    capsule_inventory: capsule_inventory
+                upgradeUtils.&upgrade_products,
+                stepName: "Capsule",
+                upgrade_type: 'capsule',
+                product: 'capsule',
+                satellite_inventory: satellite_inventory,
+                capsule_inventory: capsule_inventory
             )
         }
 
-        stage("__TEST__\nPost-Upgrade Scenarios") {
+        stage("Run Post-Upgrade Scenarios") {
 
             if (params.stream == 'y-stream') {
                 sh """
@@ -163,15 +168,13 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at
         currentBuild.result = 'FAILURE'
     }
     finally {
-        if(! params.external_satellite.trim()) {
-            stage('__TEARDOWN__\nCheck-in Satellite and/or Capsule') {
-                brokerUtils.checkin_all()
-            }
+        stage('__TEARDOWN__\nCheck-in Satellite and/or Capsule') {
+            brokerUtils.checkin_all()
         }
 
         emailUtils.sendEmail(
-            'to_nicks': ["sat-qe-jenkins@redhat.com"],
-            'reply_nicks': ["sat-qe-jenkins@redhat.com"],
+            'to_nicks': ["sat-qe-jenkins"],
+            'reply_nicks': ["sat-qe-jenkins"],
             'subject': "${currentBuild.result}: Upgrade Scenarios Status Frorm ${from_version} To ${to_version} on ${os_ver}",
             'body': '${FILE, path="upgrade_highlights"}' +
                 "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details."

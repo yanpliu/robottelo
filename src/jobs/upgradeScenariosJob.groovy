@@ -2,24 +2,25 @@ import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
 
-def OS = ['rhel7']
-def jobCFG = ['y-stream', 'z-stream']
-
-
 globalJenkinsDefaults.upgrade_versions.each { versionName ->
-    OS.each { os ->
-        jobCFG.each { jobName ->
-            if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && jobName == 'z-stream')) {
-                pipelineJob("sat-${versionName}-${jobName}-upgrade-scenarios-${os}") {
+    globalJenkinsDefaults.sat_os.each { os ->
+        globalJenkinsDefaults.streams.each { stream ->
+            if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && stream == 'z_stream')) {
+                pipelineJob("sat-${versionName}-${stream}-upgrade-scenarios-${os}") {
                     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
-                    description("Satellite upgrade scenarios for ${jobName}")
+                    description("Satellite upgrade scenarios for ${stream}")
                     parameters {
                         stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b')
+                        stringParam('snap_version', '', 'Snap version to be deployed, format is x.y')
                         stringParam('os', "${os}", 'RHEL version of Satellite')
                         stringParam('xdist_workers', '4', 'Number of Workers/Satellites to run the tests')
-                        stringParam('build_label', '', 'Specify the build label of the Satellite. Example Sat6.10.0-1.0 which is Sat6.y.z-SNAP.COMPOSE')
+                        stringParam(
+                            'build_label',
+                            '',
+                            "Specify the build label. Ex. '6.8 TO 6.9 Snap: 1.0', which is FROM_VERSION TO SAT_VERSION SNAP: x.y"
+                        )
                         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
-                        stringParam('stream', "${jobName}", 'y-stream or z-stream')
+                        stringParam('stream', "${stream}", 'y_stream or z_stream')
                         booleanParam(
                             'downstream_fm_upgrade',
                             false,

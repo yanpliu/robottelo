@@ -15,8 +15,8 @@ def test_run_type = 'upgrade'
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
     containerEnvVar(key: 'ROBOTTELO_SERVER__INVENTORY_FILTER', value: 'name<satellite-upgrade'),
-    containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
-    containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
+    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${params.sat_version}'"),
+    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
@@ -52,8 +52,6 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at
             // Subscribe the machine to RHN for extra packages
             sh 'cp ${UPGRADE_DIR}/conf/subscription.yaml ${WORKSPACE}/subscription.yaml'
             subscriptions = readYaml file: "${WORKSPACE}/subscription.yaml"
-            def rhn_username = subscriptions.SUBSCRIPTION.RHN_USERNAME
-            def rhn_pool = subscriptions.SUBSCRIPTION.RHN_POOLID
 
             // Integrate Satellite and Capsule
             upgradeUtils.parallel_run_func(
@@ -66,14 +64,11 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at
         }
 
         stage('Setup build details for upgrade') {
-            first_host_name_parts = satellite_inventory[0]._broker_args.template.split('-')
-            sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
-            snap_version = params.snap_version ?: first_host_name_parts[4]
-            currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_all-tier_${from_version}_to_${to_version} ${params.build_label}"
-
-            env.ROBOTTELO_server__version__release = sat_version
-            env.ROBOTTELO_server__version__snap = snap_version
-            env.ROBOTTELO_robottelo__satellite_version = sat_version.tokenize('.').take(2).join('.')
+            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
+            env.ROBOTTELO_robottelo__satellite_version = xy_sat_version
+            env.UPGRADE_robottelo__satellite_version = xy_sat_version
             sh """
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc

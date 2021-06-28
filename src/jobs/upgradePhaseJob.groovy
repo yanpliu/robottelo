@@ -1,84 +1,67 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
-def os = ['rhel7']
-
-def jobCFG = [
-        'z_stream':   ['num_appliances': '1',
-                       'z_stream': true,
-                      ],
-        'y_stream':   ['num_appliances': '1',
-                        'z_stream': false,
-                      ],
-]
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
-    os.each { OS ->
-        jobCFG.each { jobName, config ->
-            if (! (versionName == globalJenkinsDefaults.sat_versions.last() && config['z_stream'])) {
-                pipelineJob("sat-${versionName}-${jobName}-Upgrade-Phase-${OS}") {
+    globalJenkinsDefaults.sat_os.each { OS ->
+        globalJenkinsDefaults.streams.each { stream ->
+            if (! (versionName == globalJenkinsDefaults.sat_versions.last() && stream == 'z_stream')) {
+                pipelineJob("sat-${versionName}-${stream}-upgrade-phase-${OS}") {
                     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
-                    description("Satellite, Capsule Upgrade job for ${jobName}")
+                    description("Satellite, Capsule Upgrade job for ${stream}")
                     parameters {
-                        stringParam(
-                            'sat_version',
-                            "${versionName}",
-                            "Satellite version to deployed, format is a.b"
-                        )
+                        stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b')
+                        stringParam('snap_version', '', 'Snap version to be deployed, format is x.y')
                         stringParam(
                             'os',
                             "${OS}",
                             "RHEL version of Satellite"
                         )
                         stringParam(
-                           'build_label',
-                           "",
-                           "Specify the build label of the Satellite. Example Sat6.3.0-1.0 Which is Sat6.y.z-SNAP.COMPOSE"
+                            'build_label',
+                            "",
+                            "Specify the build label. Ex. '6.8 TO 6.9 Snap: 1.0', which is FROM_VERSION TO SAT_VERSION SNAP: x.y"
                         )
                         stringParam(
                             'tower_url',
                             globalJenkinsDefaults.tower_url,
                             "Ansible Tower URL, format 'https://<url>/'"
                         )
-                        booleanParam(
-                            'zstream_upgrade',
-                             config['z_stream'],
-                            "This option, enable for Z-stream and disable for Y-stream upgrade"
-                        )
+                        stringParam('stream', "${stream}", 'y_stream or z_stream')
                         booleanParam(
                             'db_trigger',
                              false,
-                             "This option use to trigger the customer db upgrade job after satellite upgrade"
+                             'This option use to trigger the customer db upgrade job after satellite upgrade'
                         )
                         booleanParam(
                             "foreman_maintain_satellite_upgrade",
                             true,
-                            "This option allows to use foreman-maintain for satellite-upgrade."
+                            'This option allows to use foreman-maintain for satellite-upgrade.'
                         )
                         booleanParam(
                             "downstream_fm_upgrade",
                             false,
-                            "This option helps to enable the required reposiory for non-release-fm version upgrade"
+                            'This option helps to enable the required reposiory for non-release-fm version upgrade'
                         )
                         booleanParam(
                             "foreman_maintain_capsule_upgrade",
                             true,
-                            "This option allows to use foreman-maintain for capsule upgrade."
+                            'This option allows to use foreman-maintain for capsule upgrade.'
                         )
                         booleanParam(
                             "satellite_capsule_setup_reboot",
                             true,
-                            "This option allows the reboot of satellite and capsule setup after upgrade."
+                            'This option allows the reboot of satellite and capsule setup after upgrade.'
                         )
                         booleanParam(
                             "upgrade_with_http_proxy",
                             false,
-                            "This option allows to perform the upgrade using http_proxy."
+                            'This option allows to perform the upgrade using http_proxy.'
                         )
                         booleanParam(
                             "setup_preserve",
                             false,
-                            "This option allows us to preserve the setup after upgrade for investigation purpose"
+                            'This option allows us to preserve the setup after upgrade for investigation purpose'
                         )
                         stringParam(
                             'capsule_count',
@@ -97,12 +80,12 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                         stringParam(
                             'external_satellite_hostname',
                             '',
-                            "Provide the exteranl satellite details"
+                            'Provide the exteranl satellite details'
                         )
                         stringParam(
                             'external_capsule_hostnames',
                             '',
-                            "Provide the external capsule hostname, if you have multiple capsules then enter it by keeping space"
+                            'Provide the external capsule hostname, if you have multiple capsules then enter it by keeping space'
                         )
                         choiceParam(
                             'ansible_repo_version', [
@@ -110,7 +93,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                             '2.8',
                             '2.7'
                             ],
-                          "Ansible repo version for capsule upgrade"
+                          'Ansible repo version for capsule upgrade'
                         )
                         stringParam(
                             'specific_upgrade_base_version',

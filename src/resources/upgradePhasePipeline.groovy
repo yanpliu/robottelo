@@ -3,14 +3,13 @@
 import groovy.json.*
 
 def to_version = params.sat_version
-def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
+def from_version = ("${params.stream}" == 'z-stream')? to_version : upgradeUtils.previous_version(to_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
+
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
-        // TODO: This and satellite_version should be set after the broker checkout with accurate values for snap version too
         containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${params.sat_version}'"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
@@ -85,7 +84,11 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 env.satellite_hostname = params.external_satellite_hostname
                 env.capsule_hostnames = params.external_capsule_hostnames
             }
-            currentBuild.displayName = "#${env.BUILD_NUMBER} upgrade_${from_version}_to_${sat_version} ${params.build_label}"
+            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
+            env.ROBOTTELO_robottelo__satellite_version = xy_sat_version
+            env.UPGRADE_robottelo__satellite_version = xy_sat_version
         }
         stage("Setup ssh-agent"){
             sh """

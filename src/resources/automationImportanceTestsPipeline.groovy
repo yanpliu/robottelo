@@ -53,7 +53,7 @@ withCredentials([
                     (workflow): [
                         'deploy_sat_version': params.sat_version,
                         'deploy_snap_version': params.snap_version,
-                        'count': params.appliance_count
+                        'count': params.xdist_workers
                     ] << template_name,
                 )
             }
@@ -94,7 +94,7 @@ withCredentials([
                             ],
                             [
                                 key: "instance_count",
-                                value: "${params.appliance_count}"
+                                value: "${params.xdist_workers}"
                             ]
                         ]
                     )
@@ -109,14 +109,14 @@ withCredentials([
             }
 
             stage('Execute Automation Test Suite') {
-                // -n argument should be params.appliance_count when robottelo 8303 is merged
+                // -n argument should be params.xdist_workers when robottelo 8303 is merged
                 if(params.use_ibutsu){
                     ibutsu_options = pipelineVars.ibutsuBaseOptions
                 } else { ibutsu_options = " "}
                 return_code = robotteloUtils.execute(script: """
                     py.test -v -rEfs --tb=short \
                     --durations=20 --durations-min=600.0 \
-                    -n ${params.appliance_count} \
+                    -n ${params.xdist_workers} \
                     --dist loadscope \
                     --junit-xml=sat-${params.importance}-results.xml \
                     -o junit_suite_name=sat-${params.importance} \

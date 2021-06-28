@@ -23,7 +23,11 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                         stringParam('snap_version', '', 'Snap version to deployed, format is x.y')
                         stringParam('os', "${os}", 'RHEL version of Satellite')
                         stringParam('xdist_workers', '4', 'Number of Workers/Satellites to run the tests')
-                        stringParam('build_label', '', 'Specify the build label, format is Sat-6.y.z-SNAP.COMPOSE')
+                        stringParam(
+                            'build_label',
+                            '',
+                            "Specify the build label. Ex. '6.8 TO 6.9 Snap: 1.0', which is FROM_VERSION TO SAT_VERSION SNAP: x.y"
+                        )
                         booleanParam('zstream_upgrade', config['z_stream'], 'Check if z-stream upgrade')
                         booleanParam(
                             'downstream_fm_upgrade',

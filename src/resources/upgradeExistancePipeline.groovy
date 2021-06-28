@@ -19,7 +19,7 @@ def at_vars = [
 openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
     try {
 
-        stage('__SETUP__\nSatellite and Capsule GA version') {
+        stage('Setup - Satellite and Capsule of GA version') {
 
             satellite_inventory = brokerUtils.checkout(
                 'deploy-satellite-upgrade': [
@@ -31,17 +31,18 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             env.satellite_hostname = satellite_inventory[0].hostname
         }
 
-        stage('__ENV-SETUP__\nSet BuildName, passwd and bashrc') {
-            currentBuild.displayName = "# ${env.BUILD_NUMBER} Upgrade_Existence_Tests_from_${from_version}_to_${to_version} ${params.build_label}"
+        stage('Set BuildName and ssh-agent') {
+            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             sh '''
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc
-                ssh-add - <<< \\$SATLAB_PRIVATE_KEY
                 source ~/.bashrc
+                ssh-add - <<< \\$SATLAB_PRIVATE_KEY
             '''
         }
 
-        stage('__DATASTORE__\nCollect before Upgrade') {
+        stage('Collect API and CLI datastores before Upgrade') {
             default_artifacts = ['preupgrade_cli', 'preupgrade_api', 'preupgrade_templates.tar.gz']
             sh """
                 source ~/.bashrc
@@ -55,11 +56,11 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             archiveArtifacts artifacts: default_artifacts.join(', ')
         }
 
-        stage("__SETUP__\nEnvironment setup for Satellite for upgrade") {
+        stage("Readying Satellite for upgrade") {
             upgradeUtils.setup_products(product: 'satellite', os_ver: os_ver, satellite: satellite_inventory[0])
         }
 
-        stage("__UPGRADE__\nSatellite") {
+        stage("Satellite Upgrade") {
             sh """
                 source ~/.bashrc
                 cd \${UPGRADE_DIR}
@@ -67,7 +68,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             """
         }
 
-        stage('__DATASTORE__\nCollect after Upgrade') {
+        stage('Collect API and CLI datastores after Upgrade') {
             default_artifacts = ['postupgrade_cli', 'postupgrade_api', 'postupgrade_templates.tar.gz']
             sh """
                 source ~/.bashrc
@@ -81,7 +82,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             archiveArtifacts artifacts: default_artifacts.join(', ')
         }
 
-        stage("__TEST__\nExistence Tests - CLI Endpoint") {
+        stage("Run Existence Tests - CLI Endpoint") {
             upgradeUtils.execute(
                 script: """
                     export UPGRADE_UPGRADE__EXISTENCE_TEST__ENDPOINT='cli'
@@ -92,7 +93,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             junit "test_existance_cli-results.xml"
         }
 
-        stage("__TEST__\nExistence Tests - API Endpoint") {
+        stage("Run Existence Tests - API Endpoint") {
             upgradeUtils.execute(
                 script: """
                     export UPGRADE_UPGRADE__EXISTENCE_TEST__ENDPOINT='api'
