@@ -1,7 +1,7 @@
 def execute(Map parameters = [:]) {
 
     // Default artifacts to collect for importance jobs
-    defaultArtifacts = ['logs/*.log', '*-results.xml', '*.properties', 'screenshots.tar.gz']
+    defaultArtifacts = ['logs/*.log', '*-results.xml', 'screenshots.tar.gz']
     def artifacts = parameters.get('artifacts', defaultArtifacts)
 
     returnCode = sh (
