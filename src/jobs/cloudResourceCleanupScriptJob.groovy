@@ -18,7 +18,7 @@ pipelineJob("cloud-resources-cleanup") {
     }
 
     triggers {
-        cron('H 16 * * 3,5')
+        cron('H 16 * * 2,4')
     }
 
     definition {
