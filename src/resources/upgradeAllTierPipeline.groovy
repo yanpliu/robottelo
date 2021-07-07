@@ -3,8 +3,7 @@
 import groovy.json.*
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
-def os_ver = "${params.os}"
-def to_version = "${params.sat_version}".tokenize('.').take(2).join('.')
+def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def rp_launch = 'Upgrades'
 def rp_pytest_options = ''
@@ -13,9 +12,11 @@ def wrapper_test_uuid = ''
 def test_run_type = 'upgrade'
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+    containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
     containerEnvVar(key: 'ROBOTTELO_SERVER__INVENTORY_FILTER', value: 'name<satellite-upgrade'),
-    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${params.sat_version}'"),
+    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${to_version}'"),
     containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
+    containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
     containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
@@ -35,7 +36,7 @@ openShiftUtils.withNode(
                 'deploy-satellite-upgrade': [
                     'deploy_sat_version': from_version,
                     'deploy_scenario': 'satellite-upgrade',
-                    'deploy_rhel_version': os_ver[-1],
+                    'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers,
                 ],
             )
@@ -43,7 +44,7 @@ openShiftUtils.withNode(
                 'deploy-capsule-upgrade': [
                     'deploy_sat_version': from_version,
                     'deploy_scenario': 'capsule-upgrade',
-                    'deploy_rhel_version': os_ver[-1],
+                    'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers,
                 ],
             )
@@ -63,10 +64,9 @@ openShiftUtils.withNode(
                 capsule_inventory: capsule_inventory,
                 version: from_version, subscriptions: subscriptions
             )
-            calculated_build_name = "From "+ from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
+            // Build Description
+            calculated_build_name = from_version + " to " + "${params.sat_version}" + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
-            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
 
         stage('Setup ssh-agent') {
@@ -83,7 +83,7 @@ openShiftUtils.withNode(
                 upgradeUtils.&setup_products,
                 stepName: 'Satellite and Capsule',
                 product: 'capsule',
-                os_ver: os_ver,
+                os_ver: params.os,
                 satellite_inventory: satellite_inventory,
                 capsule_inventory: capsule_inventory
             )
@@ -126,7 +126,7 @@ openShiftUtils.withNode(
                         ],
                         [
                             key: 'os',
-                            value: "${os_ver}"
+                            value: "${params.os}"
                         ],
                         [
                             key: 'instance_count',
@@ -169,7 +169,7 @@ openShiftUtils.withNode(
                     parameters: [
                         [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],
                         [$class: 'StringParameterValue', name: 'sat_version', value: params.sat_version],
-                        [$class: 'StringParameterValue', name: 'rhel_version', value: os_ver[-1]],
+                        [$class: 'StringParameterValue', name: 'rhel_version', value: params.os[-1]],
                         [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
                         [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
                         [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],
@@ -215,12 +215,14 @@ openShiftUtils.withNode(
             emailUtils.sendEmail(
                 'to_nicks': ['sat-qe-jenkins'],
                 'reply_nicks': ['sat-qe-jenkins'],
-                'subject': "${currentBuild.result}: Upgrade All-tier Status ${currentBuild.displayName}",
-                'body': '${FILE, path="upgrade_highlights"}' + " The build ${env.BUILD_URL} has been completed",
+                'subject': "${currentBuild.result}: Upgrade All-tier tests ${currentBuild.displayName}",
+                'body': '${FILE, path="upgrade_highlights"}\n' +
+                        "The build ${currentBuild.displayName} has been ${currentBuild.result}. \n\n Refer ${env.BUILD_URL} for more details.",
                 'mimeType': 'text/plain',
                 'attachmentsPattern': 'full_upgrade'
             )
         }
+
         stage('Finish the report portal launch') {
             if (launch_uuid){
                 reportPortalUtils.finish_launch(launch_uuid: launch_uuid)

@@ -2,14 +2,15 @@
 
 import groovy.json.*
 
-def to_version = "${params.sat_version}".tokenize('.').take(2).join('.')
+def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
-def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${params.sat_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
+        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${to_version}'"),
         containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
+        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
@@ -84,10 +85,9 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 env.satellite_hostname = params.external_satellite_hostname
                 env.capsule_hostnames = params.external_capsule_hostnames
             }
-            calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
+            // Build Description
+            calculated_build_name = from_version + " to " + "${params.sat_version}" + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
-            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
 
         stage("Setup ssh-agent"){
@@ -176,8 +176,9 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["${mailing_user}"],
             'reply_nicks': ["${mailing_user}"],
-            'subject': "${currentBuild.result}: Upgrade Phase status ${currentBuild.displayName}",
-            'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
+            'subject': "${currentBuild.result}: Upgrade Phase ${currentBuild.displayName}",
+            'body': '${FILE, path="upgrade_highlights"}\n' +
+                    "The build ${currentBuild.displayName} has been ${currentBuild.result}. \n\n Refer ${env.BUILD_URL} for more details.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'
         )

@@ -32,5 +32,6 @@ class pipelineVars implements Serializable {
     String towerUser = 'satqe_auto_droid'
 
     List customer_databases = ['DogFood','Softlayer','SaintGobain']
+    List upgrade_versions = ["6.9", "6.10"]
     String zstream_signoffsheet = 'https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing'
 }

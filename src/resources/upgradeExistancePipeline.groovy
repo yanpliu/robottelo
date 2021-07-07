@@ -2,15 +2,16 @@
 
 import groovy.json.*
 
-def os_ver = "${params.os}"
-def to_version = "${params.sat_version}".tokenize('.').take(2).join('.')
+def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
+        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: os_ver),
+        containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
         containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: params.distribution),
         containerEnvVar(key: 'UPGRADE_UPGRADE__DOWNSTREAM_FM_UPGRADE', value: "${params.downstream_fm_upgrade}"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_SATELLITE_UPGRADE', value: "${params.foreman_maintain_satellite_upgrade}"),
@@ -23,15 +24,14 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 'deploy-satellite-upgrade': [
                     'deploy_sat_version' : from_version,
                     'deploy_scenario'    : 'satellite-upgrade',
-                    'deploy_rhel_version': os_ver[-1]
+                    'deploy_rhel_version': params.os[-1]
                 ],
             )
             env.satellite_hostname = satellite_inventory[0].hostname
             env.capsule_hostnames = ''
-            calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
+            // Build Description
+            calculated_build_name = from_version + " to " + "${params.sat_version}" + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
-            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
 
         stage('Setup ssh-agent') {
@@ -131,8 +131,8 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["sat-qe-jenkins"],
             'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "${currentBuild.result}: Upgrade Existence Tests Status ${currentBuild.displayName}",
-            'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
+            'subject': "${currentBuild.result}: Upgrade Existence Tests ${currentBuild.displayName}",
+            'body': '${FILE, path="upgrade_highlights"}' + "The build ${currentBuild.displayName} has been ${currentBuild.result}. \n\n Refer ${env.BUILD_URL} for more details.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'
         )
