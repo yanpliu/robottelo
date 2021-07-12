@@ -51,10 +51,10 @@ dependencies {
   // Job DSL plugin including plugin dependencies
   testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}"
   testImplementation "org.jenkins-ci.plugins:job-dsl:${jobDslVersion}@jar"
-  testImplementation 'com.thoughtworks.xstream:xstream:1.4.15'
-  testImplementation 'org.jenkins-ci.plugins:structs:1.22@jar'
+  testImplementation 'com.thoughtworks.xstream:xstream:1.4.17'
+  testImplementation 'org.jenkins-ci.plugins:structs:1.23@jar'
   testImplementation 'org.jenkins-ci.plugins:cloudbees-folder:6.15@jar'
-  testImplementation 'org.jenkins-ci.plugins:script-security:1.76@jar'
+  testImplementation 'org.jenkins-ci.plugins:script-security:1.77@jar'
 
   // Run the following script in the Script Console of your Jenkins instance to generate
   // the above testPlugins list. (adapted from https://git.io/fjpUs)
@@ -71,39 +71,39 @@ dependencies {
   // plugins to install in test instance
   // These are the Maven IDs for the given plugins, which can be found at:
   // https://<jenkins.hostname>/pluginManager/plugin/<plugin ID>/thirdPartyLicenses
-  // https://2-277-2-jenkins-csb-uc.apps.ocp4.prod.psi.redhat.com/plugins.txt (plugins.txt -> update-center/2.277/default/plugins.txt)
+  // https://main-jenkins-csb-uc.apps.ocp4.prod.psi.redhat.com/2.289/plugins.txt (plugins.txt -> update-center/2.289/plugins.txt)
   testPlugins 'org.jenkins-ci.plugins:ansible:1.1'
   testPlugins 'org.jenkins-ci.plugins:ansible-tower:0.16.0'
   testPlugins 'com.coravy.hudson.plugins.github:github:1.33.1'
-  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.18'
-  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:2.90'
+  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps-global-lib:2.19'
+  testPlugins 'org.jenkins-ci.plugins.workflow:workflow-cps:2.92'
   testPlugins 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.23'
   testPlugins 'org.jenkins-ci.plugins:any-buildstep:0.1'
   testPlugins 'org.jenkins-ci.plugins:build-blocker-plugin:1.7.7'
   testPlugins 'org.jenkins-ci.plugins:cachet-gating:1.0.9'
   testPlugins 'org.jenkins-ci.plugins:cloudbees-folder:6.15'
-  testPlugins 'org.jenkins-ci.plugins:credentials:2.3.17'
-  testPlugins 'org.jenkins-ci.plugins:cvs:2.18'
-  testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.15'
+  testPlugins 'org.jenkins-ci.plugins:credentials:2.5'
+  testPlugins 'org.jenkins-ci.plugins:cvs:2.19'
+  testPlugins 'org.jenkins-ci.plugins:dashboard-view:2.17'
   testPlugins 'org.jenkins-ci.plugins:extra-columns:1.23'
   testPlugins 'org.jenkins-ci.plugins:envinject:2.4.0'
   testPlugins 'org.jenkins-ci.plugins:flexible-publish:0.16.1'
   testPlugins 'org.jenkins-ci.plugins:generic-webhook-trigger:1.72'
   testPlugins 'org.jenkins-ci.plugins:ghprb:1.42.2'
-  testPlugins 'org.jenkins-ci.plugins:git:4.7.1'
+  testPlugins 'org.jenkins-ci.plugins:git:4.7.2'
   testPlugins 'org.jenkins-ci.plugins:gradle:1.36'
-  testPlugins 'org.jenkins-ci.plugins:groovy:2.3'
+  testPlugins 'org.jenkins-ci.plugins:groovy:2.4'
   testPlugins 'org.jenkins-ci.plugins:htmlpublisher:1.25'
-  testPlugins 'org.jenkins-ci.plugins:jms-messaging:1.1.21'
-  testPlugins 'org.jenkins-ci.plugins:junit:1.49'
+  testPlugins 'org.jenkins-ci.plugins:jms-messaging:1.1.22'
+  testPlugins 'org.jenkins-ci.plugins:junit:1.50'
   testPlugins 'org.jenkins-ci.plugins:mailer:1.34'
-  testPlugins 'org.jenkins-ci.plugins:matrix-project:1.18'
-  testPlugins 'org.jenkins-ci.plugins:parameterized-trigger:2.40'
+  testPlugins 'org.jenkins-ci.plugins:matrix-project:1.19'
+  testPlugins 'org.jenkins-ci.plugins:parameterized-trigger:2.41'
   testPlugins 'org.jenkins-ci.plugins:progress-bar-column-plugin:1.0'
   testPlugins 'org.jenkins-ci.plugins:sidebar-link:1.12.0'
   testPlugins 'org.jenkins-ci.plugins:ssh-agent:1.22'
   testPlugins 'org.jenkins-ci.plugins:test-results-analyzer:0.3.5'
-  testPlugins 'org.jenkins-ci.plugins:throttle-concurrents:2.2'
+  testPlugins 'org.jenkins-ci.plugins:throttle-concurrents:2.3'
   testPlugins 'org.jenkins-ci.plugins:token-macro:2.15'
   testPlugins 'org.jenkins-ci.plugins:view-job-filters:2.3'
   testPlugins 'org.jenkins-ci.plugins:ws-cleanup:0.39'
@@ -112,11 +112,11 @@ dependencies {
   testPlugins 'com.openshift.jenkins:openshift-pipeline:1.0.57'
   testPlugins 'io.fabric8.jenkins.plugins:openshift-sync:1.0.46'
   testPlugins 'org.openshift.jenkins:openshift-login:1.0.26'
-  testPlugins 'org.jenkinsci.plugins:kubernetes-credentials:0.8.0'
+  testPlugins 'org.jenkinsci.plugins:kubernetes-credentials:0.9.0'
   testPlugins 'com.cloudbees.jenkins.plugins:kubernetes-credentials-provider:0.18-1'
-  testPlugins 'org.csanchez.jenkins.plugins:kubernetes:1.29.2'
-  testPlugins 'org.jenkins-ci.plugins:kubernetes-client-api:4.13.2-1'
-  testPlugins 'org.6wind.jenkins:lockable-resources:2.10'
+  testPlugins 'org.csanchez.jenkins.plugins:kubernetes:1.30.0'
+  testPlugins 'org.jenkins-ci.plugins:kubernetes-client-api:5.4.1'
+  testPlugins 'org.6wind.jenkins:lockable-resources:2.11'
 }
 
 task resolveTestPlugins(type: Copy) {

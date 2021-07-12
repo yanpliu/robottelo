@@ -40,9 +40,9 @@ Examples will be in the `src/jobs/` folder with comments inline.  Each example w
 
 Plugins are added to Jenkins at container build time, via plugins.txt.
 
-CCI-JD provides a script that will reconsile plugins that we have defined locally and the list of default CSB plugins. It should be used to generate a pinned plugins.txt file, from the Jenkins-csb branch that matches the version of Jenkins we're running. (example: 2-277-2)
+CCI-JD provides a script that will reconsile plugins that we have defined locally and the list of default CSB plugins. It should be used to generate a pinned plugins.txt file, from the Jenkins-csb branch that matches the version of Jenkins we're running. (example: 2-289-2)
 
-https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-277-2/cci-jd/docs/plugins.md#reproducible-jenkins-deployment
+https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-289/cci-jd/docs/plugins.md#reproducible-jenkins-deployment
 
 
 ## Testing
@@ -200,7 +200,7 @@ Decrypt: git crypt unlock
 
 * Clone following repo: https://gitlab.cee.redhat.com/ccit/jenkins-csb/
 * Next two are only needed for `push-credentials.sh` nothing else. You do not need to commit these changes to repo.
-* Please see [CCIT Tools README](https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/tree/2-190-3/cci-jd) for more details on the tooling.
+* Please see [CCIT Tools README](https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/tree/2-289/cci-jd) for more details on the tooling.
 - Make sure properties.yaml correctly declare `OS_PROJECT_NAME` and `OS_TENANT_NAME`, as that is where the credentials will be uploaded.
 - Make sure to sym-link `src/jobs` to `jobs` at the root of your `satelliteqe-jenkins` dir using ` ln -s src/jobs jobs`
 
@@ -246,7 +246,7 @@ This will rebuild your Jenkins docker container and that will trigger rebuild of
 
 This is what finishes adding new credentials to your Jenkins with Git-Crypt and JCasC.
 
-Additional Reference: https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-190-3/cci-jd/docs/git-crypt.md
+Additional Reference: https://gitlab.cee.redhat.com/ccit/jenkins-csb/-/blob/2-289/cci-jd/docs/git-crypt.md
 
 
 # OCP Jenkins CSB Modifications
