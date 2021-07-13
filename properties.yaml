@@ -1,17 +1,17 @@
 # Publicly cloneable GIT url of the declaration (this) repository.
-CASC_DECLARATION_REPO: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+CASC_DECLARATION_REPO: 'https://gitlab.sat.engineering.redhat.com/gtalreja/satelliteqe-jenkins.git'
 # Name of the JCasC YAML file. Expected to be in the same directory as this file.
-CASC_REPO_FILE: casc.yaml
+CASC_REPO_FILE: 'casc.yaml'
 # Name of the plugins.txt file. Expected to be in the same directory as this file.
-CASC_REPO_PLUGINS: plugins.txt
+CASC_REPO_PLUGINS: 'plugins.txt'
 # Following 3 vars were added when I was running setup.sh file locally(as it failed to run without those)
 # to test changes as per their README.
 # Repo: https://gitlab.mw.lab.eng.bos.redhat.com/jbossqe-jenkins/jcasc File: setup.sh
 # README: https://gitlab.mw.lab.eng.bos.redhat.com/jbossqe-jenkins/jcasc/blob/master/docs/setup.md#local-development
 # It may not be needed for our jenkins instances in openshift. Hence commented it out.
 # Name of the OpenShift project the deployment is in (TENANT_NAME-PROJECT_NAME.cloud.paas.psi.redhat.com)
-OS_PROJECT_NAME: jenkins-csb-satellite-qe
+OS_PROJECT_NAME: 'jenkins-csb-satellite-qe'
 # Name of the OpenShift tenant the deployment is in (TENANT_NAME-PROJECT_NAME.cloud.paas.psi.redhat.com)
-OS_TENANT_NAME: satqe
+OS_TENANT_NAME: 'satqe-stage'
 # this tells which version of Jenkins to build
-JENKINS_CSB_VERSION: 2-277
+JENKINS_CSB_VERSION: '2-289'
