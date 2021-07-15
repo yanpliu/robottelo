@@ -22,7 +22,8 @@ pipelineJob('snap-templatization') {
         stringParam('CI_MESSAGE','','UMB message that comes from CI-trigger. It is expected to provide an artifact  .id:COMPOSE_ID, extra.target:CDN, extra.results_id:JIRA')
         stringParam('MESSAGE_HEADERS','','Headers of the message that comes from CI-trigger')
         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
-        booleanParam('trigger_automation', true, 'If checked, will trigger automation')
+        //TODO: Use booleanParam for trigger_automation - https://github.com/jenkinsci/jms-messaging-plugin/issues/220
+        choiceParam('trigger_automation', ['Yes', 'No'], 'If Yes, will trigger automation')
     }
 
     properties {

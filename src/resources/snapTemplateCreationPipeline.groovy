@@ -155,7 +155,7 @@ try {
         }
 
         stage('Trigger Automation Test') {
-            if (params.trigger_automation) {
+            if (params.trigger_automation == 'Yes') {
                 if (template_exists) {
                     build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
                         parameters: [
