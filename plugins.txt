@@ -14,11 +14,10 @@ build-blocker-plugin:1.7.7
 build-timeout:1.20
 cachet-gating:1.0.9
 checks-api:1.7.0
-claim:2.18.2
-cli-commander:0.3
 cloud-stats:0.27
 cloudbees-disk-usage-simple:0.10
 cloudbees-folder:6.15
+command-launcher:1.6
 conditional-buildstep:1.4.1
 config-file-provider:3.8.0
 configuration-as-code:1.51
@@ -39,12 +38,14 @@ extended-read-permission:3.2
 external-monitor-job:1.7
 extra-columns:1.23
 font-awesome-api:5.15.3-3
+generic-webhook-trigger:1.72
 ghprb:1.42.2
 git:4.7.2
 git-client:3.7.2
 git-server:1.9
 github:1.33.1
 github-api:1.123
+gitlab-plugin:1.5.20
 gradle:1.36
 groovy:2.4
 handlebars:3.0.8
