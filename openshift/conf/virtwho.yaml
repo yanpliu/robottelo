@@ -49,11 +49,11 @@ VIRTWHO:
     guest_password: redhat
   KUBEVIRT:
     hypervisor_type: kubevirt
-    hypervisor_server: 10.66.144.7
+    hypervisor_server: worker-2.virtwhocluster85.lab.pnq2.cee.redhat.com
     hypervisor_username: root
     hypervisor_password:
     hypervisor_config_file: /root/kube.conf
-    guest: 10.66.144.7
-    guest_port: 31270
+    guest: worker-2.virtwhocluster85.lab.pnq2.cee.redhat.com
+    guest_port: 31818
     guest_username: root
     guest_password: redhat
