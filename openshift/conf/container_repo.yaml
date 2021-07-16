@@ -1,5 +1,5 @@
 # Container registry and repo set information to use for container repo syncing.
-CONTAINER_REPO:
+container_repo:
   registries:
     redhat:
       url: https://registry.redhat.io
