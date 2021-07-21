@@ -39,11 +39,6 @@ items:
         env:
         - name: GIT_SSL_NO_VERIFY
           value: 'true'
-        - name: CONFIG_FILES_TOKEN
-          valueFrom:
-            secretKeyRef:
-              key: config-files-token
-              name: satqe-casc-secret
       type: Docker
     triggers:
     - type: ImageChange
@@ -52,6 +47,54 @@ items:
         from:
           kind: ImageStreamTag
           name: robottelo-upstream:latest
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: sat-upgrade-upstream:latest
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    creationTimestamp:
+    labels:
+      name: sat-upgrades-robottelo-container-6.9.z
+    name: sat-upgrades-robottelo-container-6.9.z
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: sat-upgrades-robottelo-container:6.9.z
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
+      type: Git
+      contextDir: openshift
+    strategy:
+        # TODO OCP Builder does not have the right CA to clone public gitlab.
+        # TODO Look into making satqe jenkins repo private and using deploy tokens
+      dockerStrategy:
+        dockerfilePath: upgrades_robottelo/Dockerfile
+        env:
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+        - name: ROBOTTELO_BRANCH
+          value: '6.9.z'
+      type: Docker
+    triggers:
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: robottelo-upstream:6.9.z
     - type: ImageChange
       imageChange:
         automatic: true

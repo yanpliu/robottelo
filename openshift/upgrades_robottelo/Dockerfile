@@ -29,6 +29,7 @@ RUN git clone https://github.com/SatelliteQE/satellite6-upgrade.git && \
 
 RUN git clone https://github.com/SatelliteQE/robottelo.git && \
     cd robottelo && \
+    git checkout ${ROBOTTELO_BRANCH:-master} && \
     pip install -qr requirements.txt && \
     pip freeze | tee robottelo-pip-freeze.log
 

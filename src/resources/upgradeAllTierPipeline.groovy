@@ -26,7 +26,10 @@ def at_vars = [
     containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_CAPSULE_UPGRADE', value: "${params.foreman_maintain_capsule_upgrade}"),
 ]
 
-openShiftUtils.withNode(image: pipelineVars.ciUpgradeRobotteloImage, envVars: at_vars) {
+openShiftUtils.withNode(
+    image: "$pipelineVars.ciUpgradeRobotteloImage:${robotteloImageTags.find{to_version.startsWith(it.key) }.value}",
+    envVars: at_vars
+) {
     try {
         stage('Check out satellite and capsule upgrade instances') {
             satellite_inventory = brokerUtils.checkout(
