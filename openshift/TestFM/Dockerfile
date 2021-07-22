@@ -16,6 +16,7 @@ USER 1001
 WORKDIR "${HOME}"
 RUN git clone https://github.com/SatelliteQE/testfm.git && \
     cd testfm && \
+    git checkout ${TESTFM_BRANCH:-master} && \
     pip install -U pip && \
     pip install -qr requirements.txt && \
     pip install broker && \

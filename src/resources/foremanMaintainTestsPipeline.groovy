@@ -6,7 +6,10 @@ def testfm_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
 ]
 
-openShiftUtils.withNode(image: pipelineVars.ciTestFmImage, envVars: testfm_vars) {
+openShiftUtils.withNode(
+    image: "$pipelineVars.ciTestFmImage:${robotteloImageTags.find{params.sat_version.startsWith(it.key) }.value}",
+    envVars: testfm_vars
+) {
     try {
         stage('Check out Satellite/Capsule') {
             satellite_inventory = brokerUtils.checkout(

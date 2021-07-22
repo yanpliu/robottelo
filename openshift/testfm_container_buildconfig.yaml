@@ -15,6 +15,14 @@ items:
         scheduled: true
       referencePolicy:
         type: Source
+    - name: 6.9.z
+      from:
+        kind: DockerImage
+        name: quay.io/satelliteqe/testfm:6.9.z
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
 
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -60,6 +68,48 @@ items:
         from:
           kind: ImageStreamTag
           name: testfm-upstream:latest
+    - type: ConfigChange
+  status:
+    lastVersion: 0
+
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    creationTimestamp:
+    labels:
+      name: testfm-container-6.9.z
+    name: testfm-container-6.9.z
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: testfm-container:6.9.z
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
+      type: Git
+      contextDir: openshift
+    strategy:
+      # TODO OCP Builder does not have the right CA to clone public gitlab.
+      # TODO Look into making satqe jenkins repo private and using deploy tokens
+      dockerStrategy:
+        dockerfilePath: TestFM/Dockerfile
+        env:
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+        - name: TESTFM_BRANCH
+          value: 6.9.z
+      type: Docker
+    triggers:
+    - type: ImageChange
+      imageChange:
+        automatic: true
+        from:
+          kind: ImageStreamTag
+          name: testfm-upstream:6.9.z
     - type: ConfigChange
   status:
     lastVersion: 0
