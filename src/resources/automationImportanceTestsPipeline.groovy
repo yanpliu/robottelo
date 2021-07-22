@@ -100,7 +100,7 @@ withCredentials([
                     )
                     // append the acquired UUIDs to pytest options
                     rp_pytest_options = "--reportportal -o rp_endpoint=${pipelineVars.reportPortalServer} -o rp_project=${pipelineVars.reportPortalProject} " +
-                        "-o rp_hierarchy_dirs=false -o  rp_log_batch_size=100 --rp-launch=${rp_launch} --rp-launch-id=${launch_uuid} --rp-parent-item-id=${wrapper_test_uuid}"
+                        "-o rp_hierarchy_dirs=false -o  rp_log_batch_size=500 --rp-launch=${rp_launch} --rp-launch-id=${launch_uuid} --rp-parent-item-id=${wrapper_test_uuid}"
                 }
                 else{
                     println("Skipping 'Create report portal launch and parent test' stage")
