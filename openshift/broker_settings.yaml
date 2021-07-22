@@ -38,6 +38,11 @@ nicks:
     rhel_version: '8.3'
     target_memory: 1536MiB
     target_cores: '1'
+  rhel8_fips:
+    workflow: deploy-base-rhel-fips
+    rhel_version: '8.3'
+    target_memory: 1536MiB
+    target_cores: '1'
   sat69:
     workflow: deploy-sat-jenkins
     deploy_sat_version: '6.9'
