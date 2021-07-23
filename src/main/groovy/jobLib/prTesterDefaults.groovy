@@ -7,7 +7,7 @@ static List userWhitelist = ['omkarkhatavkar', 'jyejare', 'rplevka', 'jameerpath
 'mshriver', 'jacobcallahan', 'latran', 'rdrazny', 'tstrych', 'lvrtelov', 'mccun934', 'ehelms', 'tpapaioa',
  'lhellebr', 'lpramuk', 'eko999', 'pondrejk', 'mirekdlugosz', 'devendra104', 'ogajduse', 'Gauravtalreja1',
  'ColeHiggins2', 'jawatts', 'akhil-jha', 'bherrin3', 'hkx303', 'vsedmik', 'synkd', 'shweta83', 'tstrych',
- 'rmynar', 'pdragun', 'pochop', 'spusateri']
+ 'rmynar', 'pdragun', 'Griffin-Sullivan', 'ppochop', 'spusateri']
 
 // for reference https://github.com/orgs/SatelliteQE/teams/repository-admins/members
 static List admins = ['lpramuk', 'mshriver', 'jacobcallahan', 'jyejare', 'bherrin3', 'vijay8451',
