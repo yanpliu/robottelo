@@ -4,7 +4,7 @@ import groovy.json.*
 
 def os_ver = "${params.os}"
 def to_version = "${params.sat_version}"
-def from_version = ("${params.stream}" == 'z-stream')? to_version : upgradeUtils.previous_version(to_version)
+def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -18,9 +18,7 @@ def at_vars = [
 
 openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
     try {
-
-        stage('Setup - Satellite and Capsule of GA version') {
-
+        stage('Check out satellite of GA version') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-satellite-upgrade': [
                     'deploy_sat_version' : from_version,
@@ -29,24 +27,28 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 ],
             )
             env.satellite_hostname = satellite_inventory[0].hostname
-        }
-
-        stage('Set BuildName and ssh-agent') {
+            env.capsule_hostnames = ''
             calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            sh '''
+            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
+            env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
+        }
+
+        stage('Setup ssh-agent') {
+            sh """
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc
                 source ~/.bashrc
-                ssh-add - <<< \\$SATLAB_PRIVATE_KEY
-            '''
+                ssh-add - <<< \$SATLAB_PRIVATE_KEY
+            """
         }
 
-        stage('Collect API and CLI datastores before Upgrade') {
+        stage('Collect API and CLI data before upgrade') {
             default_artifacts = ['preupgrade_cli', 'preupgrade_api', 'preupgrade_templates.tar.gz']
             sh """
-                source ~/.bashrc
                 cd \${UPGRADE_DIR}
+                source ~/.bashrc
                 fab -u root set_datastore:"preupgrade","cli",\${satellite_hostname}
                 fab -u root set_datastore:"preupgrade","api",\${satellite_hostname}
                 fab -u root set_templatestore:"preupgrade",\${satellite_hostname}
@@ -56,23 +58,27 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             archiveArtifacts artifacts: default_artifacts.join(', ')
         }
 
-        stage("Readying Satellite for upgrade") {
-            upgradeUtils.setup_products(product: 'satellite', os_ver: os_ver, satellite: satellite_inventory[0])
+        stage("Setup products for upgrade") {
+            sh """
+                cd \${UPGRADE_DIR}
+                source ~/.bashrc
+                fab -u root product_setup_for_upgrade_on_brokers_machine:"satellite","${params.os}",'${satellite_hostname}','${capsule_hostnames}'
+            """
         }
 
-        stage("Satellite Upgrade") {
+        stage("Satellite upgrade") {
             sh """
-                source ~/.bashrc
                 cd \${UPGRADE_DIR}
+                source ~/.bashrc
                 fab -u root product_upgrade:'satellite','satellite',\${satellite_hostname}
             """
         }
 
-        stage('Collect API and CLI datastores after Upgrade') {
+        stage('Collect API and CLI data after upgrade') {
             default_artifacts = ['postupgrade_cli', 'postupgrade_api', 'postupgrade_templates.tar.gz']
             sh """
-                source ~/.bashrc
                 cd \${UPGRADE_DIR}
+                source ~/.bashrc
                 fab -u root set_datastore:"postupgrade","cli",\${satellite_hostname}
                 fab -u root set_datastore:"postupgrade","api",\${satellite_hostname}
                 fab -u root set_templatestore:"postupgrade",\${satellite_hostname}
@@ -82,7 +88,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             archiveArtifacts artifacts: default_artifacts.join(', ')
         }
 
-        stage("Run Existence Tests - CLI Endpoint") {
+        stage("Run Existence Tests for CLI endpoint") {
             upgradeUtils.execute(
                 script: """
                     export UPGRADE_UPGRADE__EXISTENCE_TEST__ENDPOINT='cli'
@@ -93,7 +99,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             junit "test_existance_cli-results.xml"
         }
 
-        stage("Run Existence Tests - API Endpoint") {
+        stage("Run Existence Tests for API endpoint") {
             upgradeUtils.execute(
                 script: """
                     export UPGRADE_UPGRADE__EXISTENCE_TEST__ENDPOINT='api'
@@ -113,15 +119,23 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
     }
 
     finally {
-        stage('Check In Satellite and Capsule Instances') {
+        sh '''
+            if [ -f "${UPGRADE_DIR}/upgrade_highlights" ]; then
+                cp "${UPGRADE_DIR}/upgrade_highlights" upgrade_highlights
+                cp "${UPGRADE_DIR}/full_upgrade" full_upgrade
+            fi
+        '''
+        stage('Check-in upgrade instances') {
             brokerUtils.checkin_all()
         }
 
         emailUtils.sendEmail(
             'to_nicks': ["sat-qe-jenkins"],
             'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "${currentBuild.result}: Upgrade Existence Tests Status From ${from_version} To ${to_version} on ${os_ver}",
-            'body': "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details."
+            'subject': "${currentBuild.result}: Upgrade Existence Tests status from ${from_version} to ${to_version} on ${os_ver}",
+            'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
+            'mimeType': 'text/plain',
+            'attachmentsPattern': 'full_upgrade'
         )
     }
 }

@@ -3,7 +3,7 @@
 import groovy.json.*
 
 def to_version = params.sat_version
-def from_version = ("${params.stream}" == 'z-stream')? to_version : upgradeUtils.previous_version(to_version)
+def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 
 def at_vars = [
@@ -24,7 +24,7 @@ def at_vars = [
 
 openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
     try {
-        stage('Check out satellite and capsule upgrade instances') {
+        stage('Check out satellite and capsule of GA version') {
             if (! params.external_satellite_hostname.trim()){
                 satellite_inventory = brokerUtils.checkout(
                     'deploy-satellite-upgrade': [
@@ -90,6 +90,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
             env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
         }
+
         stage("Setup ssh-agent"){
             sh """
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
@@ -98,6 +99,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 ssh-add - <<< \$SATLAB_PRIVATE_KEY
             """
         }
+
         stage("Setup products for upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
@@ -105,6 +107,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 fab -u root product_setup_for_upgrade_on_brokers_machine:"${params.upgrade_type}","${params.os}",'${satellite_hostname}',"${capsule_hostnames}"
             """
         }
+
         stage("Satellite upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
@@ -112,6 +115,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 fab -u root product_upgrade:"${params.upgrade_type}",'satellite','${satellite_hostname}'
             """
         }
+
         stage("Customer db upgrade trigger"){
             if (params.db_trigger){
                 for (customer_name in pipelineVars.customer_databases) {
@@ -131,6 +135,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 }
             }
         }
+
         stage("Capsule upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
@@ -138,6 +143,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 fab -u root product_upgrade:"${params.upgrade_type}",'capsule','${satellite_hostname}'
             """
         }
+
         stage("Content host upgrade"){
             sh """
                 cd \${UPGRADE_DIR}
@@ -159,17 +165,18 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             fi
         '''
 
-
-         stage('Check In Satellite Instances') {
+        stage('Check-in upgrade instances') {
             if ((! params.setup_preserve) && (! params.external_satellite_hostname.trim()) && (currentBuild.result == 'SUCCESS')) {
                 brokerUtils.checkin_all()
             }
-         }
+        }
+        cause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
+        mailing_user = ("${params.pipelineType}" == "common_upgrade_testing")? "${cause.userId[0]}" : "sat-qe-jenkins"
 
         emailUtils.sendEmail(
-            'to_nicks': ["sat-qe-jenkins"],
-            'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "Upgrade Status ${from_version} to ${sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
+            'to_nicks': ["${mailing_user}"],
+            'reply_nicks': ["${mailing_user}"],
+            'subject': "${currentBuild.result}: Upgrade Phase status from ${from_version} to ${sat_version} on ${os_ver}",
             'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'

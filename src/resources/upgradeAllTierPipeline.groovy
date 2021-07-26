@@ -5,7 +5,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def os_ver = "${params.os}"
 def to_version = "${params.sat_version}"
-def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
+def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def rp_launch = 'Upgrades'
 def rp_pytest_options = ''
 def launch_uuid = ''
@@ -31,7 +31,7 @@ openShiftUtils.withNode(
     envVars: at_vars
 ) {
     try {
-        stage('Check out satellite and capsule upgrade instances') {
+        stage('Check out satellite and capsule of GA version') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-satellite-upgrade': [
                     'deploy_sat_version': from_version,
@@ -64,14 +64,14 @@ openShiftUtils.withNode(
                 capsule_inventory: capsule_inventory,
                 version: from_version, subscriptions: subscriptions
             )
-        }
-
-        stage('Setup build details for upgrade') {
             calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             xy_sat_version = sat_version.tokenize('.').take(2).join('.')
             env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
             env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
+        }
+
+        stage('Setup ssh-agent') {
             sh """
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc
@@ -162,7 +162,7 @@ openShiftUtils.withNode(
             junit 'upgrade-all-tiers-results.xml'
         }
 
-        stage('Trigger Polarion Test Run Upload') {
+        stage('Trigger polarion test run upload') {
             println("Pytest Exit code is ${return_code}")
             if (return_code.toInteger() <= 2) {
                 println('Calling Polarion Result Upload')
@@ -197,12 +197,13 @@ openShiftUtils.withNode(
         emailUtils.sendEmail(
             'to_nicks': ['sat-qe-jenkins'],
             'reply_nicks': ['sat-qe-jenkins'],
-            'subject': "Upgrade All-tier Status from ${from_version} to ${to_version} is ${currentBuild.result}",
+            'subject': "${currentBuild.result}: Upgrade All-tier Status from ${from_version} to ${to_version} on ${os_ver}",
             'body': '${FILE, path="upgrade_highlights"}' + " The build ${env.BUILD_URL} has been completed",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'
         )
-        stage('Finish the Report Portal Launch') {
+
+        stage('Finish the report portal launch') {
             if (launch_uuid){
                 reportPortalUtils.finish_launch(launch_uuid: launch_uuid)
             }
@@ -211,7 +212,8 @@ openShiftUtils.withNode(
                 Utils.markStageSkippedForConditional(STAGE_NAME)
             }
         }
-        stage('Check In Satellite Instances') {
+
+        stage('Check-in upgrade instances') {
             brokerUtils.checkin_all()
         }
     }

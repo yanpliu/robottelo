@@ -19,7 +19,7 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                             "Specify the build label. Ex. '6.8 TO 6.9 Snap: 1.0', which is FROM_VERSION TO SAT_VERSION SNAP: x.y"
                         )
                         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
-                        stringParam('stream', "${stream}", 'y-stream or z-stream')
+                        stringParam('stream', "${stream}", 'y_stream or z_stream')
                         booleanParam(
                                 'downstream_fm_upgrade',
                                 false,

@@ -3,32 +3,25 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
-def OS = ['rhel7']
-
-def jobCFG = [
-        'z_stream':   ['z_stream': true],
-        'y_stream':   ['z_stream': false],
-]
-
 
 globalJenkinsDefaults.upgrade_versions.each { versionName ->
-    OS.each { os ->
-        jobCFG.each { jobName, config ->
-            if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && config['z_stream'])) {
-                pipelineJob("sat-${versionName}-${jobName}-upgrade-all-tier-${os}") {
+    globalJenkinsDefaults.sat_os.each { OS ->
+        globalJenkinsDefaults.streams.each { stream ->
+            if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && stream == 'z_stream')) {
+                pipelineJob("sat-${versionName}-${stream}-upgrade-all-tier-${OS}") {
                     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
-                    description("Satellite upgrade All-Tier/EndToEnd job for ${jobName}")
+                    description("Satellite upgrade All-Tier/EndToEnd job for ${stream}")
                     parameters {
                         stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b')
                         stringParam('snap_version', '', 'Snap version to deployed, format is x.y')
-                        stringParam('os', "${os}", 'RHEL version of Satellite')
+                        stringParam('os', "${OS}", 'RHEL version of Satellite')
                         stringParam('xdist_workers', '4', 'Number of Workers/Satellites to run the tests')
                         stringParam(
                             'build_label',
                             '',
                             "Specify the build label. Ex. '6.8 TO 6.9 Snap: 1.0', which is FROM_VERSION TO SAT_VERSION SNAP: x.y"
                         )
-                        booleanParam('zstream_upgrade', config['z_stream'], 'Check if z-stream upgrade')
+                        stringParam('stream', "${stream}", 'y_stream or z_stream')
                         booleanParam(
                             'downstream_fm_upgrade',
                             false,
