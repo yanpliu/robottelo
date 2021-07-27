@@ -4,7 +4,7 @@ class pipelineVars implements Serializable {
 
     String gitSshCreds = "satqe_gitlab_jenkins_token"
 
-    String jenkinsSlaveImage = 'registry.redhat.io/openshift4/ose-jenkins-agent-base'
+    String jenkinsSlaveImage = 'registry.redhat.io/openshift4/ose-jenkins-agent-base:v4.6'
 
     String ciBrokerImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/broker-container'
     String ciRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/robottelo-container'
