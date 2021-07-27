@@ -77,7 +77,7 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'rh-cloud-token'))
 
         envVars.add(secretEnvVar(
-            key:'ROBOTTELO_ipa__password_ipa',
+            key:'ROBOTTELO_ipa__password',
             secretName: secretName,
             secretKey:'ipa_password'))
         envVars.add(secretEnvVar(
