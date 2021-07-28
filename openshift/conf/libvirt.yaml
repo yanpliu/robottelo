@@ -1,4 +1,4 @@
-COMPUTE_RESOURCES:
+LIBVIRT:
   # External Libvirt Hostname
   LIBVIRT_HOSTNAME: libvirt1.satellite.lab.eng.rdu2.redhat.com
   # Path on the Libvirt host, where the virtual images will be stored.
