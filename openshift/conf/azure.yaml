@@ -4,7 +4,9 @@ AZURERM:
   # Client Secret of the AzureRM account
   CLIENT_SECRET:
   # The subscription ID is a GUID that uniquely identifies your subscription to use Azure services.
-  SUBSCRIPTION_ID: c9e72ccc-b20e-48bd-a0c8-879c6dbcbfbb
+  SUBSCRIPTION_ID: 8e5f28e2-f7ff-4e33-a174-a9b29c9d6e50
+  # The resource group where the resources will be created under above subscription
+  RESOURCE_GROUP: SatelliteQEResources
   # Tenant ID, the ID of the AAD directory in which you created the application
   TENANT_ID: 2e64678d-2fa8-40ed-8922-c9b8e2c3f100
   # Azure Region
