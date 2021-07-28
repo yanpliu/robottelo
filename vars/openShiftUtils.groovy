@@ -183,6 +183,11 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'gce_client_email'))
 
         envVars.add(secretEnvVar(
+            key:'ROBOTTELO_gce__cert',
+            secretName: secretName,
+            secretKey:'gce_cert'))
+
+        envVars.add(secretEnvVar(
             key: 'ROBOTTELO_container_repo__registries__redhat__password',
             secretName: secretName,
             secretKey: 'container_repo_rh_registry_token'))

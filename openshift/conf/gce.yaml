@@ -10,3 +10,5 @@ GCE:
   CERT_PATH: /usr/share/foreman/sat6qetester_key.json
   # client certificate URL
   CERT_URL: http://sesame.lab.eng.rdu2.redhat.com/pub/sat6gce_cert.json
+  # client certificate
+  CERT:
