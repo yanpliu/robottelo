@@ -27,7 +27,7 @@ def at_vars = [
 ]
 
 openShiftUtils.withNode(
-    image: "$pipelineVars.ciUpgradeRobotteloImage:${robotteloImageTags.find{to_version.startsWith(it.key) }.value}",
+    image: "$pipelineVars.ciUpgradeRobotteloImage:${pipelineVars.robotteloImageTags.find{to_version.startsWith(it.key)}.value}",
     envVars: at_vars
 ) {
     try {

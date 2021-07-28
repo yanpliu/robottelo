@@ -7,7 +7,7 @@ def testfm_vars = [
 ]
 
 openShiftUtils.withNode(
-    image: "$pipelineVars.ciTestFmImage:${robotteloImageTags.find{params.sat_version.startsWith(it.key) }.value}",
+    image: "$pipelineVars.ciTestFmImage:${pipelineVars.robotteloImageTags.find{params.sat_version.startsWith(it.key)}.value}",
     envVars: testfm_vars
 ) {
     try {
