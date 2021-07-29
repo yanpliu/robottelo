@@ -30,6 +30,7 @@ withCredentials([
     def rp_pytest_options = ""
     def launch_uuid = ''
     def wrapper_test_uuid = ''
+    def junit_xml_file = "sat-${params.importance}-results.xml"
 
     def workflow = params.workflow
     def test_run_type = ''
@@ -118,14 +119,14 @@ withCredentials([
                     --durations=20 --durations-min=600.0 \
                     -n ${params.xdist_workers} \
                     --dist loadscope \
-                    --junit-xml=sat-${params.importance}-results.xml \
+                    --junit-xml=${junit_xml_file} \
                     -o junit_suite_name=sat-${params.importance} \
                     ${ibutsu_options} \
                     ${rp_pytest_options} \
                     ${params.pytest_options}
                 """)
 
-                junit "sat-${params.importance}-results.xml"
+                results_summary = junit junit_xml_file
 
                 // Add a sidebar link with the ibutsu URL
                 log_lines = currentBuild.getRawBuild().getLog(50)
@@ -137,7 +138,7 @@ withCredentials([
                     ])
                 } else {
                     println('No ibutsu run link found, no sidebar link to add')
-
+                    ibutsu_link = "missing"
                 }
             }
 
@@ -158,6 +159,41 @@ withCredentials([
                 } else {
                     println("Pytest exited with Internal Error, which will result in invalid XML. Skipping Upload")
                      currentBuild.result = 'FAILURE'
+                }
+            }
+
+            stage('Send Result Email') {
+                if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
+                    // report portal does not make it easy to get the launch ID to compose a URL
+                    // TODO: Hook into the rp launch tooling and get the launch URL to include in this email
+                    emailUtils.sendEmail(
+                        'to_nicks': ['satqe-list'],
+                        'reply_nicks': ['sat-qe-jenkins'],
+                        'subject': "${currentBuild.description}: ${params.importance} Automation Results Available",
+                        'body': """\
+                            <h3>${currentBuild.description} Automation Results</h3>
+                            <h3>Importance: ${params.importance}</h3>
+                            <ul>
+                            <lh><h4>Result Counts</h4></lh>
+                            <li><b>Tests: </b> ${results_summary.getTotalCount()}</li>
+                            <li><b>Failures: </b> ${results_summary.getFailCount()}</li>
+                            <li><b>Skipped: </b> ${results_summary.getSkipCount()}</li>
+                            <li><b>Passed: </b> ${results_summary.getPassCount()}</li>
+                        </ul>
+                        <ul>
+                            <lh><h4>Result URLs</h4></lh>
+                            <li><a href=\"${JOB_URL}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
+                            <li><a href=\"${BUILD_URL}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
+                            <li><a href=\"${ibutsu_link}\"><b>Ibutsu Test Run</b> (Analyze Failure Trends) </a></li>
+                        </ul>
+                        This email was generated automatically, if you want to improve it look here:
+                        <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/src/resources/automationImportanceTestsPipeline.groovy
+                        """.stripIndent()
+                    )
+                }
+                else {
+                    println("Skipping Email stage")
+                    Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
             }
         }

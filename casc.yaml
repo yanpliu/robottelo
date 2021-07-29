@@ -119,6 +119,7 @@ security:
   scriptApproval:
     approvedSignatures:
     - method groovy.json.JsonSlurperClassic parseText java.lang.String
+    - method groovy.lang.GroovyObject getProperty java.lang.String
     - method hudson.model.Run getArtifacts
     - method hudson.model.Run$Artifact getFileName
     - method hudson.model.Run getLog int
