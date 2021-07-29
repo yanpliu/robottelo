@@ -68,8 +68,8 @@ withCredentials([
                 snap_version = params.snap_version ?: first_host_name_parts[4]
                 currentBuild.description = sat_version + " snap: " + snap_version
 
-                env.ROBOTTELO_server__version__release = sat_version
-                env.ROBOTTELO_server__version__snap = snap_version
+                env.ROBOTTELO_server__version__release = "'${sat_version}'"
+                env.ROBOTTELO_server__version__snap = "'${snap_version}'"
                 env.ROBOTTELO_robottelo__satellite_version = sat_version.tokenize('.').take(2).join('.')
             }
 
