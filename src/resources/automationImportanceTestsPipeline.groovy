@@ -157,7 +157,7 @@ withCredentials([
                             wait: false
                 } else {
                     println("Pytest exited with Internal Error, which will result in invalid XML. Skipping Upload")
-                     currentBuild.result = 'ABORTED'
+                     currentBuild.result = 'FAILURE'
                 }
             }
         }
