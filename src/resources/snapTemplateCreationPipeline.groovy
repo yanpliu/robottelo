@@ -146,11 +146,7 @@ try {
                     body += '<br><br>However, template sanity check has failed. Please investigate!'
                 }
             } else {
-                email_to = ['sat-qe-jenkins', 'satellite-lab-list']
-                subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
-                body = "Jenkins Console Log: ${BUILD_URL}"
-                println('One or more template names were empty')
-                currentBuild.result = 'UNSTABLE'
+                throw new Exception('One or more template names are empty')
             }
         }
 
