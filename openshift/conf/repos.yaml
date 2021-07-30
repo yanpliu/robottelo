@@ -41,3 +41,290 @@ REPOS:
   PUPPET4_REPO: ''
   # Fake repos
   FAKE_REPO_ZOO3: http://inecas.fedorapeople.org/fakerepos/zoo3/
+
+  # Robottelo fixtures repos
+  MODULE_STREAM_0:
+    URL: '@format {this[robottelo].repos_hosting_url}/module_stream1'
+    ERRATA:
+      - "RHEA-2010:0001"
+      - "RHEA-2010:0002"
+      - "RHEA-2012:0059"
+      - "RHEA-2013:0070"
+      - "RHEA-2013:0071"
+      - "RHEA-2013:0075"
+      - "RHEA-2013:0076"
+
+  MODULE_STREAM_1:
+    URL: '@format {this[robottelo].repos_hosting_url}/module_stream2'
+    ERRATA:
+      - "RHEA-2012:0055"
+      - "RHEA-2012:0056"
+      - "RHEA-2012:0057"
+      - "RHEA-2012:0058"
+      - "RHEA-2012:0059"
+      - "RHEA-2012:0060"
+
+  SWID_TAG:
+    URL: '@format {this[robottelo].repos_hosting_url}/swid_zoo'
+    ERRATA:
+      - "RHEA-2010:0001"
+      - "RHEA-2010:0002"
+      - "RHEA-2010:0111"
+      - "RHEA-2012:0059"
+      - "RHEA-2013:0070"
+      - "RHEA-2013:0071"
+      - "RHEA-2013:0076"
+      - "RHEA-2013:0075"
+      - "RHEA-2013:0098"
+
+  YUM_0: 
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_yum0'
+    ERRATA:
+      - "RHEA-2012:0001"
+      - "RHEA-2012:0002"
+      - "RHEA-2012:0003"
+      - "RHEA-2012:0004"
+  
+  YUM_1:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_yum1'
+    ERRATA:
+      - "RHEA-2012:0001"
+      - "RHEA-2012:0002"
+      - "RHEA-2012:0003"
+      - "RHEA-2012:0004"
+
+  YUM_2:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_yum2'
+    ERRATA:
+      - "RHEA-2012:0001"
+      - "RHEA-2012:0002"
+      - "RHEA-2012:0003"
+      - "RHEA-2012:0004"
+
+  YUM_3:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_yum3'
+    ERRATA:
+      - "RHEA-2012:61"
+      - "RHEA-2012:81"      
+      - "RHEA-2012:1097"
+      - "RHEA-2012:1106"
+      - "RHEA-2012:2287"
+      - "RHEA-2012:3733"
+      - "RHEA-2012:4057"
+      - "RHEA-2012:4662"
+      - "RHEA-2012:4707"
+      - "RHEA-2012:4784"
+      - "RHEA-2012:5050"
+      - "RHEA-2012:5374"
+      - "RHEA-2012:5399"
+      - "RHEA-2012:5637"
+      - "RHEA-2012:5717"
+      - "RHEA-2012:5858"
+      - "RHEA-2012:6035"     
+      - "RHEA-2012:6213"
+      - "RHEA-2012:7030"
+      - "RHEA-2012:7429"
+      - "RHEA-2012:7753"
+      - "RHEA-2012:8074"
+      - "RHEA-2012:8367"
+      - "RHEA-2012:8407"
+      - "RHEA-2012:9085"
+      - "RHEA-2012:9245"
+      - "RHEA-2012:9658"
+      - "RHEA-2012:9956"
+
+  YUM_4:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_yum4'
+    ERRATA:
+      - "RHEA-2012:71"
+      - "RHEA-2012:199"
+      - "RHEA-2012:271"
+      - "RHEA-2012:305"
+      - "RHEA-2012:347"
+      - "RHEA-2012:581"
+      - "RHEA-2012:995"
+      - "RHEA-2012:1083"
+      - "RHEA-2012:1492"
+      - "RHEA-2012:1522"
+      - "RHEA-2012:1672"
+      - "RHEA-2012:1698"
+      - "RHEA-2012:1720"
+      - "RHEA-2012:2551"      
+      - "RHEA-2012:3074"
+      - "RHEA-2012:3974"
+      - "RHEA-2012:4113"
+      - "RHEA-2012:4729"
+      - "RHEA-2012:4890"
+      - "RHEA-2012:5049"
+      - "RHEA-2012:5629"
+      - "RHEA-2012:5651"
+      - "RHEA-2012:5775"
+      - "RHEA-2012:5966"
+      - "RHEA-2012:6342"
+      - "RHEA-2012:6655"
+      - "RHEA-2012:6875"
+      - "RHEA-2012:7362"
+      - "RHEA-2012:7442"
+      - "RHEA-2012:7876"
+      - "RHEA-2012:8373"
+      - "RHEA-2012:8562"
+      - "RHEA-2012:8606"
+      - "RHEA-2012:9205"
+      - "RHEA-2012:9246"
+      - "RHEA-2012:9443"
+      - "RHEA-2012:9521"
+      - "RHEA-2012:9995"
+
+  YUM_6:
+    URL: '@format {this[robottelo].repos_hosting_url}/needed_errata'
+    ERRATA:
+      - "RHBA-2012:1030"
+      - "RHEA-2012:0058" 
+      - "RHSA-2012:0055"
+      - "RHSA-2012:0056"
+      - "RHSA-2012:0057"
+      
+  YUM_7:
+    URL: '@format {this[robottelo].repos_hosting_url}/pulp/demo_repos/large_errata/zoo'
+
+  YUM_8:
+    URL: '@format {this[robottelo].repos_hosting_url}/lots_files'
+
+  YUM_9:
+    URL: '@format {this[robottelo].repos_hosting_url}/multiple_errata'
+    ERRATA:       
+      - "RHSA-2012:0055"
+      - "RHSA-2012:0056"
+      - "RHSA-2012:0057"
+      - "RHEA-2012:0058"
+      - "RHBA-2012:1030"
+
+  YUM_10:
+    URL: '@format {this[robottelo].repos_hosting_url}/modules_rpms'
+    ERRATA:
+      - "WALRUS-2013:0002"
+  
+  YUM_11:
+    URL: '@format {this[robottelo].repos_hosting_url}/rpm_deps'
+
+  YUM_MIXED:
+    URL: '@format {this[robottelo].repos_hosting_url}/yum_mixed'
+
+  CUSTOM_PUPPET:
+    URL: '@format {this[robottelo].repos_hosting_url}/custom_puppet'
+
+  PUPPET_0:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet0'
+
+  PUPPET_1:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet1'
+
+  PUPPET_2:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet2'
+
+  PUPPET_3:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet3'
+
+  PUPPET_4:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet4'
+
+  PUPPET_5:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet5'
+
+  PUPPET_8:
+    URL: '@format {this[robottelo].repos_hosting_url}/fake_puppet8'
+
+  REPO_DISCOVERY:
+    URL: '@format {this[robottelo].repos_hosting_url}/repo_discovery'
+    ERRATA:
+      - "RHEA-2012:119"
+      - "RHEA-2012:285"
+      - "RHEA-2012:321"
+      - "RHEA-2012:775"
+      - "RHEA-2012:842"
+      - "RHEA-2012:997"
+      - "RHEA-2012:1228"
+      - "RHEA-2012:1239"
+      - "RHEA-2012:1248"
+      - "RHEA-2012:1992"
+      - "RHEA-2012:2229"
+      - "RHEA-2012:2289"
+      - "RHEA-2012:2400"
+      - "RHEA-2012:2579"
+      - "RHEA-2012:2605"
+      - "RHEA-2012:2635"
+      - "RHEA-2012:2718"
+      - "RHEA-2012:2721"
+      - "RHEA-2012:2801"
+      - "RHEA-2012:2969"
+      - "RHEA-2012:3103"
+      - "RHEA-2012:3493"
+      - "RHEA-2012:3577"
+      - "RHEA-2012:3713"
+      - "RHEA-2012:3933"
+      - "RHEA-2012:4142"
+      - "RHEA-2012:4162"
+      - "RHEA-2012:4372"
+      - "RHEA-2012:4571"
+      - "RHEA-2012:4654"
+      - "RHEA-2012:4751"
+      - "RHEA-2012:4760"
+      - "RHEA-2012:4832"
+      - "RHEA-2012:5053"
+      - "RHEA-2012:5243"
+      - "RHEA-2012:5271"
+      - "RHEA-2012:5319"
+      - "RHEA-2012:5470"
+      - "RHEA-2012:5515"
+      - "RHEA-2012:5528"
+      - "RHEA-2012:5629"
+      - "RHEA-2012:5848"
+      - "RHEA-2012:5854"
+      - "RHEA-2012:5894"
+      - "RHEA-2012:6061"
+      - "RHEA-2012:6066"
+      - "RHEA-2012:6378"
+      - "RHEA-2012:6406"
+      - "RHEA-2012:6502"
+      - "RHEA-2012:6964"
+      - "RHEA-2012:7008"
+      - "RHEA-2012:7146"
+      - "RHEA-2012:7184"
+      - "RHEA-2012:7195"
+      - "RHEA-2012:7213"
+      - "RHEA-2012:7269"
+      - "RHEA-2012:7317"
+      - "RHEA-2012:7419"
+      - "RHEA-2012:7473"
+      - "RHEA-2012:7475"
+      - "RHEA-2012:7619"
+      - "RHEA-2012:7792"
+      - "RHEA-2012:7924"
+      - "RHEA-2012:7947"
+      - "RHEA-2012:8061"
+      - "RHEA-2012:8085"
+      - "RHEA-2012:8126"
+      - "RHEA-2012:8241"
+      - "RHEA-2012:8538"
+      - "RHEA-2012:8877"
+      - "RHEA-2012:8897"
+      - "RHEA-2012:8968"
+      - "RHEA-2012:8997"
+      - "RHEA-2012:9106"
+      - "RHEA-2012:9177"
+      - "RHEA-2012:9258"
+      - "RHEA-2012:9359"
+      - "RHEA-2012:9611"
+      - "RHEA-2012:9685"
+    
+  INC_UPD:
+    URL: '@format {this[robottelo].repos_hosting_url}/inc_update'
+    ERRATA:
+      - "EXA:2015-0001"
+      - "EXA:2015-0002"
+
+  FILE_TYPE_REPO:
+    URL: '@format {this[robottelo].repos_hosting_url}/pulp_remote'
+
+  EPEL_REPO:
+    URL: '@format {this[robottelo].repos_hosting_url}/epel_repo'
