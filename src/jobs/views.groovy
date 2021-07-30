@@ -127,7 +127,8 @@ def utilJobs = ['Master-Seed',
                 'polarion-testrun-upload',
                 'polarion-testcase-upload',
                 'cloud-resources-cleanup',
-                'robottelo-pr-testing'
+                'robottelo-pr-testing',
+                'manifest-downloader'
 ]
 
 listView("Utility") {
