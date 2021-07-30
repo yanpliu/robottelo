@@ -67,8 +67,8 @@ openShiftUtils.withNode(
             calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            env.ROBOTTELO_robottelo__satellite_version = xy_sat_version
-            env.UPGRADE_robottelo__satellite_version = xy_sat_version
+            env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
             sh '''
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
                 echo \"\$(ssh-agent -s)\" >> ~/.bashrc

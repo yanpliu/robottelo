@@ -87,8 +87,8 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            env.ROBOTTELO_robottelo__satellite_version = xy_sat_version
-            env.UPGRADE_robottelo__satellite_version = xy_sat_version
+            env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
         }
         stage("Setup ssh-agent"){
             sh """
