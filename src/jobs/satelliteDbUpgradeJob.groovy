@@ -1,7 +1,7 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
-customer_databases = ['DogFood','Securian','PrincipalFinancial','BNYMelon']
+customer_databases = ['DogFood',,'Softlayer','BNYMelon']
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
     if (versionName == globalJenkinsDefaults.sat_versions.last()) {
@@ -30,10 +30,10 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                         globalJenkinsDefaults.tower_url,
                         "Ansible Tower URL, format 'https://<url>/'"
                     )
-                    booleanParam(
-                        'zstream_upgrade',
-                        false,
-                        "This option, enable for Z-stream and disable for Y-stream upgrade"
+                    stringParam(
+                        'stream',
+                        "y_stream",
+                        'y_stream or z_stream'
                     )
                     stringParam(
                         'customer_name',

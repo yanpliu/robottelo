@@ -176,7 +176,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["${mailing_user}"],
             'reply_nicks': ["${mailing_user}"],
-            'subject': "${currentBuild.result}: Upgrade Phase status from ${from_version} to ${sat_version} on ${os_ver}",
+            'subject': "${currentBuild.result}: Upgrade Phase status from ${from_version} to ${sat_version} on ${os}",
             'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'

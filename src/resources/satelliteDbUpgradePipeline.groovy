@@ -2,7 +2,7 @@
 import groovy.json.*
 
 def to_version = params.sat_version
-def from_version = params['zstream_upgrade']? params.sat_version : upgradeUtils.previous_version(sat_version)
+def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
         containerEnvVar(key: 'UPGRADE_CLONE__CLONE_RPM', value: "${params.clone_rpm}"),
@@ -111,7 +111,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["sat-qe-jenkins"],
             'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "${params.customer_name} db upgrade status ${from_version} to ${sat_version} on ${os} ${BUILD_LABEL} ${currentBuild.result}",
+            'subject': "${currentBuild.result}: ${params.customer_name} db upgrade status from ${from_version} to ${sat_version} on ${os}",
             'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'

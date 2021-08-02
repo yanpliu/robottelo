@@ -32,5 +32,5 @@ class pipelineVars implements Serializable {
 
     String towerUser = 'satqe_auto_droid'
 
-    List customer_databases = ['DogFood','Securian','PrincipalFinancial','BNYMelon']
+    List customer_databases = ['DogFood',,'Softlayer','BNYMelon']
 }
