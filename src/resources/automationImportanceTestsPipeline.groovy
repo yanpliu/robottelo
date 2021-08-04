@@ -140,26 +140,26 @@ withCredentials([
                     println('No ibutsu run link found, no sidebar link to add')
                     ibutsu_link = "missing"
                 }
+
+                println("Pytest Exit code is ${return_code}")
+                if(return_code.toInteger() > 2) {
+                    throw new Exception("pytest return code indicates an internal error or session failure")
+                }
             }
 
 
             stage('Trigger Polarion Test Run Upload') {
-                println("Pytest Exit code is ${return_code}")
-                if(return_code.toInteger() <= 2) {
-                    println("Calling Polarion Result Upload")
-                    build job: "polarion-testrun-upload",
-                            parameters: [
-                                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                                    [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
-                                    [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
-                                    [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
-                            ],
-                            wait: false
-                } else {
-                    println("Pytest exited with Internal Error, which will result in invalid XML. Skipping Upload")
-                     currentBuild.result = 'FAILURE'
-                }
+                println("Calling Polarion Result Upload")
+                build job: "polarion-testrun-upload",
+                        parameters: [
+                                [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                                [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                                [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                                [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
+                                [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
+                        ],
+                        wait: false
+
             }
 
             stage('Send Result Email') {
