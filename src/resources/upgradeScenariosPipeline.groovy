@@ -3,7 +3,7 @@
 import groovy.json.*
 
 def os_ver = "${params.os}"
-def to_version = "${params.sat_version}"
+def to_version = sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 
 def at_vars = [
@@ -61,11 +61,10 @@ openShiftUtils.withNode(
                 capsule_inventory: capsule_inventory,
                 version: from_version, subscriptions: subscriptions
             )
-            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            calculated_build_name = from_version + " to " + sat_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
-            env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
+            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
         stage("Setup ssh-agent"){
             sh """
@@ -153,10 +152,48 @@ openShiftUtils.withNode(
                 -o junit_suite_name=test_scenarios-post \
                 tests/upgrades
             """)
-            junit "test_scenarios-post-results.xml"
+            results_summary = junit "test_scenarios-post-results.xml"
+            currentBuild.result = 'SUCCESS'
         }
 
-        currentBuild.result = 'SUCCESS'
+        stage('Send Result Email') {
+            if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
+                email_body = """\
+                    <h3>${calculated_build_name} Upgrade Customer Scenarios Automation Results</h3>
+                    <ul>
+                        <lh><h4>Result Counts</h4></lh>
+                        <li><b>Tests: </b> ${results_summary.getTotalCount()}</li>
+                        <li><b>Failures: </b> ${results_summary.getFailCount()}</li>
+                        <li><b>Skipped: </b> ${results_summary.getSkipCount()}</li>
+                        <li><b>Passed: </b> ${results_summary.getPassCount()}</li>
+                    </ul>
+                    <ul>
+                        <lh><h4>Result URLs</h4></lh>
+                        <li><a href=\"${JOB_URL}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
+                        <li><a href=\"${BUILD_URL}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
+                    </ul>
+                    This email was generated automatically, if you want to improve it look here:
+                    <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/src/resources/src/resources/upgradeScenariosPipeline.groovy
+                    """
+                    // Include a link to sign-off sheet for z-stream builds, check sat_version
+                    if (stream == 'z_stream') {
+                        email_body = email_body + """\
+                            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${zstream_signoffsheet}\">Sign Off Sheet</a></h4>
+                        """.stripIndent()
+                    }
+                    emailUtils.sendEmail(
+                        'to_nicks': ['satqe-list'],
+                        'reply_nicks': ['sat-qe-jenkins'],
+                        'subject': "${calculated_build_name}: Upgrade Customer Scenarios Automation Results Available",
+                        'body': email_body.stripIndent(),
+                        'attachmentsPattern': 'full_upgrade'
+                    )
+            }
+            else {
+                    println("Skipping Email stage")
+                    Utils.markStageSkippedForConditional(STAGE_NAME)
+            }
+        }
     }
     catch (exc){
         echo "Catch Error: \n${exc}"
@@ -172,14 +209,16 @@ openShiftUtils.withNode(
         stage('Check-in upgrade instances') {
             brokerUtils.checkin_all()
         }
-        emailUtils.sendEmail(
-            'to_nicks': ["sat-qe-jenkins"],
-            'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "${currentBuild.result}: Upgrade Scenarios status from ${from_version} to ${sat_version} on ${os_ver}",
-            'body': '${FILE, path="upgrade_highlights"}' +
-                "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details.",
-            'mimeType': 'text/plain',
-            'attachmentsPattern': 'full_upgrade'
-        )
+        if(currentBuild.result == 'FAILURE'){
+            emailUtils.sendEmail(
+                'to_nicks': ["sat-qe-jenkins"],
+                'reply_nicks': ["sat-qe-jenkins"],
+                'subject': "${currentBuild.result}: Upgrade Scenarios status from ${from_version} to ${sat_version} snap: ${snap_version} on ${os_ver}",
+                'body': '${FILE, path="upgrade_highlights"}' +
+                    "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details.",
+                'mimeType': 'text/plain',
+                'attachmentsPattern': 'full_upgrade'
+            )
+        }
     }
 }

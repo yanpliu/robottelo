@@ -189,7 +189,7 @@ withCredentials([
                     // Include a link to sign-off sheet for z-stream builds, check sat_version
                     if (sat_version.tokenize('.')[2].toInteger() > 0) {
                         email_body = email_body + """\
-                            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing\">Sign Off Sheet</a></h4>
+                            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${zstream_signoffsheet}\">Sign Off Sheet</a></h4>
                         """.stripIndent()
                     }
 

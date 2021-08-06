@@ -12,6 +12,7 @@ class pipelineVars implements Serializable {
     String ciUpgradesImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/sat-upgrade-container'
     String ciTestFmImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/testfm-container'
     String ciUpgradeRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/sat-upgrades-robottelo-container'
+    String zstream_signoffsheet = 'https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing'
 
     Map robotteloImageTags = [ // maps sat_version to robottelo container tag
         '6.10': 'latest',

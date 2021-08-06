@@ -12,7 +12,7 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
                     description("Satellite upgrade All-Tier/EndToEnd job for ${stream}")
                     parameters {
-                        stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b')
+                        stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b.c')
                         stringParam('snap_version', '', 'Snap version to deployed, format is x.y')
                         stringParam('os', "${OS}", 'RHEL version of Satellite')
                         stringParam('xdist_workers', '4', 'Number of Workers/Satellites to run the tests')

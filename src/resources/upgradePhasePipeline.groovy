@@ -2,7 +2,7 @@
 
 import groovy.json.*
 
-def to_version = params.sat_version
+def to_version = sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 
@@ -84,11 +84,10 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 env.satellite_hostname = params.external_satellite_hostname
                 env.capsule_hostnames = params.external_capsule_hostnames
             }
-            calculated_build_name = from_version + " to " + to_version + " snap: " + "${params.snap_version}"
+            calculated_build_name = from_version + " to " + sat_version + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
-            xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            env.ROBOTTELO_robottelo__satellite_version = "'${xy_sat_version}'"
-            env.UPGRADE_robottelo__satellite_version = "'${xy_sat_version}'"
+            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
 
         stage("Setup ssh-agent"){
@@ -176,7 +175,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["${mailing_user}"],
             'reply_nicks': ["${mailing_user}"],
-            'subject': "${currentBuild.result}: Upgrade Phase status from ${from_version} to ${sat_version} on ${os}",
+            'subject': "${currentBuild.result}: Upgrade Phase status from ${from_version} to ${sat_version} snap: ${snap_version} on ${os}",
             'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'
