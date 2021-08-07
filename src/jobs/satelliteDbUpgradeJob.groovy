@@ -13,12 +13,17 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     stringParam(
                         'sat_version',
                         "${versionName}",
-                        "Satellite version to deployed, format is a.b"
+                        "Satellite version to deployed, format is a.b.c"
                     )
                     choiceParam(
                         'os',
                         ['rhel7','rhel6'],
                         "Select OS version of target Satellite"
+                    )
+                    stringParam(
+                        'snap_version',
+                        '',
+                        'Snap version to be deployed, format is x.y'
                     )
                     stringParam(
                         'build_label',

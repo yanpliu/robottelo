@@ -56,7 +56,8 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                         """
                     )
              }
-            currentBuild.displayName = "#${env.BUILD_NUMBER} ${params.customer_name} DB upgrade_${from_version}_to_${sat_version} ${params.build_label}"
+            calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
+            currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
         }
         stage("Setup ssh-agent"){
             sh """
@@ -111,7 +112,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         emailUtils.sendEmail(
             'to_nicks': ["sat-qe-jenkins"],
             'reply_nicks': ["sat-qe-jenkins"],
-            'subject': "${currentBuild.result}: ${params.customer_name} db upgrade status from ${from_version} to ${sat_version} on ${os}",
+            'subject': "${currentBuild.result}: ${params.customer_name} Db Upgrade Status ${currentBuild.displayName}",
             'body': '${FILE, path="upgrade_highlights"}' + "The build ${env.BUILD_URL} has been completed.",
             'mimeType': 'text/plain',
             'attachmentsPattern': 'full_upgrade'

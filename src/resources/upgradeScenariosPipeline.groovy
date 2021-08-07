@@ -3,7 +3,7 @@
 import groovy.json.*
 
 def os_ver = "${params.os}"
-def to_version = sat_version.tokenize('.').take(2).join('.')
+def to_version = "${params.sat_version}".tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 
 def at_vars = [
@@ -61,7 +61,7 @@ openShiftUtils.withNode(
                 capsule_inventory: capsule_inventory,
                 version: from_version, subscriptions: subscriptions
             )
-            calculated_build_name = from_version + " to " + sat_version + " snap: " + "${params.snap_version}"
+            calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
             env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
@@ -158,36 +158,23 @@ openShiftUtils.withNode(
 
         stage('Send Result Email') {
             if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
-                email_body = """\
-                    <h3>${calculated_build_name} Upgrade Customer Scenarios Automation Results</h3>
-                    <ul>
-                        <lh><h4>Result Counts</h4></lh>
-                        <li><b>Tests: </b> ${results_summary.getTotalCount()}</li>
-                        <li><b>Failures: </b> ${results_summary.getFailCount()}</li>
-                        <li><b>Skipped: </b> ${results_summary.getSkipCount()}</li>
-                        <li><b>Passed: </b> ${results_summary.getPassCount()}</li>
-                    </ul>
-                    <ul>
-                        <lh><h4>Result URLs</h4></lh>
-                        <li><a href=\"${JOB_URL}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
-                        <li><a href=\"${BUILD_URL}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
-                    </ul>
-                    This email was generated automatically, if you want to improve it look here:
-                    <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/src/resources/src/resources/upgradeScenariosPipeline.groovy
-                    """
-                    // Include a link to sign-off sheet for z-stream builds, check sat_version
-                    if (stream == 'z_stream') {
-                        email_body = email_body + """\
-                            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${zstream_signoffsheet}\">Sign Off Sheet</a></h4>
-                        """.stripIndent()
-                    }
-                    emailUtils.sendEmail(
-                        'to_nicks': ['satqe-list'],
-                        'reply_nicks': ['sat-qe-jenkins'],
-                        'subject': "${calculated_build_name}: Upgrade Customer Scenarios Automation Results Available",
-                        'body': email_body.stripIndent(),
-                        'attachmentsPattern': 'full_upgrade'
-                    )
+                email_body = emailUtils.emailBody(
+                    results_summary: results_summary,
+                    importance: "",
+                    job_url: "${JOB_URL}",
+                    build_url: "${BUILD_URL}",
+                    sat_version: "${params.sat_version}",
+                    ibutsu_link: "support not available yet",
+                    description: "${calculated_build_name}",
+                    zstream_signoffsheet: "${pipelineVars.zstream_signoffsheet}",
+                    resource_file: "upgradeScenariosPipeline.groovy"
+                )
+                emailUtils.sendEmail(
+                    'to_nicks': ['satqe-list'],
+                    'reply_nicks': ['sat-qe-jenkins'],
+                    'subject': "${currentBuild.displayName}: Upgrade Customer Scenarios Automation Results Available",
+                    'body': email_body.stripIndent()
+                )
             }
             else {
                     println("Skipping Email stage")
@@ -213,7 +200,7 @@ openShiftUtils.withNode(
             emailUtils.sendEmail(
                 'to_nicks': ["sat-qe-jenkins"],
                 'reply_nicks': ["sat-qe-jenkins"],
-                'subject': "${currentBuild.result}: Upgrade Scenarios status from ${from_version} to ${sat_version} snap: ${snap_version} on ${os_ver}",
+                'subject': "${currentBuild.result}: Upgrade Scenarios Status ${currentBuild.displayName}",
                 'body': '${FILE, path="upgrade_highlights"}' +
                     "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details.",
                 'mimeType': 'text/plain',

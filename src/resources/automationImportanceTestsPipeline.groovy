@@ -166,33 +166,17 @@ withCredentials([
                 if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
                     // report portal does not make it easy to get the launch ID to compose a URL
                     // TODO: Hook into the rp launch tooling and get the launch URL to include in this email
-                    email_body = """\
-                        <h3>${currentBuild.description} Automation Results</h3>
-                        <h3>Importance: ${params.importance}</h3>
-                        <ul>
-                        <lh><h4>Result Counts</h4></lh>
-                        <li><b>Tests: </b> ${results_summary.getTotalCount()}</li>
-                        <li><b>Failures: </b> ${results_summary.getFailCount()}</li>
-                        <li><b>Skipped: </b> ${results_summary.getSkipCount()}</li>
-                        <li><b>Passed: </b> ${results_summary.getPassCount()}</li>
-                    </ul>
-                    <ul>
-                        <lh><h4>Result URLs</h4></lh>
-                        <li><a href=\"${JOB_URL}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
-                        <li><a href=\"${BUILD_URL}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
-                        <li><a href=\"${ibutsu_link}\"><b>Ibutsu Test Run</b> (Analyze Failure Trends) </a></li>
-                    </ul>
-                    This email was generated automatically, if you want to improve it look here:
-                    <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/src/resources/automationImportanceTestsPipeline.groovy
-                    """
-
-                    // Include a link to sign-off sheet for z-stream builds, check sat_version
-                    if (sat_version.tokenize('.')[2].toInteger() > 0) {
-                        email_body = email_body + """\
-                            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${zstream_signoffsheet}\">Sign Off Sheet</a></h4>
-                        """.stripIndent()
-                    }
-
+                    email_body = emailUtils.emailBody(
+                        results_summary: results_summary,
+                        importance: "${params.importance}",
+                        job_url: "${JOB_URL}",
+                        build_url: "${BUILD_URL}",
+                        sat_version: "${params.sat_version}",
+                        description: "${currentBuild.description}",
+                        ibutsu_link: "${ibutsu_link}",
+                        zstream_signoffsheet: "${pipelineVars.zstream_signoffsheet}",
+                        resource_file: "automationImportanceTestsPipeline.groovy"
+                    )
                     emailUtils.sendEmail(
                         'to_nicks': ['satqe-list'],
                         'reply_nicks': ['sat-qe-jenkins'],
