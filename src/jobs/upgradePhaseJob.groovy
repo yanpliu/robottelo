@@ -118,9 +118,9 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                                 \nSelect 'n-1' to perform only satellite upgrade, by keeping capsule at last released zStream version."""
                             )
                             stringParam(
-                                'pipeline_job_type',
+                                'pipelineType',
                                 "${pipelineType}",
-                                "common-upgrade-testing: trigger by user for testing purpose or upgrade-phase: trigger by the upstream job"
+                                "upgrade-testing: trigger by user for testing purpose or upgrade-phase: trigger by the upstream job"
                             )
                         }
 

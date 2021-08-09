@@ -171,7 +171,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             }
         }
         cause = currentBuild.getBuildCauses('hudson.model.Cause$UserIdCause')
-        mailing_user = ("${params.pipelineType}" == "common_upgrade_testing")? "${cause.userId[0]}" : "sat-qe-jenkins"
+        mailing_user = ("${params.pipelineType}" == "upgrade-testing")? "${cause.userId[0]}" : "sat-qe-jenkins"
 
         emailUtils.sendEmail(
             'to_nicks': ["${mailing_user}"],
