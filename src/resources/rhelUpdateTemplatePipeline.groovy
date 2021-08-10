@@ -33,6 +33,7 @@ openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
             catch (exc) {
                 println("Exception occurred with template update for ${version}, setting workflow_failure")
                 workflow_failure = true
+                Utils.markStageSkippedForConditional(STAGE_NAME)
             }
         }
     }

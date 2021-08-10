@@ -162,9 +162,11 @@ try {
                     build job: "manifest-downloader", wait: false
                 } else {
                     println('Template creation failed, skipping triggering automation job')
+                    Utils.markStageSkippedForConditional(STAGE_NAME)
                 }
             } else {
                 println('Skipping triggering automation job, check automation_trigger')
+                Utils.markStageSkippedForConditional(STAGE_NAME)
             }
         }
     }
