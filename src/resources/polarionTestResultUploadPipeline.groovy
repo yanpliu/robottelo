@@ -2,7 +2,7 @@
 
 import groovy.json.*
 
-openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage) {
+openShiftUtils.withNode(image: "$pipelineVars.ciRobotteloImage:${pipelineVars.robotteloImageTags.find{sat_version.startsWith(it.key)}.value}") {
 
     stage('Set Build Description') {
         currentBuild.description = "Trigger: " + params.job_name +
