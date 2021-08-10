@@ -1,7 +1,7 @@
 @Library("satqe_pipeline_lib") _
 import groovy.json.*
 
-def to_version = params.sat_version
+def to_version = "${params.sat_version}".tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -9,7 +9,6 @@ def at_vars = [
         containerEnvVar(key: 'UPGRADE_CLONE__INCLUDE_PULP_DATA', value: "${params.include_pulp_data}"),
         containerEnvVar(key: 'UPGRADE_CLONE__RESTORECON', value: "${params.restorecon}"),
         containerEnvVar(key: 'UPGRADE_CLONE__CUSTOMER_NAME', value: "${params.customer_name}"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${params.sat_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
         containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: "${params.os}"),
@@ -58,6 +57,9 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
              }
             calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
+            env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
+        }
         }
         stage("Setup ssh-agent"){
             sh """

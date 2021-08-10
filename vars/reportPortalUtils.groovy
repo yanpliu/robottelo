@@ -31,7 +31,11 @@ def create_launch(Map parameters = [:]) {
      */
 
     withCredentials([string(credentialsId: 'reportportal-robottelo-token', variable: 'rp_token')]) {
-
+        /* ALLURE_NO_ANALYTICS=1 disables google analytics reporting from pytest-reportportal:
+           https://github.com/reportportal/agent-python-pytest#integration-with-ga
+        */
+        env.RP_UUID = "${rp_token}"
+        env.ALLURE_NO_ANALYTICS = "1"
         def launch_name = parameters.get('launch_name', 'OCP-Jenkins-CI')
         def launch_attributes = parameters.get('launch_attributes', [])
         def rerun_of = parameters.get('rerun_of')

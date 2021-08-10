@@ -160,14 +160,8 @@ openShiftUtils.withNode(
             if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
                 email_body = emailUtils.emailBody(
                     results_summary: results_summary,
-                    importance: "",
-                    job_url: "${JOB_URL}",
-                    build_url: "${BUILD_URL}",
                     sat_version: "${params.sat_version}",
-                    ibutsu_link: "support not available yet",
-                    description: "${calculated_build_name}",
-                    zstream_signoffsheet: "${pipelineVars.zstream_signoffsheet}",
-                    resource_file: "upgradeScenariosPipeline.groovy"
+                    description: "${calculated_build_name}"
                 )
                 emailUtils.sendEmail(
                     'to_nicks': ['satqe-list'],
@@ -177,7 +171,7 @@ openShiftUtils.withNode(
                 )
             }
             else {
-                    println("Skipping Email stage")
+                    println("The build is failed due to product or environment-related issues, hence skipping the Email stage")
                     Utils.markStageSkippedForConditional(STAGE_NAME)
             }
         }
@@ -198,8 +192,8 @@ openShiftUtils.withNode(
         }
         if(currentBuild.result == 'FAILURE'){
             emailUtils.sendEmail(
-                'to_nicks': ["sat-qe-jenkins"],
-                'reply_nicks': ["sat-qe-jenkins"],
+                'to_nicks': ['sat-qe-jenkins'],
+                'reply_nicks': ['sat-qe-jenkins'],
                 'subject': "${currentBuild.result}: Upgrade Scenarios Status ${currentBuild.displayName}",
                 'body': '${FILE, path="upgrade_highlights"}' +
                     "The build ${BUILD_LABEL} has been completed. \n\n Refer ${env.BUILD_URL} for more details.",

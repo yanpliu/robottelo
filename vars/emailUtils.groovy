@@ -52,33 +52,37 @@ def sendEmail(parameters = [:]) {
 }
 
 def emailBody(Map parameters = [:]) {
-    importance_html_tag = ""
-    if (parameters.importance != ""){
-        importance_html_tag = "Importance: ${parameters.importance}"
-    }
+    def results_summary = parameters.get('results_summary', 'No results available')
+    def importance = parameters.get('importance', '')
+    def sat_version = parameters.get('sat_version', '6.10.0')
+    def description = parameters.get('description', "${currentBuild.description}")
+    def ibutsu_link = parameters.get('ibutsu_link', 'No ibutsu link available')
+
+    def importance_html_tag = (importance != '')
+    importance_html_tag = ("${importance}" != "")? "Importance: ${importance}" : ""
     email_body = """\
-        <h3>${parameters.description} ${parameters.importance} Automation Results</h3>
+        <h3>${description} ${importance} Automation Results</h3>
         <h3>${importance_html_tag}</h3>
         <ul>
             <lh><h4>Result Counts</h4></lh>
-            <li><b>Tests: </b> ${parameters.results_summary.getTotalCount()}</li>
-            <li><b>Failures: </b> ${parameters.results_summary.getFailCount()}</li>
-            <li><b>Skipped: </b> ${parameters.results_summary.getSkipCount()}</li>
-            <li><b>Passed: </b> ${parameters.results_summary.getPassCount()}</li>
+            <li><b>Tests: </b> ${results_summary.getTotalCount()}</li>
+            <li><b>Failures: </b> ${results_summary.getFailCount()}</li>
+            <li><b>Skipped: </b> ${results_summary.getSkipCount()}</li>
+            <li><b>Passed: </b> ${results_summary.getPassCount()}</li>
         </ul>
         <ul>
             <lh><h4>Result URLs</h4></lh>
-            <li><a href=\"${parameters.job_url}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
-            <li><a href=\"${parameters.build_url}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
-            <li><a href=\"${parameters.ibutsu_link}\"><b>Ibutsu Test Run</b> (Analyze Failure Trends) </a></li>
+            <li><a href=\"${JOB_URL}test_results_analyzer/\"><b>Jenkins Test Result Analyzer</b> (Compare builds) </a></li>
+            <li><a href=\"${BUILD_URL}testReport/\"><b>Jenkins Test Results</b> (Single Build Results) </a></li>
+            <li><a href=\"${ibutsu_link}\"><b>Ibutsu Test Run</b> (Analyze Failure Trends) </a></li>
         </ul>
         This email was generated automatically, if you want to improve it look here:
-        <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/src/resources/src/resources/${parameters.resource_file}
+        <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/vars/emailUtils.groovy
     """
     // Include a link to sign-off sheet for z-stream builds, check sat_version
-    if (parameters.sat_version.tokenize('.')[2].toInteger() > 0) {
+    if (sat_version.tokenize('.')[2].toInteger() > 0) {
         email_body = email_body + """\
-            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${parameters.zstream_signoffsheet}\">Sign Off Sheet</a></h4>
+            <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${pipelineVars.zstream_signoffsheet}\">Sign Off Sheet</a></h4>
         """.stripIndent()
     }
     return email_body

@@ -28,7 +28,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             )
             env.satellite_hostname = satellite_inventory[0].hostname
             env.capsule_hostnames = ''
-            calculated_build_name = "From" + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
+            calculated_build_name = "From " + from_version + " To " + "${params.sat_version}" + " Snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
             env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
             env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
