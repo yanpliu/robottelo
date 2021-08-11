@@ -6,15 +6,15 @@ openShiftUtils.withNode(image: "$pipelineVars.ciRobotteloImage:${pipelineVars.ro
 
     try {
         stage('Set Build Description') {
-            currentBuild.description = "Trigger: " + params.job_name +
-                    " Run: " + params.build_number +
+            currentBuild.description = "Trigger: " + params.results_job_name +
+                    " Run: " + params.results_build_number +
                     " Build: " + params.sat_version + "-" + params.snap_version + (params.test_run_type ? " $params.test_run_type" : "")
         }
 
         stage('Copy Test Run Artifacts') {
             copyArtifacts(
-                    projectName: "${params.job_name}",
-                    selector: specific("${params.build_number}"),
+                    projectName: "${params.results_job_name}",
+                    selector: specific("${params.results_build_number}"),
                     filter : '*results.xml',
                     target: "${WORKSPACE}"
             )

@@ -31,12 +31,12 @@ pipelineJob("polarion-testrun-upload"){
                 "Version of RHEL Satellite version is deployed on, format is a"
         )
         stringParam(
-                'job_name',
+                'results_job_name',
                 "",
                 "Name of the Job that results will be uploaded from"
         )
         stringParam(
-                'build_number',
+                'results_build_number',
                 "",
                 "Build number of the Job that results will be uploaded from"
         )

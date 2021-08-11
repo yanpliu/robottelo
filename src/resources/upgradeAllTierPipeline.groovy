@@ -171,9 +171,9 @@ openShiftUtils.withNode(
                         [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],
                         [$class: 'StringParameterValue', name: 'sat_version', value: params.sat_version],
                         [$class: 'StringParameterValue', name: 'rhel_version', value: os_ver[-1]],
-                        [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                        [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
                         [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
-                        [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
+                        [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],
                     ],
                     wait: false
             } else {

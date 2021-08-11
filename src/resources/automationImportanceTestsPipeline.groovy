@@ -154,9 +154,9 @@ withCredentials([
                         parameters: [
                                 [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
                                 [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                                [$class: 'StringParameterValue', name: 'job_name', value: env.JOB_BASE_NAME],
+                                [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
                                 [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
-                                [$class: 'StringParameterValue', name: 'build_number', value: currentBuild.number.toString()],
+                                [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],
                         ],
                         wait: false
 
