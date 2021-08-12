@@ -60,7 +60,6 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
             env.ROBOTTELO_robottelo__satellite_version = "'${to_version}'"
             env.UPGRADE_robottelo__satellite_version = "'${to_version}'"
         }
-        }
         stage("Setup ssh-agent"){
             sh """
                 echo \"\${USER_NAME:-default}:x:\$(id -u):0:\${USER_NAME:-default} user:\${HOME}:/sbin/nologin\" >> /etc/passwd
