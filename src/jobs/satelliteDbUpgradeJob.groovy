@@ -1,7 +1,7 @@
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
-customer_databases = ['DogFood',,'Softlayer','BNYMelon']
+customer_databases = ['DogFood','Softlayer','SaintGobain']
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
     if (versionName == globalJenkinsDefaults.sat_versions.last()) {
