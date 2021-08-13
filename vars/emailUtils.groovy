@@ -80,7 +80,7 @@ def emailBody(Map parameters = [:]) {
         <br>https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins/-/blob/master/vars/emailUtils.groovy
     """
     // Include a link to sign-off sheet for z-stream builds, check sat_version
-    if (sat_version.tokenize('.')[2].toInteger() > 0) {
+    if (sat_version.tokenize('.')[2]?.toInteger() > 0) {
         email_body = email_body + """\
             <br><br><h4>This is a z-stream snap, update component status on the <a href=\"${pipelineVars.zstream_signoffsheet}\">Sign Off Sheet</a></h4>
         """.stripIndent()

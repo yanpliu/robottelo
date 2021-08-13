@@ -159,7 +159,7 @@ openShiftUtils.withNode(
                 email_body = emailUtils.emailBody(
                     results_summary: results_summary,
                     importance: "${params.importance}",
-                    sat_version: "${params.sat_version}",
+                    sat_version: "${sat_version}",
                     ibutsu_link: "${ibutsu_link}"
                 )
                 emailUtils.sendEmail(
