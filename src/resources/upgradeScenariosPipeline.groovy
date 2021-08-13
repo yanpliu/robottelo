@@ -160,8 +160,8 @@ openShiftUtils.withNode(
             if(currentBuild.result == 'SUCCESS' || currentBuild.result == 'UNSTABLE') {
                 email_body = emailUtils.emailBody(
                     results_summary: results_summary,
-                    sat_version: "${params.sat_version}",
-                    description: "${calculated_build_name}"
+                    sat_version: params.sat_version,
+                    description: calculated_build_name
                 )
                 emailUtils.sendEmail(
                     'to_nicks': ['satqe-list'],

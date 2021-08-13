@@ -158,9 +158,9 @@ openShiftUtils.withNode(
                 // TODO: Hook into the rp launch tooling and get the launch URL to include in this email
                 email_body = emailUtils.emailBody(
                     results_summary: results_summary,
-                    importance: "${params.importance}",
-                    sat_version: "${sat_version}",
-                    ibutsu_link: "${ibutsu_link}"
+                    importance: params.importance,
+                    sat_version: sat_version,
+                    ibutsu_link: ibutsu_link
                 )
                 emailUtils.sendEmail(
                     'to_nicks': ['satqe-list'],
