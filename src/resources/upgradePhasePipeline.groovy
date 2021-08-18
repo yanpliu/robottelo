@@ -4,6 +4,7 @@ import groovy.json.*
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
+def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -117,7 +118,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
 
         stage("Customer db upgrade trigger"){
             if (params.db_trigger){
-                for (customer_name in pipelineVars.customer_databases) {
+                for (customer_name in pipelineVars.customer_db_resources.keySet()) {
                     build job: "sat-db-${to_version}-upgrade-for-${customer_name}",
                     parameters: [
                                 [$class: 'StringParameterValue', name: 'sat_version', value: "${params.sat_version}"],
