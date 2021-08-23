@@ -7,7 +7,7 @@ VMWARE:
   # password: Password for vmware
   # PASSWORD:
   # datacenter: vmware datacenter
-  DATECENTER: RH_Engineering
+  DATACENTER: RH_Engineering
   # vm_name: Name of VM to power On/Off & delete
   VM_NAME: automation-robottelo-vmware-vm
 
