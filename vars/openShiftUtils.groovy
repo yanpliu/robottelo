@@ -173,16 +173,6 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey: 'rhn_password'))
 
         envVars.add(secretEnvVar(
-            key:'ROBOTTELO_gce__project_id',
-            secretName: secretName,
-            secretKey:'gce_project_id'))
-
-        envVars.add(secretEnvVar(
-            key:'ROBOTTELO_gce__client_email',
-            secretName: secretName,
-            secretKey:'gce_client_email'))
-
-        envVars.add(secretEnvVar(
             key:'ROBOTTELO_gce__cert',
             secretName: secretName,
             secretKey:'gce_cert'))
