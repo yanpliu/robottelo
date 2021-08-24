@@ -1,6 +1,7 @@
 @Library("satqe_pipeline_lib") _
 
 import groovy.json.*
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)

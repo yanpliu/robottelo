@@ -1,6 +1,7 @@
 @Library("satqe_pipeline_lib") _
 
 import groovy.json.*
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 node('master') {
     // see more at https://www.jenkins.io/doc/pipeline/examples/#load-from-file
