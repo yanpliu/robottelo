@@ -32,7 +32,7 @@ REPOS:
   # Software Collection Repo
   RHSCL_REPO: http://download.eng.rdu2.redhat.com/released/RHSCL/3.4/RHEL-7/Server/x86_64/os/
   # Ansible 2.8 Repo
-  ANSIBLE_REPO: http://cdn.stage.redhat.com/content/dist/rhel/server/7/7Server/x86_64/ansible/2.8/os/
+  ANSIBLE_REPO: http://cdn.stage.redhat.com/content/dist/rhel/server/7/7Server/x86_64/ansible/2.9/os/
   # Swid Tools required for generating swid tags in RHEL8 content host
   SWID_TOOLS_REPO: https://copr.devel.redhat.com/coprs/jpazdzio/swid/repo/rhel-8.dev/jpazdzio-swid-rhel-8.dev.repo
   # Satellite 6 repository
