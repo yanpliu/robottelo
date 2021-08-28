@@ -39,10 +39,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
             disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
             description("Automation job for case importance of ${jobName}")
-            logRotator {
-                artifactDaysToKeep(10)
-                daysToKeep(21)
-            }
+
             parameters {
                 stringParam('snap_version', "", "Snap version to deployed, format is x.y")
                 // Will default when https://projects.engineering.redhat.com/browse/SATQE-12568 is finished
@@ -101,6 +98,11 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     '',
                     'Marks the build as a re-run of the given RP Launch UUID (overrides the default re-run logic)'
                 )
+            }
+
+            logRotator {
+                artifactDaysToKeep(10)
+                daysToKeep(21)
             }
 
             properties {
