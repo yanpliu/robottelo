@@ -221,6 +221,11 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'ROBOTTELO_ansible_hub__token',
             secretName: secretName,
             secretKey: 'ansible_hub_token'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_ipa__idm_password',
+            secretName: secretName,
+            secretKey: 'idm_password'))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container') || image.contains('sat-upgrades-robottelo-container')) {
