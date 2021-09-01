@@ -35,7 +35,7 @@ class pipelineVars implements Serializable {
     Map customer_db_resources = [
         'DogFood': ['target_memory': '32GiB', 'target_cores': '8'],
         'Softlayer': ['target_memory': '20GiB', 'target_cores': '4'],
-        'SaintGobain': ['target_memory': '32GiB', 'target_cores': '8']
+        'MTBank': ['target_memory': '32GiB', 'target_cores': '8']
     ]
     String zstream_signoffsheet = 'https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing'
 }
