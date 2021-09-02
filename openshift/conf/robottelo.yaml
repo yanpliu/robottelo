@@ -21,7 +21,7 @@ ROBOTTELO:
   - clickElement
   - mouseMoveTo
   # - The URL of container hosting repos on SatLab
-  REPOS_HOSTING_URL: http://infra-robottelo-fixtures.infra.sat.rdu2.redhat.com:50123
+  REPOS_HOSTING_URL: http://infra-podman-01.infra.sat.rdu2.redhat.com:50123
   # browser tells robottelo which browser to use when testing UI. Valid values
   BROWSER: remote
   # Zalenium command executor
