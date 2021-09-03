@@ -1,0 +1,4 @@
+ANSIBLE_HUB:
+  URL: https://console.redhat.com/api/automation-hub/
+  TOKEN:
+  SSO_URL: https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token

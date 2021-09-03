@@ -216,6 +216,11 @@ def withNode(Map parameters = [:], Closure body) {
             key: 'ROBOTTELO_virtwho__kubevirt__hypervisor_password',
             secretName: secretName,
             secretKey: 'kubevirt_hypervisor_password'))
+
+        envVars.add(secretEnvVar(
+            key: 'ROBOTTELO_ansible_hub__token',
+            secretName: secretName,
+            secretKey: 'ansible_hub_token'))
     }
 
     if (image.contains('robottelo-container') || image.contains('broker-container') || image.contains('sat-upgrade-container') || image.contains('testfm-container') || image.contains('sat-upgrades-robottelo-container')) {
