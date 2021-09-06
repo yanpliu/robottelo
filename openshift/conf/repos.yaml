@@ -328,3 +328,7 @@ REPOS:
 
   EPEL_REPO:
     URL: '@format {this[robottelo].repos_hosting_url}/epel_repo'
+
+  GR_YUM_REPO:
+    URL: '@format {this[robottelo].repos_hosting_url}/yum_gpg'
+    GPG_URL: '@format {this[robottelo].repos_hosting_url}/yum_gpg/RPM-GPG-KEY-dummy-packages-generator'
