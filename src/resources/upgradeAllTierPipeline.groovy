@@ -10,8 +10,10 @@ def rp_pytest_options = ''
 def launch_uuid = ''
 def wrapper_test_uuid = ''
 def test_run_type = 'upgrade'
+
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+    containerEnvVar(key: 'BROKER_AnsibleTower__username', value: pipelineVars.towerUpgradesUser),
     containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
     containerEnvVar(key: 'ROBOTTELO_SERVER__INVENTORY_FILTER', value: 'name<satellite-upgrade'),
     containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${to_version}'"),

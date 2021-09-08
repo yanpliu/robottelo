@@ -79,7 +79,7 @@ openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
                 def body = "${user}:<br><br> "
                 def subject = "SLA Enforcement ${user} Report for Build ${BUILD_NUMBER}"
 
-                if(user == pipelineVars.towerUser) {
+                if(user in [pipelineVars.towerUser, pipelineVars.towerUpgradesUser]) {
                     println("skipping jenkins user")
                     continue;
                 }

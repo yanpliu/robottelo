@@ -7,21 +7,22 @@ def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 
 def at_vars = [
-        containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
-        containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
-        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${to_version}'"),
-        containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
-        containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__ANSIBLE_REPO_VERSION', value: "'${params.ansible_repo_version}'"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: "${params.distribution}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_SATELLITE_UPGRADE', value: "${params.foreman_maintain_satellite_upgrade}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__DOWNSTREAM_FM_UPGRADE', value: "${params.downstream_fm_upgrade}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_CAPSULE_UPGRADE', value: "${params.foreman_maintain_capsule_upgrade}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__SATELLITE_CAPSULE_SETUP_REBOOT', value: "${params.satellite_capsule_setup_reboot}"),
-        containerEnvVar(key: 'UPGRADE_UPGRADE__UPGRADE_WITH_HTTP_PROXY', value: "${params.upgrade_with_http_proxy}"),
+    containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
+    containerEnvVar(key: 'BROKER_AnsibleTower__username', value: pipelineVars.towerUpgradesUser),
+    containerEnvVar(key: 'ROBOTTELO_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
+    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__RELEASE', value: "'${to_version}'"),
+    containerEnvVar(key: 'ROBOTTELO_SERVER__VERSION__SNAP', value: "'${params.snap_version}'"),
+    containerEnvVar(key: 'UPGRADE_ROBOTTELO__SATELLITE_VERSION', value: "'${to_version}'"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__FROM_VERSION', value: "'${from_version}'"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__TO_VERSION', value: "'${to_version}'"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__OS', value: params.os),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__ANSIBLE_REPO_VERSION', value: "'${params.ansible_repo_version}'"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__DISTRIBUTION', value: "${params.distribution}"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_SATELLITE_UPGRADE', value: "${params.foreman_maintain_satellite_upgrade}"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__DOWNSTREAM_FM_UPGRADE', value: "${params.downstream_fm_upgrade}"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__FOREMAN_MAINTAIN_CAPSULE_UPGRADE', value: "${params.foreman_maintain_capsule_upgrade}"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__SATELLITE_CAPSULE_SETUP_REBOOT', value: "${params.satellite_capsule_setup_reboot}"),
+    containerEnvVar(key: 'UPGRADE_UPGRADE__UPGRADE_WITH_HTTP_PROXY', value: "${params.upgrade_with_http_proxy}"),
 ]
 
 openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {

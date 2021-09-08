@@ -30,6 +30,7 @@ class pipelineVars implements Serializable {
     String polarionUser = 'rhsat6_machine'
 
     String towerUser = 'satqe_auto_droid'
+    String towerUpgradesUser = 'satqe_upgrades'
 
     List upgrade_versions = ["6.9", "6.10"]
     Map customer_db_resources = [
