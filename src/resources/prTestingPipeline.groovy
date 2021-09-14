@@ -33,6 +33,7 @@ throttle(['pr-tester']) {
                     git fetch origin refs/pull/${env.ghprbPullId}/head:refs/remotes/origin/pr/${env.ghprbPullId}
                     git config --local user.name "Omkar Khatavkar"
                     git config --local user.email okhatavkar007@gmail.com
+                    git checkout ${env.ghprbTargetBranch}
                     git merge origin/pr/${env.ghprbPullId}
                     git log -n 5
                 """
