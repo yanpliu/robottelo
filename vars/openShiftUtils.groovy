@@ -287,6 +287,14 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'rhn_password'))
     }
 
+    // Inject report portal env vars to container
+    if (image.contains('report-portal-tools')) {
+        envVars.add(secretEnvVar(
+            key:'RP_API_TOKEN',
+            secretName: secretName,
+            secretKey:'reportportal-robottelo-token'))
+    }
+
     if (yaml) {
         podParameters['yaml'] = readTrusted(yaml)
     } else {

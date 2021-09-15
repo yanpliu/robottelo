@@ -1,0 +1,7 @@
+rp_endpoint: https://reportportal-sat-qe.apps.ocp4.prod.psi.redhat.com
+rp_project: Satellite6
+
+launch_name: OCP-Jenkins-CI
+launch_description: downstream snap automation
+# Test owners
+default_test_owner: satqe-list

@@ -17,8 +17,6 @@ def snap_version = params.snap_version
 // def rp_launch = "Importance_${params.importance}"
 def rp_launch = params.rp_launch
 def rerun_of = params.rerun_of
-def rp_pytest_options = ""
-def launch_uuid = ''
 def wrapper_test_uuid = ''
 def junit_xml_file = "sat-${params.importance}-results.xml"
 
@@ -63,41 +61,6 @@ openShiftUtils.withNode(
             env.ROBOTTELO_robottelo__satellite_version = "'${sat_version.tokenize('.').take(2).join('.')}'"
         }
 
-        stage('Create report portal launch and parent test') {
-            if(params.use_reportportal) {
-                (launch_uuid, wrapper_test_uuid) = reportPortalUtils.create_launch(
-                    launch_name: rp_launch,
-                    rerun_of: rerun_of,
-                    filter_attributes: "${sat_version}-${snap_version},${params.importance}",
-                    launch_attributes: [
-                        [
-                            key: "sat_version",
-                            value: "${sat_version}-${snap_version}"
-                        ],
-                        [
-                            key: "y_stream",
-                            value: "${sat_version}".tokenize('.').take(2).join('.')
-                        ],
-                        [
-                            key: "importance",
-                            value: "${params.importance}"
-                        ],
-                        [
-                            key: "instance_count",
-                            value: "${params.xdist_workers}"
-                        ]
-                    ]
-                )
-                // append the acquired UUIDs to pytest options
-                rp_pytest_options = "--reportportal -o rp_endpoint=${pipelineVars.reportPortalServer} -o rp_project=${pipelineVars.reportPortalProject} " +
-                    "-o rp_hierarchy_dirs=false -o  rp_log_batch_size=500 --rp-launch=${rp_launch} --rp-launch-id=${launch_uuid} --rp-parent-item-id=${wrapper_test_uuid}"
-            }
-            else{
-                println("Skipping 'Create report portal launch and parent test' stage")
-                Utils.markStageSkippedForConditional(STAGE_NAME)
-            }
-        }
-
         stage('Execute Automation Test Suite') {
             // -n argument should be params.xdist_workers when robottelo 8303 is merged
             if(params.use_ibutsu){
@@ -110,7 +73,6 @@ openShiftUtils.withNode(
                 --junit-xml=${junit_xml_file} \
                 -o junit_suite_name=sat-${params.importance} \
                 ${ibutsu_options} \
-                ${rp_pytest_options} \
                 ${params.pytest_options}
             """)
 
@@ -148,6 +110,34 @@ openShiftUtils.withNode(
                     ],
                     wait: false
 
+        }
+	stage('Trigger Report Portal Launch Upload') {
+            if(params.use_reportportal) {
+                attr_ystream = "${sat_version}".tokenize('.').take(2).join('.')
+                // figure out the rerun_of and append it in the job params if not null 
+                if (!rerun_of) {
+                    rerun_of = reportPortalUtils.get_rerun_of(rp_launch, "${sat_version}-${snap_version},${params.importance}")
+                }
+                rp_job_params = [
+	            [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
+                    [$class: 'StringParameterValue', name: 'rp_launch_description', value: currentBuild.description],
+                    [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],
+                    [$class: 'StringParameterValue', name: 'rp_launch_name', value: rp_launch],
+                    [$class: 'StringParameterValue', name: 'rp_rerun_of', value: rerun_of],
+	            [$class: 'StringParameterValue',
+		        name: 'rp_launch_attrs',
+		        value: "sat_version=${sat_version}-${snap_version} y_stream=${attr_ystream} importance=${params.importance} instance_count=${params.xdist_workers}"
+	            ]
+                ]
+                println("Calling Report Portal Result Upload")
+                build job: "reportportal-launch-upload",
+                    parameters: rp_job_params,
+                    wait: false
+            }
+            else {
+                println('Skipping the Report Portal logging')
+                Utils.markStageSkippedForConditional(STAGE_NAME)
+            }
         }
 
         stage('Send Result Email') {
@@ -188,15 +178,6 @@ openShiftUtils.withNode(
                 'subject': subject,
                 'body': body
             )
-        }
-        stage('Finish the Report Portal Launch') {
-            if(launch_uuid){
-                reportPortalUtils.finish_launch(launch_uuid: launch_uuid)
-            }
-            else {
-                println("No launch_uuid: Skipping 'Finish the Report Portal Launch' stage")
-                Utils.markStageSkippedForConditional(STAGE_NAME)
-            }
         }
         stage('Check In Satellite Instances') {
             brokerUtils.checkin_all()

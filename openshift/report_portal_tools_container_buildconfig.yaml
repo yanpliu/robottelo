@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: List
+items:
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
+    labels:
+      name: report-portal-tools-container
+    name: report-portal-tools-container
+  spec:
+    lookupPolicy:
+      local: true
+
+- kind: BuildConfig
+  apiVersion: build.openshift.io/v1
+  metadata:
+    creationTimestamp:
+    labels:
+      name: report-portal-tools-container
+    name: report-portal-tools-container
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: report-portal-tools-container:latest
+    resources: {}
+    runPolicy: Serial
+    source:
+      git:
+        uri: https://gitlab.sat.engineering.redhat.com/satelliteqe/satelliteqe-jenkins.git
+        ref: master
+      type: Git
+      contextDir: openshift
+    strategy:
+      dockerStrategy:
+        dockerfilePath: rp_tools/Dockerfile
+        env:
+        - name: GIT_SSL_NO_VERIFY
+          value: 'true'
+      type: Docker
