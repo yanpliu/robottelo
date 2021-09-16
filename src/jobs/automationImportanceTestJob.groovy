@@ -90,7 +90,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                 )
                 booleanParam(
                     'use_reportportal',
-                    true,
+                    false,
                     'Determines whether or not to push results to report portal'
                 )
                 stringParam(
