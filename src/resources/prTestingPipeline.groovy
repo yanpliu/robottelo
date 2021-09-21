@@ -4,11 +4,14 @@
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}")
 ]
+def xy_sat_version = pipelineVars.sat_versions.find{env.ghprbTargetBranch.startsWith(it)} ?: pipelineVars.sat_versions.last()
 
 throttle(['pr-tester']) {
 
-    openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: at_vars) {
-
+    openShiftUtils.withNode(
+        image: "$pipelineVars.ciRobotteloImage:${pipelineVars.robotteloImageTags.find{xy_sat_version.startsWith(it.key)}.value}",
+        envVars: at_vars
+    ) {
             stage('Load Github Comment Config'){
                 println("Trigger comment: ${env.ghprbCommentBody}")
                 if (!env.ghprbCommentBody.contains("test-robottelo")) {
@@ -27,12 +30,14 @@ throttle(['pr-tester']) {
 
             // In below block, we can not merge the PR unless has the valid git configs.
             stage("Checkout Test PR"){
+                env.ROBOTTELO_robottelo__satellite_version = "'$xy_sat_version'"
+                env.ROBOTTELO_server__version__release = "'$xy_sat_version'"
                 sh """
                     cd \${ROBOTTELO_DIR}
                     git fetch origin
                     git fetch origin refs/pull/${env.ghprbPullId}/head:refs/remotes/origin/pr/${env.ghprbPullId}
-                    git config --local user.name "Omkar Khatavkar"
-                    git config --local user.email okhatavkar007@gmail.com
+                    git config --local user.name "SATQE Jenkins"
+                    git config --local user.email sat-qe-jenkins@redhat.com
                     git checkout ${env.ghprbTargetBranch}
                     git merge origin/pr/${env.ghprbPullId}
                     git log -n 5

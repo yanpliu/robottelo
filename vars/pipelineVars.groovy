@@ -32,7 +32,8 @@ class pipelineVars implements Serializable {
     String towerUser = 'satqe_auto_droid'
     String towerUpgradesUser = 'satqe_upgrades'
 
-    List upgrade_versions = ["6.9", "6.10"]
+    List sat_versions = ['6.9', '6.10']
+    List upgrade_versions = ['6.9', '6.10']
     Map customer_db_resources = [
         'DogFood': ['target_memory': '32GiB', 'target_cores': '8'],
         'Softlayer': ['target_memory': '20GiB', 'target_cores': '4'],
