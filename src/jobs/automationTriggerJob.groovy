@@ -2,8 +2,17 @@
 
 import jobLib.globalJenkinsDefaults
 import jenkins.model.*
+import hudson.model.Item
+import hudson.model.Items
+
+
+def jobProperties
 
 globalJenkinsDefaults.sat_versions.each { versionName ->
+    Item currentJob = Jenkins.instance.getItemByFullName("${versionName}-automation-trigger")
+    if (currentJob) {
+        jobProperties = currentJob.@properties
+    }
     pipelineJob("${versionName}-automation-trigger") {
         disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
 
@@ -39,6 +48,16 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
                     }
                     scriptPath("src/resources/automationTriggerPipeline.groovy")
                 }
+        }
+        if (jobProperties) {
+            configure { root ->
+                def properties = root / 'properties'
+                jobProperties.each { property ->
+                    String xml = Items.XSTREAM2.toXML(property)
+                    def jobPropertiesPropertyNode = new XmlParser().parseText(xml)
+                    properties << jobPropertiesPropertyNode
+                }
+            }
         }
     }
 }
