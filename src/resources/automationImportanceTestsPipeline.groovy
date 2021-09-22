@@ -44,6 +44,10 @@ openShiftUtils.withNode(
                 (workflow): [
                     'deploy_sat_version': params.sat_version,
                     'deploy_snap_version': params.snap_version,
+                    // https://bugzilla.redhat.com/show_bug.cgi?id=1976051
+                    // Remove target_memory and pool skip args when PUMA BZ resolved
+                    'target_memory': '35GiB',
+                    'skip_vm_pooling': 'True',
                     'count': params.xdist_workers
                 ] << template_name,
             )
