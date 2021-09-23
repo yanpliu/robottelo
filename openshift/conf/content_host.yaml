@@ -5,6 +5,16 @@ content_host:
   - 6
   - 7
   - 8
-    # hardware:
-        # memory:
-        # cores:
+  hardware:
+    rhel6:
+      release: 6.10
+      memory: 1GiB
+      cores: 1
+    rhel7:
+      release: 7.9
+      memory: 1GiB
+      cores: 1
+    rhel8:
+      release: 8.3
+      memory: 1536 MiB
+      cores: 1
