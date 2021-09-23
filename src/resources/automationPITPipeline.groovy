@@ -127,19 +127,21 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
          // install satellite version given by the `sat_ver` variable
          // TBD - waiting for a workflow name and a format of its result
          startTime = new Date().getTime()
+         json_output = JsonOutput.toJson(repo_file)
          sh (
            returnStdout: true,
            script:
              """
-             echo "${JsonOutput.toJson(repo_file)}" > /tmp/os_repos.json
+             echo '${json_output}' > os_repos.json
              """
            )
+         archiveArtifacts artifacts: 'os_repos.json'
          if(scenario == "server") {
            wf_name = "deploy-pit-template"
            wf_args = [
                'deploy_template_name': "${rhel_nvr}",
                'sat_xy_version': "${sat_ver}",
-               'rhel_compose_repositories': '/tmp/os_repos.json'
+               'rhel_compose_repositories': 'os_repos.json'
            ]
          }
          else {
