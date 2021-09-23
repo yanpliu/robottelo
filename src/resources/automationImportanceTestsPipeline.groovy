@@ -34,22 +34,17 @@ openShiftUtils.withNode(
 ) {
     try {
         stage('Check Out Satellite Instances') {
-            if(params.template_name != '') {
-                println('Template name was passed in parameters, using it for broker')
-                template_name = ['deploy_template_name': params.template_name]
-            } else {
-                template_name = [:]  // empty map
-            }
             inventory = brokerUtils.checkout(
                 (workflow): [
                     'deploy_sat_version': params.sat_version,
                     'deploy_snap_version': params.snap_version,
+                    'deploy_template_name': params.template_name,
                     // https://bugzilla.redhat.com/show_bug.cgi?id=1976051
                     // Remove target_memory and pool skip args when PUMA BZ resolved
                     'target_memory': '35GiB',
                     'skip_vm_pooling': 'True',
                     'count': params.xdist_workers
-                ] << template_name,
+                ]
             )
         }
 

@@ -25,7 +25,9 @@ def checkout(Map parameters = [:]) {
         // construct remaining broker command by parsing key:val pairs in parameters[workflow]
         // All params will be passed with `--key` e.g. for count, broker acccepts `-c` or `--count`
         // In this function assumption is to get all params spelled out(long version)
-        parameters[workflow].each { key, val -> broker_command+="--$key $val " }
+        // Only pass the key/value pair if the value is populated
+        // TODO handle NULL state for value as a broker flag argument
+        parameters[workflow].each { key, val -> if (val != ''){broker_command+=" --$key $val"}}
         // broker_settings.yaml needs to be present in the BROKER_DIRECTORY before running broker commands
         checkout_rc = sh(returnStatus: true, script: "${broker_command}")
         println('Broker RC for checkout: ' + checkout_rc)
