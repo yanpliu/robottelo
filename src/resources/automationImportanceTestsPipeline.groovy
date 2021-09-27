@@ -107,7 +107,6 @@ openShiftUtils.withNode(
                 py.test -v -rEfs --tb=short \
                 --durations=20 --durations-min=600.0 \
                 -n ${params.xdist_workers} \
-                --dist loadscope \
                 --junit-xml=${junit_xml_file} \
                 -o junit_suite_name=sat-${params.importance} \
                 ${ibutsu_options} \
