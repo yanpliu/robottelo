@@ -88,6 +88,7 @@ throttle(['pr-tester']) {
             stage('Check Out Satellite Instances') {
                 brokerUtils.checkout(
                     'deploy-sat-jenkins': [
+                        'deploy_sat_version': xy_sat_version,
                         'count': 1
                     ],
                 )
