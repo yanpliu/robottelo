@@ -45,6 +45,6 @@ SERVER:
 
   SSH_CLIENT:
     # Time to wait for the ssh command to finish, in seconds
-    COMMAND_TIMEOUT: 300
+    COMMAND_TIMEOUT: 5m
     # Time to wait for establishing the ssh connection, in seconds
-    CONNECTION_TIMEOUT: 60
+    CONNECTION_TIMEOUT: 1m
