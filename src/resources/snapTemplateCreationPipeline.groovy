@@ -12,6 +12,17 @@ node('master') {
 def broker_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
 ]
+
+def templateNames = [
+    // map of workflow-name: template-name
+    'create-sat-jenkins-template': null,
+    'create-sat-capsule-template': null,
+    // TODO: OSP WFs fail on template recreation https://issues.redhat.com/browse/SATQE-16678
+    // uncomment them once the issue above is fixed
+    //'create-sat-jenkins-template-osp': null,
+    //'create-sat-capsule-template-osp': null,
+]
+
 try {
     openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: broker_vars) {
 
@@ -45,86 +56,56 @@ try {
 
             // Check for any value not set
             if (sat_version && snap_version && capsule_version && rhel_major_version && satellite_activation_key && capsule_activation_key) {
-                print 'All Work flow values have been set'
+                println('All Work flow values have been set')
             } else {
                 error('One or more variables were empty')
             }
 
         }
 
-        stage('Create Snap Templates ') {
+        stage('Create Snap Templates') {
 
-            // Call all three AT snap template workflows in parallel
+            // Call all four(RHV:2, OSP:2) AT snap template workflows in parallel
             parallel(
-                    "create-sat-jenkins-template": {
-                        output_sat_jenkins =
-                                sh(
-                                        returnStdout: true,
-                                        script:
-                                                """
-                                broker execute --workflow 'create-sat-jenkins-template' \
-                                --output-format raw --artifacts last --additional-arg True \
-                                --activation_key ${satellite_activation_key}\
-                                --rhel_major_version ${rhel_major_version} \
-                                --sat_version ${sat_version} \
-                                --snap_version ${snap_version}
-                            """
-                                )
-                    },
-                    "create-capsule-template": {
-                        output_capsule =
-                                sh(
-                                        returnStdout: true,
-                                        script:
-                                                """
-                            broker execute --workflow 'create-sat-capsule-template' \
-                            --output-format raw --artifacts last --additional-arg True \
-                            --activation_key ${capsule_activation_key}\
-                            --rhel_major_version ${rhel_major_version} \
-                            --sat_version ${sat_version} \
-                            --snap_version ${snap_version}
-                        """
-                                )
-                    },
+                templateNames.collectEntries{workflow, templateName ->
+                    [   // map of string: closure
+                        (workflow): ({
+                            def workflowOutput = sh(
+                                returnStdout: true,
+                                script: """
+                                    broker execute --workflow '${workflow}' \
+                                    --output-format raw --artifacts last --additional-arg True \
+                                    --activation_key ${workflow.contains('capsule') ? capsule_activation_key : satellite_activation_key} \
+                                    --rhel_major_version ${rhel_major_version} \
+                                    --sat_version ${sat_version} \
+                                    --snap_version ${snap_version} \
+                                    ${workflow.endsWith('-osp') ? '--tower-inventory satlab-osp-01-inventory' : ''}
+                                """
+                            )
+                            // Print raw output, small JSON so not pretty printing
+                            println("${workflow} output: ${workflowOutput}")
+                            // Read JSON broker console output and replace single quotes by double quotes
+                            templateNames[workflow] = readJSON(text: workflowOutput.replace('\'', '"')).data_out?.template
+                            println("[workflow] ${workflow} created template: ${templateNames[workflow]}")
+                        })
+                    ]
+                }
             )
-        }
-
-        stage('Parse Output and Set Template Names') {
-
-            // Print raw output, small JSON so not pretty printing
-            println('create-sat-jenkins-template output: ' + output_sat_jenkins)
-            println('create-capsule-template output: ' + output_capsule)
-
-            // Output to JSON files
-            // Single quotes in the broker console output, replace with double quote
-            sat_jenkins_template = null
-            capsule_template = null
-
-            if (output_sat_jenkins.contains('data_out')) {
-                output_sat_json = readJSON text: output_sat_jenkins.replace("'", "\"")
-                //writeJSON file: "sat-jenkins-temp-creation.json", json: output_sat_json['data_out']
-                sat_jenkins_template = output_sat_json.get('data_out', '').get('template', '')
-                println('Sat Jenkins Template Name is ' + sat_jenkins_template)
-            } else {
-                println('ERROR: broker call for sat-jenkins workflow must have failed, nothing was returned')
-            }
-
-            if (output_capsule.contains('data_out')) {
-                output_capsule_json = readJSON text: output_capsule.replace("'", "\"")
-                //writeJSON file: "capsule-temp-creation.json", json: output_capsule_json['data_out']
-                capsule_template = output_capsule_json.get('data_out', '').get('template', '')
-                println('Sat Capsule Template Name is ' + capsule_template)
-            } else {
-                println('ERROR: broker call for capsule workflow must have failed, nothing was returned')
-            }
-
         }
 
         robottelo_vars = broker_vars + [
             containerEnvVar(
                 key: 'ROBOTTELO_robottelo__satellite_version',
                 value: "'${sat_version.tokenize('.').take(2).join('.')}'"
-            )
+            ),
+            containerEnvVar(
+                key: 'ROBOTTELO_server__version__release',
+                value: "'${sat_version}'"
+            ),
+            containerEnvVar(
+                key: 'ROBOTTELO_server__version__snap',
+                value: "'${snap_version}'"
+            ),
         ]
         sanityPassed = snapTemplateSanityCheck(
             'sat_version': sat_version,
@@ -132,17 +113,15 @@ try {
             'node_vars': robottelo_vars,
         )
 
-        stage('Archive Artifacts') {
-            //archiveArtifacts artifacts: '*.json'
+        stage('Template Names Check') {
             // Check for any value not set
-            template_exists = sat_jenkins_template && capsule_template
-            if (template_exists) {
-                print 'All template names have been created'
+            templates_exist = templateNames.every{workflow, templateName -> templateName}
+            if (templates_exist) {
+                println('All template names have been created')
                 email_to = ['sat-qe-jenkins', 'satellite-qe-tower-users']
                 subject = "Templates for ${sat_version} SNAP ${snap_version} are available"
-                body = "Following snap ${snap_version} templates have been created:" +
-                        " <br><br> sat_jenkins_template: ${sat_jenkins_template} " +
-                        "<br><br> capsule_template: ${capsule_template}"
+                body = "Following snap ${snap_version} templates have been created:<br>" +
+                    templateNames.collect{workflow, templateName -> "<br>\n • $workflow → $templateName"}.join('')
                 if (!sanityPassed) {
                     body += '<br><br>However, template sanity check has failed. Please investigate!'
                 }
@@ -153,7 +132,7 @@ try {
 
         stage('Trigger Automation Test') {
             if (params.trigger_automation == 'Yes') {
-                if (template_exists) {
+                if (templates_exist) {
                     build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
                         parameters: [
                             [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
@@ -172,7 +151,7 @@ try {
         }
     }
 } catch (exc) {
-    print "Pipeline failed with ${exc}"
+    println("[ERROR] Pipeline failed with ${exc}")
     email_to = ['sat-qe-jenkins', 'satellite-lab-list']
     subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
     body = "Jenkins Console Log: ${BUILD_URL}. Error that was caught: <br><br> ${exc}"
