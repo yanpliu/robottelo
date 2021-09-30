@@ -11,32 +11,8 @@ ROBOTTELO:
   TMP_DIR: '@format {env[ROBOTTELO_DIR]}/tmp'
   # Web Server to provide various test artifacts
   ARTIFACTS_SERVER: sesame.lab.eng.rdu2.redhat.com
-  # Webdriver logging options
-  LOG_DRIVER_COMMANDS:
-  - newSession
-  - windowMaximize
-  - get
-  - findElement
-  - sendKeysToElement
-  - clickElement
-  - mouseMoveTo
   # - The URL of container hosting repos on SatLab
   REPOS_HOSTING_URL: http://infra-podman-01.infra.sat.rdu2.redhat.com:50123
-  # browser tells robottelo which browser to use when testing UI. Valid values
-  BROWSER: remote
-  # Zalenium command executor
-  COMMAND_EXECUTOR: http://wharf.cfme.lab.eng.rdu2.redhat.com:80/wd/hub
-  # Webdriver to use
-  WEBDRIVER: chrome
-  WEBDRIVER_BINARY: /usr/bin/chromedriver
-  # Desired Capabilities of Web Driver
-  WEBDRIVER_DESIRED_CAPABILITIES:
-    PLATFORM: any
-    MAXDURATION: 5400
-    IDLETIMEOUT: 1000
-    START-MAXIMISED: true
-    SCREENRESOLUTION: 1600x1200
-    # TAGS:
   # CDN sync
   CDN: true
   # Run one datapoint or multiple datapoints for tests

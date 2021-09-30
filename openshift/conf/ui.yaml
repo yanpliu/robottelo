@@ -1,0 +1,36 @@
+UI:
+  SCREENSHOTS_PATH: '@format {env[ROBOTTELO_DIR]}/screenshots/'
+  # Webdriver logging options
+  LOG_DRIVER_COMMANDS:
+  - newSession
+  - windowMaximize
+  - get
+  - findElement
+  - sendKeysToElement
+  - clickElement
+  - mouseMoveTo
+
+  # browser tells robottelo which browser to use when testing UI. Valid values (selenium/remote)
+  BROWSER: remote
+  # Webdriver to use
+  WEBDRIVER: chrome
+  WEBDRIVER_BINARY: /usr/bin/chromedriver
+
+  # web_kaifuku settings
+  WEBKAIFUKU:
+    webdriver: '@jinja {{ this.ui.browser if this.ui.browser in ["remote"] else this.ui.webdriver}}'
+    webdriver_options:
+      command_executor: http://wharf.cfme.lab.eng.rdu2.redhat.com:80/wd/hub
+      desired_capabilities:
+        browserName: chrome
+        chromeOptions:
+          args:
+            - 'disable-web-security'
+            - 'ignore-certificate-errors'
+          prefs:
+            download.prompt_for_download: False
+        platform: any
+        maxduration: 5400
+        idletimeout: 1000
+        start-maximised: true
+        screenresolution: 1600x1200
