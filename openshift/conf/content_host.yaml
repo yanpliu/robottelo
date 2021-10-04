@@ -7,7 +7,7 @@ content_host:
   - 8
   hardware:
     rhel6:
-      release: 6.10
+      release: '6.10'
       memory: 1GiB
       cores: 1
     rhel7:
