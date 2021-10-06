@@ -2,34 +2,34 @@ import groovy.json.*
 
 def get_rerun_of(String launch_name, String filter_attributes) {
     withCredentials([string(credentialsId: 'reportportal-robottelo-token', variable: 'rp_token')]) {
-	    def jsonSlurper = new JsonSlurper()
-	    def filter_params =
-		"?page.page=1&page.size=1&page.sort=name%2Cnumber%2CDESC&" +
-		"filter.ne.status=IN_PROGRESS&filter.has.attributeValue=${filter_attributes}&filter.eq.name=${launch_name}"
+        def jsonSlurper = new JsonSlurper()
+        def filter_params =
+        "?page.page=1&page.size=1&page.sort=name%2Cnumber%2CDESC&" +
+        "filter.ne.status=IN_PROGRESS&filter.has.attributeValue=${filter_attributes}&filter.eq.name=${launch_name}"
 
-	    def parent_req = new URL("${pipelineVars.reportPortalServer}/api/v1/${pipelineVars.reportPortalProject}/launch${filter_params}").openConnection()
-	    parent_req.setRequestProperty("Authorization", "bearer ${rp_token}")
-	    parent_req.setRequestMethod('GET')
-	    parent_req.setDoOutput(true)
-	    def parent_rc = parent_req.getResponseCode()
-	    if(parent_rc == 200){
-		// parse the API response JSON payload
-		def parent_response = jsonSlurper.parseText(parent_req.getInputStream().getText())
-		if(parent_response['content'].size() > 0){
-		    // one or more previous launches detected, assuming this is a re-run
-		    ref_launch = parent_response['content'][0]['uuid']
-		    println("related launch found, set as re-run of ${ref_launch}")
-		    return ref_launch
-		}
-		else{
-		    println("no related launches found, assuming no re-run")
-		}
-	    }
-	    else{
-		error("Error occurred while trying to fetch a list of launches: " +
-		    "response code: ${parent_rc} " + "with a message: ${parent_req.getInputStream().getText()}"
-		)
-	    }
+        def parent_req = new URL("${pipelineVars.reportPortalServer}/api/v1/${pipelineVars.reportPortalProject}/launch${filter_params}").openConnection()
+        parent_req.setRequestProperty("Authorization", "bearer ${rp_token}")
+        parent_req.setRequestMethod('GET')
+        parent_req.setDoOutput(true)
+        def parent_rc = parent_req.getResponseCode()
+        if(parent_rc == 200){
+            // parse the API response JSON payload
+            def parent_response = jsonSlurper.parseText(parent_req.getInputStream().getText())
+            if(parent_response['content'].size() > 0){
+                // one or more previous launches detected, assuming this is a re-run
+                ref_launch = parent_response['content'][0]['uuid']
+                println("related launch found, set as re-run of ${ref_launch}")
+                return ref_launch
+            }
+            else{
+                println("no related launches found, assuming no re-run")
+            }
+        }
+        else{
+            error("Error occurred while trying to fetch a list of launches: " +
+                "response code: ${parent_rc} " + "with a message: ${parent_req.getInputStream().getText()}"
+            )
+        }
     }
 }
 

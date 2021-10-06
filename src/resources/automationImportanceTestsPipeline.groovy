@@ -111,23 +111,23 @@ openShiftUtils.withNode(
                     wait: false
 
         }
-	stage('Trigger Report Portal Launch Upload') {
+        stage('Trigger Report Portal Launch Upload') {
             if(params.use_reportportal) {
                 attr_ystream = "${sat_version}".tokenize('.').take(2).join('.')
-                // figure out the rerun_of and append it in the job params if not null 
+                // figure out the rerun_of and append it in the job params if not null
                 if (!rerun_of) {
                     rerun_of = reportPortalUtils.get_rerun_of(rp_launch, "${sat_version}-${snap_version},${params.importance}")
                 }
                 rp_job_params = [
-	            [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
+                    [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
                     [$class: 'StringParameterValue', name: 'rp_launch_description', value: currentBuild.description],
                     [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],
                     [$class: 'StringParameterValue', name: 'rp_launch_name', value: rp_launch],
                     [$class: 'StringParameterValue', name: 'rp_rerun_of', value: rerun_of],
-	            [$class: 'StringParameterValue',
-		        name: 'rp_launch_attrs',
-		        value: "sat_version=${sat_version}-${snap_version} y_stream=${attr_ystream} importance=${params.importance} instance_count=${params.xdist_workers}"
-	            ]
+                    [$class: 'StringParameterValue',
+                        name: 'rp_launch_attrs',
+                        value: "sat_version=${sat_version}-${snap_version} y_stream=${attr_ystream} importance=${params.importance} instance_count=${params.xdist_workers}"
+                    ]
                 ]
                 println("Calling Report Portal Result Upload")
                 build job: "reportportal-launch-upload",
