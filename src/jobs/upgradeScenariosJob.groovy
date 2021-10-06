@@ -13,7 +13,7 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                         stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b.c')
                         stringParam('snap_version', '', 'Snap version to be deployed, format is x.y')
                         stringParam('os', "${os}", 'RHEL version of Satellite')
-                        stringParam('xdist_workers', '4', 'Number of Workers/Satellites to run the tests')
+                        stringParam('xdist_workers', '2', 'Number of Workers/Satellites to run the tests')
                         stringParam(
                             'build_label',
                             '',
