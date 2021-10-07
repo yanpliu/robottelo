@@ -128,6 +128,13 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
          // TBD - waiting for a workflow name and a format of its result
          startTime = new Date().getTime()
          json_output = JsonOutput.toJson(repo_file)
+
+         sh 'cp "${ROBOTTELO_DIR}/conf/subscription.yaml" subscription.yaml'
+         subscription_detail = readYaml file: 'subscription.yaml'
+         env.rhn_username = subscription_detail.SUBSCRIPTION.RHN_USERNAME
+         env.rhn_pool = subscription_detail.SUBSCRIPTION.RHN_POOLID
+         def rhn_password = sh(returnStdout: true, script: 'echo ${ROBOTTELO_subscription__rhn_password}')
+
          sh (
            returnStdout: true,
            script:
@@ -137,17 +144,22 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
            )
          archiveArtifacts artifacts: 'os_repos.json'
          if(scenario == "server") {
-           wf_name = "deploy-pit-template"
+           wf_name = "deploy-satellite-rhel-cmp-template"
            wf_args = [
-               'deploy_template_name': "${rhel_nvr}",
+               'rhel_compose_id': "${rhel_nvr}",
                'sat_xy_version': "${sat_ver}",
-               'rhel_compose_repositories': 'os_repos.json'
+               'rhel_compose_repositories': 'os_repos.json',
+               'cdn_rhn_username': "${env.rhn_username}",
+               'cdn_rhn_password': "${env.rhn_password}",
+               'cdn_rhsm_pool_id': "${rhn_pool}",
+               'count': "${params.appliance_count}"
            ]
          }
          else {
            wf_name = "deploy-sat-jenkins"
            wf_args = [
-           "deploy_sat_version": "${sat_ver}"
+           'deploy_sat_version': "${sat_ver}",
+           'count': "${params.appliance_count}"
            ]
          }
          println("Using broker to execute ${wf_name} with args: ${wf_args}")
@@ -155,22 +167,24 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
            (wf_name): (wf_args)
          )
        }
-   }
-   catch(error){
-     println("ERROR OCCURRED: ${error}")
-   }
-   try {
      if(scenario == "server") {
-         // placeholder for pytest selector
-         pit_scenario_selector = ''
+         println('executing pytest for SERVER scenario')
+         pit_scenario_selector = '-m "not destructive and not satellite_fixture"'
      }
      else if(scenario == "client"){
-         // placeholder for pytest selector
-         pit_scenario_selector = ''
-         throw new Exception("Robottelo client-scenario tests are not yet suited for PIT run.")
+         println('executing pytest for CLIENT scenario')
+         env.ROBOTTELO_content_host__deploy_workflow = 'deploy-rhel-cmp-template'
+         // extract rhel major version and set it as a default rhel
+         def rhel_ver_major = rhel_ver.tokenize('.')[0]
+         env.ROBOTTELO_content_host__default_rhel_version = rhel_ver_major
+         env.ROBOTTELO_content_host__rhel_versions = [rhel_ver_major]
+         env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__compose" = rhel_nvr
+         env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__release" = rhel_ver
+         pit_scenario_selector = '-m "content_host and not destructive"'
      }
      // run robottelo PIT tests
      stage('robottelo interop tests'){
+       println('executing pytest session')
        return_code = robotteloUtils.execute(script: """
          py.test -v -rEfs --tb=short \
            --importance Critical \
@@ -253,6 +267,8 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
        }
 
        stage('Build Notification') {
+         subject = "PIT automation ${scenario}-sat${sat_ver}-${rhel_nvr}: ${test_status}"
+         body = "The PIT build finished with status: ${test_status}.<br>${env.BUILD_URL}"
          email_to = ['sat-qe-jenkins']
          emailUtils.sendEmail(
            'to_nicks': email_to,

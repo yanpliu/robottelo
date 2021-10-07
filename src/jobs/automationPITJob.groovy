@@ -15,7 +15,7 @@ pipelineJob('PIT-automation') {
         stringParam('MESSAGE_HEADERS',"","Headers of the message that comes from CI-trigger")
         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Ansible Tower URL, format 'https://<url>/'")
         stringParam('appliance_count', "5", "Number of Satellite instances to checkout for each pytest session")
-        stringParam('pytest_options', "-m 'not destructive' tests/foreman/", 'Pytest options, other than those specified with unique string params.')
+        stringParam('pytest_options', "tests/foreman/", 'Pytest options, other than those specified with unique string params.')
     }
     properties {
         pipelineTriggers {
