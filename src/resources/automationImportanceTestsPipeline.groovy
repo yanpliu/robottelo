@@ -119,6 +119,9 @@ openShiftUtils.withNode(
                     rerun_of = reportPortalUtils.get_rerun_of(rp_launch, "${sat_version}-${snap_version},${params.importance}")
                 }
                 rp_job_params = [
+                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version]
+                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                    [$class: 'StringParameterValue', name: 'test_run_type', value: test_run_type],
                     [$class: 'StringParameterValue', name: 'results_job_name', value: env.JOB_BASE_NAME],
                     [$class: 'StringParameterValue', name: 'rp_launch_description', value: currentBuild.description],
                     [$class: 'StringParameterValue', name: 'results_build_number', value: currentBuild.number.toString()],

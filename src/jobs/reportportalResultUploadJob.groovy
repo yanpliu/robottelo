@@ -9,6 +9,20 @@ pipelineJob("reportportal-launch-upload"){
 
     parameters {
         stringParam(
+                'snap_version',
+                "",
+                "Snap version tested, used for description")
+        stringParam(
+                'sat_version',
+                "",
+                "Satellite version tested, used for description"
+        )
+        stringParam(
+                'test_run_type',
+                "",
+                "To differentiate special runs (fips, upgrade)"
+        )
+        stringParam(
                 'results_job_name',
                 "",
                 "Name of the Job that results will be uploaded from"
