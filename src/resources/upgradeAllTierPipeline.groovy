@@ -5,6 +5,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
+def resource_type =  ("$to_version" == '6.10')?'UpgradeTemplate':'Default'
 def rp_launch = 'Upgrades'
 def rp_pytest_options = ''
 def launch_uuid = ''
@@ -40,6 +41,8 @@ openShiftUtils.withNode(
                     'deploy_scenario': 'satellite-upgrade',
                     'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers,
+                    'target_cores': pipelineVars.upgrade_resources[resource_type]['target_cores'],
+                    'target_memory': pipelineVars.upgrade_resources[resource_type]['target_memory'],
                 ],
             )
             all_inventory = brokerUtils.checkout(

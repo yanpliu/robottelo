@@ -4,6 +4,7 @@ import groovy.json.*
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
+def resource_type =  ("$to_version" == '6.10')?'UpgradeTemplate':'Default'
 
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -25,7 +26,9 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                 'deploy-satellite-upgrade': [
                     'deploy_sat_version' : from_version,
                     'deploy_scenario'    : 'satellite-upgrade',
-                    'deploy_rhel_version': params.os[-1]
+                    'deploy_rhel_version': params.os[-1],
+                    'target_cores'       : pipelineVars.upgrade_resources[resource_type]['target_cores'],
+                    'target_memory'      : pipelineVars.upgrade_resources[resource_type]['target_memory'],
                 ],
             )
             env.satellite_hostname = satellite_inventory[0].hostname

@@ -35,10 +35,14 @@ class pipelineVars implements Serializable {
 
     List sat_versions = ['6.9', '6.10']
     List upgrade_versions = ['6.9', '6.10']
-    Map customer_db_resources = [
+    List customer_databases = ['DogFood','Softlayer','MTBank']
+
+    Map upgrade_resources = [
         'DogFood': ['target_memory': '32GiB', 'target_cores': '8'],
         'Softlayer': ['target_memory': '20GiB', 'target_cores': '4'],
-        'MTBank': ['target_memory': '32GiB', 'target_cores': '8']
+        'MTBank': ['target_memory': '32GiB', 'target_cores': '8'],
+        'UpgradeTemplate': ['target_memory': '32GiB', 'target_cores': '8'],
+        'Default': ['target_memory': '20GiB', 'target_cores': '6'],
     ]
     String zstream_signoffsheet = 'https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing'
 }

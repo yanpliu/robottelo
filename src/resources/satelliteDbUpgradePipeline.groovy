@@ -29,8 +29,8 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         stage('Check out rhel instance') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-base-rhel': [
-                    'target_cores': pipelineVars.customer_db_resources[params.customer_name]['target_cores'],
-                    'target_memory': pipelineVars.customer_db_resources[params.customer_name]['target_memory'],
+                    'target_cores': pipelineVars.upgrade_resources[params.customer_name]['target_cores'],
+                    'target_memory': pipelineVars.upgrade_resources[params.customer_name]['target_memory'],
                     'rhel_version': '7.9',
                     ],
                 )

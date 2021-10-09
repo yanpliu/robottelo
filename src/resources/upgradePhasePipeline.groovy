@@ -5,6 +5,7 @@ import groovy.json.*
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
 def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
+def resource_type =  ("$to_version" == '6.10')?'UpgradeTemplate':'Default'
 
 def at_vars = [
     containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}"),
@@ -34,6 +35,8 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
                         'deploy_sat_version': upgrade_base_version,
                         'deploy_scenario': 'satellite-upgrade',
                         'deploy_rhel_version': params.os[-1],
+                        'target_cores': pipelineVars.upgrade_resources[resource_type]['target_cores'],
+                        'target_memory': pipelineVars.upgrade_resources[resource_type]['target_memory'],
                         ],
                 )
                 env.satellite_hostname = satellite_inventory[0].hostname
@@ -119,7 +122,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
 
         stage("Customer db upgrade trigger"){
             if (params.db_trigger){
-                for (customer_name in pipelineVars.customer_db_resources.keySet()) {
+                for (customer_name in pipelineVars.customer_databases) {
                     build job: "sat-db-${to_version}-upgrade-for-${customer_name}",
                     parameters: [
                                 [$class: 'StringParameterValue', name: 'sat_version', value: "${params.sat_version}"],
