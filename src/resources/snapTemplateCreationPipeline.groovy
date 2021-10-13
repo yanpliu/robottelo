@@ -15,12 +15,13 @@ def broker_vars = [
 
 def templateNames = [
     // map of workflow-name: template-name
+    // defines what WFs we execute in parallel
+    // RHV
     'create-sat-jenkins-template': null,
     'create-sat-capsule-template': null,
-    // TODO: OSP WFs fail on template recreation https://issues.redhat.com/browse/SATQE-16678
-    // uncomment them once the issue above is fixed
-    //'create-sat-jenkins-template-osp': null,
-    //'create-sat-capsule-template-osp': null,
+    // OSP WF fails on template recreation https://issues.redhat.com/browse/SATQE-16678
+    'create-sat-jenkins-template-osp': null,
+    'create-sat-capsule-template-osp': null,
 ]
 
 try {
