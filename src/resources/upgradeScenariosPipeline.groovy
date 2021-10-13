@@ -5,6 +5,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
+def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 def resource_type =  ("$to_version" == '6.10')?'UpgradeTemplate':'Default'
 
 def at_vars = [
@@ -33,7 +34,7 @@ openShiftUtils.withNode(
         stage('Check out satellite and capsule of GA version') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-satellite-upgrade': [
-                        'deploy_sat_version' : from_version,
+                        'deploy_sat_version' : upgrade_base_version,
                         'deploy_scenario'    : 'satellite-upgrade',
                         'deploy_rhel_version': params.os[-1],
                         'count'              : params.xdist_workers,
@@ -44,7 +45,7 @@ openShiftUtils.withNode(
             )
             all_inventory = brokerUtils.checkout(
                 'deploy-capsule-upgrade': [
-                        'deploy_sat_version' : from_version,
+                        'deploy_sat_version' : upgrade_base_version,
                         'deploy_scenario'    : 'capsule-upgrade',
                         'deploy_rhel_version': params.os[-1],
                         'count'              : params.xdist_workers,

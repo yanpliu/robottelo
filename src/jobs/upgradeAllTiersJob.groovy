@@ -37,6 +37,11 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                             true,
                             'Use foreman-maintain for capsule upgrade'
                         )
+                        stringParam(
+                            'specific_upgrade_base_version',
+                            '',
+                            'Provide the specific upgrade base version to perform the upgrade, this is optional parameter, if you do not provide then the upgrade will execute with the latest version'
+                        )
                         choiceParam(
                             'distribution',
                             ['downstream', 'cdn'],
@@ -57,7 +62,8 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                             \nSelect 'n-1' to perform only Satellite upgrade, keep capsule with last z-stream version
                             """
                         )
-                        booleanParam('use_reportportal', true, 'Determines whether or not to push results to RP')
+                        booleanParam('use_reportportal', false, 'Determines whether or not to push results to RP')
+                        booleanParam('use_ibutsu', true, 'Determines whether or not to push results to ibutsu')
                         stringParam('tower_url', globalJenkinsDefaults.tower_url, "Tower URL, format 'https://<url>/'")
                     }
 

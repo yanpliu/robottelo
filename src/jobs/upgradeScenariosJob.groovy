@@ -41,6 +41,11 @@ globalJenkinsDefaults.upgrade_versions.each { versionName ->
                             ['downstream', 'cdn'],
                             'This option allows to configure the satellite and capsule repository based on their distribution type'
                         )
+                        stringParam(
+                            'specific_upgrade_base_version',
+                            '',
+                            'Provide the specific upgrade base version to perform the upgrade, this is optional parameter, if you do not provide then the upgrade will execute with the latest version'
+                        )
                     }
 
                     logRotator {

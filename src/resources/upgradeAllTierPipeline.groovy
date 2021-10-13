@@ -5,6 +5,7 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def to_version = params.sat_version.tokenize('.').take(2).join('.')
 def from_version = ("${params.stream}" == 'z_stream')? to_version : upgradeUtils.previous_version(to_version)
+def upgrade_base_version = params.specific_upgrade_base_version?specific_upgrade_base_version:from_version
 def resource_type =  ("$to_version" == '6.10')?'UpgradeTemplate':'Default'
 def rp_launch = 'Upgrades'
 def rp_pytest_options = ''
@@ -37,7 +38,7 @@ openShiftUtils.withNode(
         stage('Check out satellite and capsule of GA version') {
             satellite_inventory = brokerUtils.checkout(
                 'deploy-satellite-upgrade': [
-                    'deploy_sat_version': from_version,
+                    'deploy_sat_version': upgrade_base_version,
                     'deploy_scenario': 'satellite-upgrade',
                     'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers,
@@ -47,7 +48,7 @@ openShiftUtils.withNode(
             )
             all_inventory = brokerUtils.checkout(
                 'deploy-capsule-upgrade': [
-                    'deploy_sat_version': from_version,
+                    'deploy_sat_version': upgrade_base_version,
                     'deploy_scenario': 'capsule-upgrade',
                     'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers,
@@ -152,6 +153,10 @@ openShiftUtils.withNode(
         }
 
         stage('Run All-Tier tests') {
+            if(params.use_ibutsu){
+                ibutsu_options = pipelineVars.ibutsuBaseOptions
+            } else { ibutsu_options = " "}
+
             return_code = robotteloUtils.execute(script: """
                 pytest -v \
                 --disable-warnings \
@@ -160,9 +165,23 @@ openShiftUtils.withNode(
                 -o junit_suite_name=all-tiers-upgrade-sequential \
                 -n ${params.xdist_workers} \
                 ${rp_pytest_options} \
+                ${ibutsu_options} \
                 tests/foreman/
             """)
             results_summary = junit 'upgrade-all-tiers-results.xml'
+
+            // Add a sidebar link with the ibutsu URL
+            log_lines = currentBuild.getRawBuild().getLog(50)
+            ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
+            if (ibutsu_line){
+                ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
+                properties([
+                    sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
+                ])
+            } else {
+                println('No ibutsu run link found, no sidebar link to add')
+                ibutsu_link = "missing"
+            }
             currentBuild.result = 'SUCCESS'
         }
 
@@ -190,7 +209,8 @@ openShiftUtils.withNode(
                 email_body = emailUtils.emailBody(
                     results_summary: results_summary,
                     sat_version: params.sat_version,
-                    description: calculated_build_name
+                    description: calculated_build_name,
+                    ibutsu_link: ibutsu_link
                 )
                 emailUtils.sendEmail(
                     'to_nicks': ['satqe-list'],
