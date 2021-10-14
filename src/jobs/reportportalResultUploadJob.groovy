@@ -11,7 +11,8 @@ pipelineJob("reportportal-launch-upload"){
         stringParam(
                 'snap_version',
                 "",
-                "Snap version tested, used for description")
+                "Snap version tested, used for description"
+        )
         stringParam(
                 'sat_version',
                 "",
