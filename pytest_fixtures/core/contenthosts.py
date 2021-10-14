@@ -5,9 +5,10 @@ The functions in this module are read in the pytest_plugins/fixture_markers.py m
 All functions in this module will be treated as fixtures that apply the contenthost mark
 """
 import pytest
-from broker.broker import VMBroker
+from broker import VMBroker
 
 from robottelo.config import settings
+from robottelo.constants import DISTRO_RHEL8
 from robottelo.hosts import ContentHost
 
 
