@@ -37,6 +37,7 @@ openShiftUtils.withNode(
                     'deploy_sat_version': params.sat_version,
                     'deploy_snap_version': params.snap_version,
                     'deploy_template_name': params.template_name,
+                    'deploy_rhel_version': params.os[-1],
                     'count': params.xdist_workers
                 ]
             )
@@ -55,6 +56,7 @@ openShiftUtils.withNode(
             env.ROBOTTELO_server__version__release = "'${sat_version}'"
             env.ROBOTTELO_server__version__snap = "'${snap_version}'"
             env.ROBOTTELO_robottelo__satellite_version = "'${sat_version.tokenize('.').take(2).join('.')}'"
+            env.ROBOTTELO_server__version__rhel_release = "'${inventory[0].os_distribution_version}'"
         }
 
         stage('Execute Automation Test Suite') {
@@ -73,26 +75,8 @@ openShiftUtils.withNode(
             """)
 
             results_summary = junit junit_xml_file
-
-            // Add a sidebar link with the ibutsu URL
-            log_lines = currentBuild.getRawBuild().getLog(50)
-            ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
-            if (ibutsu_line){
-                ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
-                properties([
-                    sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
-                ])
-            } else {
-                println('No ibutsu run link found, no sidebar link to add')
-                ibutsu_link = "missing"
-            }
-
-            println("Pytest Exit code is ${return_code}")
-            if(return_code.toInteger() > 2) {
-                throw new Exception("pytest return code indicates an internal error or session failure")
-            }
+            ibutsu_link = ibutsuUtils.ibutsu_sidebar()
         }
-
 
         stage('Trigger Polarion Test Run Upload') {
             println("Calling Polarion Result Upload")
@@ -107,12 +91,13 @@ openShiftUtils.withNode(
                     wait: false
 
         }
+
         stage('Trigger Report Portal Launch Upload') {
             if(params.use_reportportal) {
                 attr_ystream = "${sat_version}".tokenize('.').take(2).join('.')
                 // figure out the rerun_of and append it in the job params if not null
                 if (!rerun_of) {
-                    rerun_of = reportPortalUtils.get_rerun_of(rp_launch, "${sat_version}-${snap_version},${params.importance}")
+                    rerun_of = reportPortalUtils.get_rerun_of(rp_launch, "${sat_version}-${snap_version},${params.importance},${params.os}")
                 }
                 rp_job_params = [
                     [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
@@ -125,7 +110,7 @@ openShiftUtils.withNode(
                     [$class: 'StringParameterValue', name: 'rp_rerun_of', value: rerun_of],
                     [$class: 'StringParameterValue',
                         name: 'rp_launch_attrs',
-                        value: "sat_version=${sat_version}-${snap_version} y_stream=${attr_ystream} importance=${params.importance} instance_count=${params.xdist_workers}"
+                        value: "sat_version=${sat_version}-${snap_version} y_stream=${attr_ystream} importance=${params.importance} instance_count=${params.xdist_workers} os=${params.os}"
                     ]
                 ]
                 println("Calling Report Portal Result Upload")

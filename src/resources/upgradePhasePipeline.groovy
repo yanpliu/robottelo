@@ -123,7 +123,7 @@ openShiftUtils.withNode(image: pipelineVars.ciUpgradesImage, envVars: at_vars) {
         stage("Customer db upgrade trigger"){
             if (params.db_trigger){
                 for (customer_name in pipelineVars.customer_databases) {
-                    build job: "sat-db-${to_version}-upgrade-for-${customer_name}",
+                    build job: "sat-db-upgrade-${customer_name.toLowerCase()}",
                     parameters: [
                                 [$class: 'StringParameterValue', name: 'sat_version', value: "${params.sat_version}"],
                                 [$class: 'StringParameterValue', name: 'snap_version', value: "${params.snap_version}"],

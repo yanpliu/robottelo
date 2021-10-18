@@ -34,49 +34,57 @@ try {
             currentBuild.description = sat_version + ' snap: ' + snap_version + ' on RHEL ' + rhel_major_version
 
             xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            stream = (xy_sat_version == pipelineVars.upgrade_versions.last()) ? 'y_stream' : 'z_stream'
+            stream = (xy_sat_version == pipelineVars.sat_rhel_matrix.keySet().last()) ? 'y_stream' : 'z_stream'
 
         }
 
 
         stage('Trigger Upgrade Phase Pipeline') {
-            build job: "sat-${xy_sat_version}-${stream}-upgrade-phase-rhel${rhel_major_version}",
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                    [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
-                ],
+            if (rhel_major_version == '7'){
+                build job: "sat-${xy_sat_version}-rhel${rhel_major_version}-${stream}-upgrade-phase",
+                    parameters: [
+                        [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                        [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                        [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
+                    ],
                 wait: false
+            }
         }
 
         stage('Trigger Upgrade Scenarios Pipeline') {
-            build job: "sat-${xy_sat_version}-${stream}-upgrade-scenarios-rhel${rhel_major_version}",
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                    [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
-                ],
+            if (rhel_major_version == '7'){
+                build job: "sat-${xy_sat_version}-rhel${rhel_major_version}-${stream}-upgrade-scenarios",
+                    parameters: [
+                        [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                        [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                        [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
+                    ],
                 wait: false
+            }
         }
 
         stage('Trigger Upgrade Existence Tests Pipeline') {
-            build job: "sat-${xy_sat_version}-${stream}-upgrade-existence-tests-rhel${rhel_major_version}",
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                    [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
-                ],
+            if (rhel_major_version == '7'){
+                build job: "sat-${xy_sat_version}-rhel${rhel_major_version}-${stream}-upgrade-existence",
+                    parameters: [
+                        [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                        [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                        [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
+                    ],
                 wait: false
+            }
         }
 
         stage('Trigger Upgrade All Tier Pipeline') {
-            build job: "sat-${xy_sat_version}-${stream}-upgrade-all-tier-rhel${rhel_major_version}",
-                parameters: [
-                    [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
-                    [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
-                    [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
-                ],
+            if (rhel_major_version == '7'){
+                build job: "sat-${xy_sat_version}-rhel${rhel_major_version}-${stream}-upgrade-all-tier",
+                    parameters: [
+                        [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
+                        [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                        [$class: 'StringParameterValue', name: 'tower_url', value: params.tower_url],
+                    ],
                 wait: true
+            }
         }
     }
 } catch (exc) {

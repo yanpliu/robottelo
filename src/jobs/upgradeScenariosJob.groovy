@@ -2,15 +2,15 @@ import jobLib.globalJenkinsDefaults
 import jenkins.model.*
 
 
-globalJenkinsDefaults.upgrade_versions.each { versionName ->
-    globalJenkinsDefaults.sat_os.each { os ->
+globalJenkinsDefaults.sat_rhel_matrix.each { sat_version, rhels ->
+    rhels.each { os ->
         globalJenkinsDefaults.streams.each { stream ->
-            if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && stream == 'z_stream')) {
-                pipelineJob("sat-${versionName}-${stream}-upgrade-scenarios-${os}") {
+            if ((! (sat_version == globalJenkinsDefaults.sat_rhel_matrix.keySet().last() && stream == 'z_stream')) && (os != 'rhel8')) {
+                pipelineJob("sat-${sat_version}-${os}-${stream}-upgrade-scenarios") {
                     disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
                     description("Satellite upgrade scenarios for ${stream}")
                     parameters {
-                        stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b.c')
+                        stringParam('sat_version', "${sat_version}", 'Satellite version to deployed, format is a.b.c')
                         stringParam('snap_version', '', 'Snap version to be deployed, format is x.y')
                         stringParam('os', "${os}", 'RHEL version of Satellite')
                         stringParam('xdist_workers', '2', 'Number of Workers/Satellites to run the tests')

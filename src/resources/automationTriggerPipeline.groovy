@@ -13,7 +13,7 @@ pipeline {
             steps {
                 script {
                     ['critical', 'high', 'medium', 'low', 'fips'].each {
-                        build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-${it}-tests",
+                        build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-${params.os}-${it}",
                         parameters: [
                             [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],
                             [$class: 'StringParameterValue', name: 'sat_version', value: params.sat_version],
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     ['Satellite', 'Capsule'].each {
-                        build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-maintain-tests",
+                        build job: "sat-${sat_version.tokenize('.').take(2).join('.')}-${params.os}-maintain",
                         parameters: [
                             [$class: 'StringParameterValue', name: 'component', value: "${it}"],
                             [$class: 'StringParameterValue', name: 'snap_version', value: params.snap_version],

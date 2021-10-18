@@ -2,70 +2,74 @@ import javaposse.jobdsl.dsl.views.jobfilter.MatchType
 import javaposse.jobdsl.dsl.views.portlets.TestTrendChartContext.DisplayStatus
 import jobLib.globalJenkinsDefaults
 
-globalJenkinsDefaults.sat_versions.each { versionName ->
-  dashboardView("${versionName}") {
-    jobFilters {
-      regex {
-        matchType(MatchType.INCLUDE_MATCHED)
-        regex(".*${versionName}.*(critical|high|medium|low|trigger|maintain).*")
-      }
-    }
 
-    leftPortlets {
-        testTrendChart {
-            displayName("FAILED Test Trend")
-            displayStatus(DisplayStatus.FAILED)
-            dateRange(14)
-            graphHeight(300)
-            graphWidth(450)
-        }
-        testStatisticsChart {
-            displayName("Test Result Proportions")
-        }
-    }
+globalJenkinsDefaults.sat_rhel_matrix.each { sat_version, rhels ->
+    rhels.each { os ->
+        dashboardView("${sat_version} ${os.capitalize()}") {
+            jobFilters {
+            regex {
+                matchType(MatchType.INCLUDE_MATCHED)
+                regex(".*${sat_version}.*${os}.*(critical|high|medium|low|trigger|maintain|fips).*")
+                }
+            }
 
-    rightPortlets {
-        testTrendChart {
-            displayName("SKIPPED Test Trend")
-            displayStatus(DisplayStatus.SKIPPED)
-            dateRange(14)
-            graphHeight(300)
-            graphWidth(450)
-        }
-        testStatisticsGrid {
-            displayName("Test Result Statistics")
-            useBackgroundColors(true)
-        }
-    }
+            leftPortlets {
+                testTrendChart {
+                    displayName("FAILED Test Trend")
+                    displayStatus(DisplayStatus.FAILED)
+                    dateRange(14)
+                    graphHeight(300)
+                    graphWidth(450)
+                }
+                testStatisticsChart {
+                    displayName("Test Result Proportions")
+                }
+            }
 
-    bottomPortlets {
-        jenkinsJobsList {
-            displayName("Jobs Matching ${versionName}")
+            rightPortlets {
+                testTrendChart {
+                    displayName("SKIPPED Test Trend")
+                    displayStatus(DisplayStatus.SKIPPED)
+                    dateRange(14)
+                    graphHeight(300)
+                    graphWidth(450)
+                }
+
+                testStatisticsGrid {
+                    displayName("Test Result Statistics")
+                    useBackgroundColors(true)
+                }
+            }
+
+            bottomPortlets {
+                jenkinsJobsList {
+                    displayName("Jobs Matching ${sat_version}")
+                }
+            }
+
+        // tons of column options: https://jenkinsci.github.io/job-dsl-plugin/#path/listView-columns
+            columns {
+                status()
+                name()
+                buildDescriptionColumn {
+                    // These are required for some reason
+                    forceWidth(false)
+                    columnWidth(80)
+                }
+                lastBuildConsole()
+                lastSuccess()
+                lastFailure()
+                lastDuration()
+            }
         }
     }
-
-    // tons of column options: https://jenkinsci.github.io/job-dsl-plugin/#path/listView-columns
-    columns {
-      status()
-      name()
-      buildDescriptionColumn {
-        // These are required for some reason
-        forceWidth(false)
-        columnWidth(80)
-      }
-      lastBuildConsole()
-      lastSuccess()
-      lastFailure()
-      lastDuration()
-    }
-  }
 
   // Upgrade Dashboard
-  dashboardView("${versionName} Upgrade") {
+  dashboardView("${sat_version} Upgrade") {
     jobFilters {
       regex {
         matchType(MatchType.INCLUDE_MATCHED)
-        regex(".*${versionName}.*(Upgrade|upgrade).*")
+        regex(".*${sat_version}.*(Upgrade|upgrade).*")
       }
     }
 
@@ -98,7 +102,7 @@ globalJenkinsDefaults.sat_versions.each { versionName ->
 
     bottomPortlets {
         jenkinsJobsList {
-            displayName("Jobs Matching ${versionName}")
+            displayName("Jobs Matching ${sat_version}")
         }
     }
 
@@ -128,7 +132,8 @@ def utilJobs = ['Master-Seed',
                 'polarion-testcase-upload',
                 'cloud-resources-cleanup',
                 'robottelo-pr-testing',
-                'manifest-downloader'
+                'manifest-downloader',
+                'reportportal-launch-upload'
 ]
 
 listView("Utility") {

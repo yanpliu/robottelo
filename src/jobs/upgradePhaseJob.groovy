@@ -3,20 +3,21 @@ import jenkins.model.*
 
 def upgrade_pipeline = ["upgrade-testing", "upgrade-phase"]
 
-globalJenkinsDefaults.upgrade_versions.each { versionName ->
-    globalJenkinsDefaults.sat_os.each { OS ->
+
+globalJenkinsDefaults.sat_rhel_matrix.each { sat_version, rhels ->
+    rhels.each { os ->
         globalJenkinsDefaults.streams.each { stream ->
             upgrade_pipeline.each { pipelineType ->
-                if (! (versionName == globalJenkinsDefaults.upgrade_versions.last() && stream == 'z_stream')) {
-                    pipelineJob("sat-${versionName}-${stream}-${pipelineType}-${OS}") {
+                if ((! (sat_version == globalJenkinsDefaults.sat_rhel_matrix.keySet().last() && stream == 'z_stream')) && (os != 'rhel8')) {
+                    pipelineJob("sat-${sat_version}-${os}-${stream}-${pipelineType}") {
                         disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
                         description("Satellite, Capsule Upgrade job for ${stream}")
                         parameters {
-                            stringParam('sat_version', "${versionName}", 'Satellite version to deployed, format is a.b.c')
+                            stringParam('sat_version', "${sat_version}", 'Satellite version to deployed, format is a.b.c')
                             stringParam('snap_version', '', 'Snap version to be deployed, format is x.y')
                             stringParam(
                                 'os',
-                                "${OS}",
+                                "${os}",
                                 "RHEL version of Satellite"
                             )
                             stringParam(

@@ -14,6 +14,7 @@ class pipelineVars implements Serializable {
     String ciTestFmImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/testfm-container'
     String ciUpgradeRobotteloImage = 'image-registry.openshift-image-registry.svc:5000/jenkins-csb-satellite-qe/sat-upgrades-robottelo-container'
     Map robotteloImageTags = [ // maps sat_version to robottelo container tag
+        '7.0' : 'latest',
         '6.10': 'latest',
         '6.9': '6.9.z',
     ]
@@ -32,11 +33,12 @@ class pipelineVars implements Serializable {
 
     String towerUser = 'satqe_auto_droid'
     String towerUpgradesUser = 'satqe_upgrades'
-
-    List sat_versions = ['6.9', '6.10']
-    List upgrade_versions = ['6.9', '6.10']
     List customer_databases = ['DogFood','Softlayer','MTBank']
-
+    Map sat_rhel_matrix = [
+        '6.9': ['rhel7'],
+        '6.10': ['rhel7'],
+        '7.0': ['rhel7', 'rhel8'],
+    ]
     Map upgrade_resources = [
         'DogFood': ['target_memory': '32GiB', 'target_cores': '8'],
         'Softlayer': ['target_memory': '20GiB', 'target_cores': '4'],

@@ -3,16 +3,16 @@ import jenkins.model.*
 
 customer_databases = ['DogFood','Softlayer','MTBank']
 
-globalJenkinsDefaults.sat_versions.each { versionName ->
-    if (versionName == globalJenkinsDefaults.sat_versions.last()) {
+globalJenkinsDefaults.sat_rhel_matrix.keySet().each { sat_version ->
+    if (sat_version == globalJenkinsDefaults.sat_rhel_matrix.keySet().last()) {
         customer_databases.each { customer_name ->
-            pipelineJob("sat-db-${versionName}-upgrade-for-${customer_name}") {
+            pipelineJob("sat-${sat_version}-db-upgrade-${customer_name.toLowerCase()}") {
                 disabled(Jenkins.getInstance().getRootUrl() != globalJenkinsDefaults.production_url)
                 description("Satellite DB Upgrade Migrate For ${customer_name}")
                 parameters {
                     stringParam(
                         'sat_version',
-                        "${versionName}",
+                        "${sat_version}",
                         "Satellite version to deployed, format is a.b.c"
                     )
                     choiceParam(

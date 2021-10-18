@@ -72,6 +72,8 @@ openShiftUtils.withNode(
             // Buiild Description
             calculated_build_name = from_version + " to " + "${params.sat_version}" + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            // Set the RHEL version environment variable
+            env.ROBOTTELO_server__version__rhel_release = "'${inventory[0].os_distribution_version}'"
         }
 
         stage("Setup ssh-agent"){

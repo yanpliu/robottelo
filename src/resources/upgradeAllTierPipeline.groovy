@@ -73,6 +73,8 @@ openShiftUtils.withNode(
             // Build Description
             calculated_build_name = from_version + " to " + "${params.sat_version}" + " snap: " + "${params.snap_version}"
             currentBuild.displayName = "${params.build_label}" ?: calculated_build_name
+            // Set the RHEL version environment variable
+            env.ROBOTTELO_server__version__rhel_release = "'${inventory[0].os_distribution_version}'"
         }
 
         stage('Setup ssh-agent') {
@@ -169,19 +171,7 @@ openShiftUtils.withNode(
                 tests/foreman/
             """)
             results_summary = junit 'upgrade-all-tiers-results.xml'
-
-            // Add a sidebar link with the ibutsu URL
-            log_lines = currentBuild.getRawBuild().getLog(50)
-            ibutsu_line = log_lines.find { it ==~ '.*Results can be viewed on.*(http.*ibutsu.*)'}
-            if (ibutsu_line){
-                ibutsu_link = ibutsu_line.substring(ibutsu_line.indexOf('http'))
-                properties([
-                    sidebarLinks([[displayName: 'Ibutsu Test Run', iconFileName: '', urlName: ibutsu_link]])
-                ])
-            } else {
-                println('No ibutsu run link found, no sidebar link to add')
-                ibutsu_link = "missing"
-            }
+            ibutsu_link = ibutsuUtils.ibutsu_sidebar()
             currentBuild.result = 'SUCCESS'
         }
 

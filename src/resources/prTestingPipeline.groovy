@@ -4,7 +4,7 @@
 def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}")
 ]
-def xy_sat_version = pipelineVars.sat_versions.find{env.ghprbTargetBranch.startsWith(it)} ?: pipelineVars.sat_versions.last()
+def xy_sat_version = pipelineVars.sat_rhel_matrix.keySet().find{env.ghprbTargetBranch.startsWith(it)} ?: pipelineVars.sat_rhel_matrix.keySet().last()
 
 throttle(['pr-tester']) {
 

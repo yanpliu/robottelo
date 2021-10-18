@@ -134,10 +134,11 @@ try {
         stage('Trigger Automation Test') {
             if (params.trigger_automation == 'Yes') {
                 if (templates_exist) {
-                    build job: "${sat_version.tokenize('.').take(2).join('.')}-automation-trigger",
+                    build job: "${sat_version.tokenize('.').take(2).join('.')}-rhel${rhel_major_version}-automation-trigger",
                         parameters: [
                             [$class: 'StringParameterValue', name: 'snap_version', value: snap_version],
                             [$class: 'StringParameterValue', name: 'sat_version', value: sat_version],
+                            [$class: 'StringParameterValue', name: 'os', value: "rhel${rhel_major_version}"],
                         ],
                         wait: false
                     build job: "manifest-downloader", wait: false
