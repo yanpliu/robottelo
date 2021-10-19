@@ -169,6 +169,15 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
        }
      if(scenario == "server") {
          println('executing pytest for SERVER scenario')
+         env.ROBOTTELO_server__deploy_arguments = '{}'
+         // TODO: use def env.ROBOTTELO_server__deploy_arguments.with
+         env.ROBOTTELO_server__deploy_arguments__rhel_compose_id = rhel_nvr
+         env.ROBOTTELO_server__deploy_arguments__sat_xy_version = sat_ver
+         // TODO: ensure that broker finds os_repos.json file
+         env.ROBOTTELO_server__deploy_arguments__rhel_compose_repositories = 'os_repos.json'
+         env.ROBOTTELO_server__deploy_arguments__cdn_rhn_username = env.rhn_username
+         env.ROBOTTELO_server__deploy_arguments__cdn_rhn_password = env.rhn_password
+         env.ROBOTTELO_server__deploy_arguments__cdn_rhsm_pool_id = rhn_pool
          pit_scenario_selector = '-m "not destructive and not satellite_fixture"'
      }
      else if(scenario == "client"){
@@ -217,8 +226,11 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
      finally {
        stage('Build CI message') {
          println("Building product-scenario.test.complete ci message..")
-         stopTime = new Date().getTime()
-         testRuntime = ((stopTime - startTime) / 1000).toInteger()
+
+         if (startTime){
+           stopTime = new Date().getTime()
+           testRuntime = ((stopTime - startTime) / 1000).toInteger()
+         }
          // override default message topic (development usage)
          if (message['contact']['email'] != "pit-qe@redhat.com") {
            messageTopic += ".${message['contact']['email'].toString().split('@')[0]}"
@@ -241,7 +253,9 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
          message['test']['namespace'] = "interop"
          message['test']['type'] = "layered-product"
          message['test']['result'] = test_status
-         message['test']['runtime'] = testRuntime
+         if (testRuntime){
+           message['test']['runtime'] = testRuntime
+         }
          message['test']['xunit_urls'] = xunitUrls
 
          message['generated_at'] = java.time.Instant.now().toString()
