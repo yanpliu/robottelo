@@ -178,7 +178,7 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
          env.ROBOTTELO_server__deploy_arguments__cdn_rhn_username = env.rhn_username
          env.ROBOTTELO_server__deploy_arguments__cdn_rhn_password = env.rhn_password
          env.ROBOTTELO_server__deploy_arguments__cdn_rhsm_pool_id = rhn_pool
-         pit_scenario_selector = '-m "not destructive and not satellite_fixture"'
+         pit_scenario_selector = "-m 'pit_server and not destructive' -k 'not fips'"
      }
      else if(scenario == "client"){
          println('executing pytest for CLIENT scenario')
@@ -189,14 +189,13 @@ openShiftUtils.withNode(image: pipelineVars.ciRobotteloImage, envVars: robottelo
          env.ROBOTTELO_content_host__rhel_versions = [rhel_ver_major]
          env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__compose" = rhel_nvr
          env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__release" = rhel_ver
-         pit_scenario_selector = '-m "content_host and not destructive"'
+         pit_scenario_selector = "-m pit_client -k 'rhel${rhel_ver_major} and not fips'"
      }
      // run robottelo PIT tests
      stage('robottelo interop tests'){
        println('executing pytest session')
        return_code = robotteloUtils.execute(script: """
          py.test -v -rEfs --tb=short \
-           --importance Critical \
            -n ${params.appliance_count} \
            --dist loadscope \
            --junit-xml=sat-pit-results.xml \
