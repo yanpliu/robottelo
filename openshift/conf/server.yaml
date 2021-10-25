@@ -26,6 +26,8 @@ SERVER:
   INVENTORY_FILTER: name<sat-jenkins
   # The Ansible Tower workflow used to deploy a satellite
   DEPLOY_WORKFLOW: deploy-sat-jenkins
+  # Dictionary of arguments which should be passed along to the deploy workflow
+  DEPLOY_ARGUMENTS: {}
   # Path to private ssh key to be used when connecting via SSH.
   # Path to private ssh key to be used when connecting via SSH
   # A robottelo containers ssh key path
