@@ -67,6 +67,11 @@ def withNode(Map parameters = [:], Closure body) {
             secretKey:'satqe_shared_password'))
 
         envVars.add(secretEnvVar(
+            key:'ROBOTTELO_git__password',
+            secretName: secretName,
+            secretKey:'gitea_user_password'))
+
+        envVars.add(secretEnvVar(
             key:'ROBOTTELO_http_proxy__password',
             secretName: secretName,
             secretKey:'satqe_shared_password'))
