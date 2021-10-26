@@ -44,22 +44,21 @@ openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
     }
 
     stage('Archive Artifacts'){
-        //archiveArtifacts artifacts: '*.json'
-        // Check for any value not set
-        if (sat_jenkins_template) {
-            print "All template names have been created"
-            subject = "[PIT] Satlab OS template for ${params.rhel_nvr} was successfully created "
-            body = "Template info:" +
-                   "<br><br> sat_jenkins_template: ${sat_jenkins_template} " +
-                   "<br><br> VM template name: ${params.rhel_nvr} " +
-                   "<br><br> RHEL repository: ${params.rhel_os_repo} " +
-                   "<br><br> source qcow2 image url: ${params.qcow_url}"
-        } else {
-            subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
-            body = "Jenkins Console Log: ${BUILD_URL}"
-            println("One or more template names were empty")
-            currentBuild.result = 'UNSTABLE'
-        }
+        archiveArtifacts artifacts: '*.json'
+    }
+    if (sat_jenkins_template) {
+        print "All template names have been created"
+        subject = "[PIT] Satlab OS template for ${params.rhel_nvr} was successfully created "
+        body = "Template info:" +
+               "<br><br> sat_jenkins_template: ${sat_jenkins_template} " +
+               "<br><br> VM template name: ${params.rhel_nvr} " +
+               "<br><br> RHEL repository: ${params.rhel_os_repo} " +
+               "<br><br> source qcow2 image url: ${params.qcow_url}"
+    } else {
+        subject = "${env.JOB_NAME} Build ${BUILD_NUMBER} has Failed. Please Investigate"
+        body = "Jenkins Console Log: ${BUILD_URL}"
+        println("One or more template names were empty")
+        currentBuild.result = 'UNSTABLE'
     }
 
     stage('Build Notification') {
