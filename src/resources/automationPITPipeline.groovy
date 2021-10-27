@@ -127,55 +127,6 @@ try{
                     string(name: 'rhel_os_repo', value: "${rhel_os_repo}")
                 ]
         }
-        /* This stage is already treated as a test and an eventual failure needs to be reported via UMB message
-           in the finally block
-        */
-        stage('Install satellite') {
-            // install satellite version given by the `sat_ver` variable
-            // TBD - waiting for a workflow name and a format of its result
-            startTime = new Date().getTime()
-            json_output = JsonOutput.toJson(repo_file)
-
-            sh 'cp "${ROBOTTELO_DIR}/conf/subscription.yaml" subscription.yaml'
-            subscription_detail = readYaml file: 'subscription.yaml'
-            env.rhn_username = subscription_detail.SUBSCRIPTION.RHN_USERNAME
-            env.rhn_pool = subscription_detail.SUBSCRIPTION.RHN_POOLID
-            def rhn_password = sh(returnStdout: true, script: 'echo ${ROBOTTELO_subscription__rhn_password}')
-            sh (
-                returnStdout: true,
-                script:
-                 """
-                 echo '${json_output}' > os_repos.json
-                 """
-            )
-            sh (
-                script: 'mkdir screenshots'
-            )
-            archiveArtifacts artifacts: 'os_repos.json'
-            if(scenario == "server") {
-                wf_name = "deploy-satellite-rhel-cmp-template"
-                wf_args = [
-                    'rhel_compose_id': "${rhel_nvr}",
-                    'sat_xy_version': "${sat_ver}",
-                    'rhel_compose_repositories': 'os_repos.json',
-                    'cdn_rhn_username': "${env.rhn_username}",
-                    'cdn_rhn_password': "${env.rhn_password}",
-                    'cdn_rhsm_pool_id': "${rhn_pool}",
-                    'count': "${params.appliance_count}"
-               ]
-           }
-           else {
-               wf_name = "deploy-sat-jenkins"
-               wf_args = [
-                   'deploy_sat_version': "${sat_ver}",
-                   'count': "${params.appliance_count}"
-               ]
-           }
-           println("Using broker to execute ${wf_name} with args: ${wf_args}")
-           brokerUtils.checkout(
-               (wf_name): (wf_args)
-           )
-        }
         if(scenario == "server") {
             println('executing pytest for SERVER scenario')
             env.ROBOTTELO_server__deploy_arguments = '{}'
@@ -298,8 +249,5 @@ finally {
             'subject': subject,
             'body': body
         )
-    }
-    stage('Check In Satellite Instances') {
-        brokerUtils.checkin_all()
     }
 }
