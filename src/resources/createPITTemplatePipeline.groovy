@@ -43,9 +43,6 @@ openShiftUtils.withNode(image: pipelineVars.ciBrokerImage, envVars: at_vars) {
         }
     }
 
-    stage('Archive Artifacts'){
-        archiveArtifacts artifacts: '*.json'
-    }
     if (sat_jenkins_template) {
         print "All template names have been created"
         subject = "[PIT] Satlab OS template for ${params.rhel_nvr} was successfully created "
