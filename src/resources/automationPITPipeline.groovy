@@ -5,6 +5,8 @@ approve:
     method org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper getRawBuild
     method hudson.model.Run getArtifacts
     method hudson.model.Run$Artifact getFileName
+    new java.io.File java.lang.String
+    staticMethod org.codehaus.groovy.runtime.DefaultGroovyMethods write java.io.File java.lang.String
 */
 
 @Library("satqe_pipeline_lib") _
@@ -102,7 +104,7 @@ try{
         // PIT parse QCOW image url
         def rhel_images_repo = rhel_os_repo.replaceFirst('/os[/]?$', '/images')
         index = new URL(rhel_images_repo).text
-        def (foo, qcow_file) = (index =~ />([-_\w\\\.]+\.qcow2)</)[0]
+        def (foo, qcow_file) = (index =~ /([-_\w\\\.]+.qcow2)/)[0]
         qcow_url = rhel_images_repo + '/' + qcow_file
     }
 
@@ -127,33 +129,52 @@ try{
                     string(name: 'rhel_os_repo', value: "${rhel_os_repo}")
                 ]
         }
-        if(scenario == "server") {
-            println('executing pytest for SERVER scenario')
-            env.ROBOTTELO_server__deploy_arguments = '{}'
-            // TODO: use def env.ROBOTTELO_server__deploy_arguments.with
-            env.ROBOTTELO_server__deploy_arguments__rhel_compose_id = rhel_nvr
-            env.ROBOTTELO_server__deploy_arguments__sat_xy_version = sat_ver
-            // TODO: ensure that broker finds os_repos.json file
-            env.ROBOTTELO_server__deploy_arguments__rhel_compose_repositories = 'os_repos.json'
-            env.ROBOTTELO_server__deploy_arguments__cdn_rhn_username = env.rhn_username
-            env.ROBOTTELO_server__deploy_arguments__cdn_rhn_password = env.rhn_password
-            env.ROBOTTELO_server__deploy_arguments__cdn_rhsm_pool_id = rhn_pool
-            pit_scenario_selector = "-m 'pit_server and not destructive' -k 'not fips'"
-        }
-        else if(scenario == "client"){
-            println('executing pytest for CLIENT scenario')
-            env.ROBOTTELO_content_host__deploy_workflow = 'deploy-rhel-cmp-template'
-            // extract rhel major version and set it as a default rhel
-            def rhel_ver_major = rhel_ver.tokenize('.')[0]
-            env.ROBOTTELO_content_host__default_rhel_version = rhel_ver_major
-            env.ROBOTTELO_content_host__rhel_versions = [rhel_ver_major]
-            env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__compose" = rhel_nvr
-            env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__release" = rhel_ver
-            pit_scenario_selector = "-m pit_client -k 'rhel${rhel_ver_major} and not fips'"
+        //set scenario-specific dynaconf settings
+        stage('Prepare robottelo environment'){
+            json_output = JsonOutput.toJson(repo_file)
+            println("json_output: ${json_output}")
+            writeFile file: 'os_repos.json', text: json_output
+            archiveArtifacts artifacts: "os_repos.json"
+            sh 'cat os_repos.json'
+            sh 'mv os_repos.json "${ROBOTTELO_DIR}"'
+
+            sh 'mkdir "${ROBOTTELO_DIR}/screenshots"'
+            sh 'cp "${ROBOTTELO_DIR}/conf/subscription.yaml" subscription.yaml'
+            subscription_detail = readYaml file: 'subscription.yaml'
+            env.rhn_username = subscription_detail.SUBSCRIPTION.RHN_USERNAME
+            env.rhn_pool = subscription_detail.SUBSCRIPTION.RHN_POOLID
+            def rhn_password = sh(returnStdout: true, script: 'printf "${ROBOTTELO_subscription__rhn_password}"')
+            if(scenario == "server") {
+                println('executing pytest for SERVER scenario')
+                env.ROBOTTELO_server__deploy_workflow = 'deploy-satellite-rhel-cmp-template'
+                // TODO: use def env.ROBOTTELO_server__deploy_arguments.with
+                env.ROBOTTELO_server__deploy_arguments__rhel_compose_id = rhel_nvr
+                env.ROBOTTELO_server__deploy_arguments__sat_xy_version = sat_ver.toString()
+                // TODO: ensure that broker finds os_repos.json file
+                env.ROBOTTELO_server__deploy_arguments__rhel_compose_repositories = 'os_repos.json'
+                env.ROBOTTELO_server__deploy_arguments__cdn_rhn_username = env.rhn_username
+                env.ROBOTTELO_server__deploy_arguments__cdn_rhn_password = rhn_password
+                env.ROBOTTELO_server__deploy_arguments__cdn_rhsm_pool_id = env.rhn_pool
+                env.ROBOTTELO_server__deploy_arguments__sat_ansible_version = '2.9'
+                pit_scenario_selector = "-m 'pit_server and not destructive' -k 'not fips'"
+            }
+            else if(scenario == "client"){
+                println('executing pytest for CLIENT scenario')
+                env.ROBOTTELO_server__deploy_arguments__deploy_sat_version = sat_ver.toString()
+                env.ROBOTTELO_content_host__deploy_workflow = 'deploy-rhel-cmp-template'
+                // extract rhel major version and set it as a default rhel
+                def rhel_ver_major = rhel_ver.tokenize('.')[0]
+                env.ROBOTTELO_content_host__default_rhel_version = rhel_ver_major
+                env.ROBOTTELO_content_host__rhel_versions = [rhel_ver_major]
+                env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__compose" = rhel_nvr
+                env."ROBOTTELO_content_host__hardware__rhel${rhel_ver_major}__release" = rhel_ver
+                pit_scenario_selector = "-m pit_client -k 'rhel${rhel_ver_major} and not fips'"
+            }
         }
         // run robottelo PIT tests
         stage('robottelo interop tests'){
             println('executing pytest session')
+            startTime = new Date().getTime()
             return_code = robotteloUtils.execute(script: """
                 py.test -v -rEfs --tb=short \
                 -n ${params.appliance_count} \
@@ -185,7 +206,7 @@ catch(error){
 }
 finally {
     stage('Build CI message') {
-        println("Building product-scenario.test.complete ci message..")
+        println("Building CI message for ${topic}")
 
         if (startTime){
             stopTime = new Date().getTime()
@@ -220,7 +241,7 @@ finally {
         message['generated_at'] = java.time.Instant.now().toString()
 
         println("${message}")
-        println("CI message product-scenario.test.complete finished building!")
+        println("CI message for ${topic} finished building!")
     }
     stage('Publish results to interop jenkins job') {
         /* publish message per instructions documented at:
