@@ -17,4 +17,4 @@ IPA:
   - satusers
   IDM_PASSWORD:
   IDM_SERVER_IP: 10.8.104.51
-  KEYTAB_URL: http://sesame.lab.eng.rdu2.redhat.com/pub/idm/freeipa.keytab
+  KEYTAB:
