@@ -227,10 +227,11 @@ def withNode(Map parameters = [:], Closure body) {
             secretName: secretName,
             secretKey: 'ansible_hub_token'))
 
-        envVars.add(secretEnvVar(
-            key: 'ROBOTTELO_ipa__keytab',
-            secretName: secretName,
-            secretKey: 'keytab'))
+        // TODO mount this binary secret through a volume mount
+        // envVars.add(secretEnvVar(
+        //    key: 'ROBOTTELO_ipa__keytab',
+        //    secretName: secretName,
+        //    secretKey: 'keytab'))
 
         envVars.add(secretEnvVar(
             key: 'ROBOTTELO_ipa__idm_password',
