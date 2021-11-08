@@ -47,4 +47,9 @@ class pipelineVars implements Serializable {
         'Default': ['target_memory': '20GiB', 'target_cores': '6'],
     ]
     String zstream_signoffsheet = 'https://docs.google.com/spreadsheets/d/1gMJF_WtVVGnfNqouDR_zHk6RhY-QLqfGRu_Fk40K9Mw/edit?usp=sharing'
+
+    Map mapped_tower_users = [
+        // Maps special shared tower users to a specific user, used for SLA email notifications
+        'security': 'ytale'
+    ]
 }

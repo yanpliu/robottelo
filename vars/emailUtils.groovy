@@ -3,6 +3,15 @@
  * Requires Email Extension Plugin to be installed and configured"
  */
 
+def replaceUsers(nicks) {
+    // Check the nicks list for replacements provided by pipelineVars.mapped_tower_users
+    pipelineVars.mapped_tower_users.each { key, user ->
+        // replace the nick if its in the mapped users
+        nicks = nicks.collect{ nick -> nick == key ? user : nick }
+    }
+    return nicks
+}
+
 def sendEmail(parameters = [:]) {
     /**
      * Send an email
@@ -22,6 +31,10 @@ def sendEmail(parameters = [:]) {
     def attachment_pattern = parameters.get('attachmentsPattern','')
 
     def email_addrs = ''
+
+    // replace any 'special' users from tower with generic mapped names
+    to_nicks = replaceUsers(to_nicks)
+    reply_nicks = replaceUsers(reply_nicks)
 
     for (t_nick in to_nicks) {
         t_nick = t_nick.replaceAll("\\s","")+"@redhat.com,"
