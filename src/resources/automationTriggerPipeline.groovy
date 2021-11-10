@@ -4,7 +4,7 @@ pipeline {
         stage('Set Build Description'){
             steps {
                 script {
-                    currentBuild.description = sat_version + " snap: " + snap_version
+                    currentBuild.description = sat_version + " snap: " + snap_version + " ${params.os}"
                 }
             }
         }

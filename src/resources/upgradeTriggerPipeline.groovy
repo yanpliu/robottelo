@@ -34,7 +34,9 @@ try {
             currentBuild.description = sat_version + ' snap: ' + snap_version + ' on RHEL ' + rhel_major_version
 
             xy_sat_version = sat_version.tokenize('.').take(2).join('.')
-            stream = (xy_sat_version == pipelineVars.sat_rhel_matrix.keySet().last()) ? 'y_stream' : 'z_stream'
+            // TODO: Replace the conditional statement with the below one once the 6.10.z branch gets ready
+            // stream = (xy_sat_version == pipelineVars.sat_rhel_matrix.keySet().last()) ? 'y_stream' : 'z_stream'
+            stream = (xy_sat_version in pipelineVars.sat_rhel_matrix.keySet().takeRight(2)) ? 'y_stream' : 'z_stream'
 
         }
 

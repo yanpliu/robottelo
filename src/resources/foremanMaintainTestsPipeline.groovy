@@ -56,7 +56,7 @@ openShiftUtils.withNode(
             first_host_name_parts = satellite_inventory[0].name.split('-')
             sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
             snap_version = params.snap_version ?: first_host_name_parts[4]
-            currentBuild.description = params.component + ' ' + sat_version + ' Snap ' + snap_version
+            currentBuild.description = params.component + ' ' + sat_version + ' snap: ' + snap_version + " ${params.os}"
 
             env.TESTFM_server__version__release = sat_version
             env.TESTFM_server__version__snap = snap_version

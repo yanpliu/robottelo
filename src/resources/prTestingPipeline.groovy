@@ -5,7 +5,8 @@ def at_vars = [
         containerEnvVar(key: 'BROKER_AnsibleTower__base_url', value: "${params.tower_url}")
 ]
 
-// TODO: workaround till 6.10 branching, remove after 6.10.z branch
+// TODO: Replace the conditional statement with the below one once the 6.10.z branch gets ready
+// def xy_sat_version = pipelineVars.sat_rhel_matrix.keySet().find{env.ghprbTargetBranch.startsWith(it)} ?: pipelineVars.sat_rhel_matrix.keySet().last()
 def xy_sat_version = pipelineVars.sat_rhel_matrix.keySet().find{env.ghprbTargetBranch.startsWith(it)} ?: pipelineVars.sat_rhel_matrix.keySet()[1]
 
 throttle(['pr-tester']) {

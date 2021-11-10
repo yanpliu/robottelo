@@ -51,7 +51,7 @@ openShiftUtils.withNode(
             // example: [tpl, sat, jenkins, 6.9.2, 1.0, rhel, 7.9]
             sat_version = (params.sat_version.tokenize('.').size() > 2) ? params.sat_version : first_host_name_parts[3]
             snap_version = params.snap_version ?: first_host_name_parts[4]
-            currentBuild.description = sat_version + " snap: " + snap_version
+            currentBuild.description = sat_version + " snap: " + snap_version + " ${params.os}"
 
             env.ROBOTTELO_server__version__release = "'${sat_version}'"
             env.ROBOTTELO_server__version__snap = "'${snap_version}'"
