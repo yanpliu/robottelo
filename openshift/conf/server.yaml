@@ -29,7 +29,11 @@ SERVER:
   # The Ansible Tower workflow used to deploy a satellite
   DEPLOY_WORKFLOW: deploy-sat-jenkins
   # Dictionary of arguments which should be passed along to the deploy workflow
-  DEPLOY_ARGUMENTS: {}
+  DEPLOY_ARGUMENTS:
+    deploy_snap_version: "@format {this.server.version.snap}"
+    deploy_sat_version: "@format {this.server.version.release}"
+    deploy_rhel_version: '7'
+    # deploy_template_name: ''
   # Path to private ssh key to be used when connecting via SSH.
   # Path to private ssh key to be used when connecting via SSH
   # A robottelo containers ssh key path
