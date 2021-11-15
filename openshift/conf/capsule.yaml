@@ -13,9 +13,9 @@ CAPSULE:
   # The Ansible Tower workflow used to deploy a capsule
   DEPLOY_WORKFLOW: deploy-sat-capsule
   # Dictionary of arguments which should be passed along to the deploy workflow
-  DEPLOY_ARGUMENTS:
-    deploy_snap_version: "@format {this.capsule.version.snap}"
-    deploy_sat_version: "@format {this.capsule.version.release}"
-    deploy_rhel_version: '7'
+  DEPLOY_ARGUMENTS: {}
+    # deploy_snap_version: "@format {this.capsule.version.snap}"
+    # deploy_sat_version: "@format {this.capsule.version.release}"
+    # deploy_rhel_version: '7'
     # deploy_template_name: ''
 
