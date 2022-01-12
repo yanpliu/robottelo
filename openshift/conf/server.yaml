@@ -9,6 +9,8 @@ SERVER:
     RELEASE: 6.10
     # The snap version currently testing (if applicable)
     # SNAP: 10
+    # The RHEL Base OS Version(x.y) where the Satellite is installed
+    RHEL_VERSION: 7.9
     # The source of Satellite packages. Can be one of:
     # internal, ga, beta
     SOURCE: internal
